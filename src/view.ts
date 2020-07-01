@@ -1,26 +1,42 @@
+// Elements factory
+function createElem(className: string) :HTMLElement {
+    const elem = document.createElement("div");
+    elem.classList.add(className);
+    return elem;
+}
+
 class Scale {
-    create() {
-        return '<div class = "slider__scale"><div class = "slider__scale__filling"></div></div>';
+    elem: HTMLElement;
+    constructor() {
+        this.elem = createElem("slider__scale");
     }
 }
 class Button {
-    create() {
-        return '<div class = "slider__button"></div>';
+    elem: HTMLElement;
+    constructor() {
+        this.elem = createElem("slider__button");
     }
 }
-
 class View {
-    create() {
-        const scale = new Scale();
-        const button = new Button();
-        return `<div class = "slider">${scale.create()}${button.create()}</div>`;
+    scale: Scale;
+    button: Button;
+    
+    constructor() {
+        this.scale = new Scale();
+        this.button = new Button();
+        this.scale.elem.onclick = (event) => {
+            this.button.elem.style.left = `${event.offsetX.toString()}px`;
+        }
+    }
+    append(entry: Element) {
+        entry.appendChild(this.scale.elem);
+        entry.appendChild(this.button.elem);
     }
 }
 
-$(document).ready(() => {
-    $(".slider").appendTo($(".root"));
-    
-})
 const myView = new View();
 
-document.getElementsByClassName("root")[0].innerHTML = myView.create();
+const entry = document.getElementsByClassName("slider")[0];
+
+
+myView.append(entry);
