@@ -1,0 +1,23 @@
+$grey: #EEE;
+$green: #6FCF97;
+
+
+.slider {
+    width: 600px;
+}
+.slider__scale {
+    width: 100%;
+    height: 4px;
+    border: 1px solid $grey;
+    background: $grey;
+    border-radius: 4px;
+    margin: 10px;
+    position: relative;
+}
+
+.slider__button {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: $green; 
+}
