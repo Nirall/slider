@@ -30,13 +30,24 @@ class Graduation {
         this.mark2 = createElem("slider__graduation__mark");
         this.mark3 = createElem("slider__graduation__mark");
         this.mark4 = createElem("slider__graduation__mark");
+        
+        this.gradElem.appendChild(this.mark1);
+        this.gradElem.appendChild(this.mark2);
+        this.gradElem.appendChild(this.mark3);
+        this.gradElem.appendChild(this.mark4);
+
         this.init = this.init.bind(this);
     }
-    init(minValue: number, maxValue: number) {
+    init(minValue: number, maxValue: number, vertical: boolean) {
         this.mark1.innerHTML = minValue + "";
-        this.mark2.innerHTML = maxValue + Math.round((maxValue - minValue)/3) + "";
-        this.mark3.innerHTML = maxValue + Math.round((maxValue - minValue)*2/3) + "";
+        this.mark2.innerHTML = minValue + Math.round((maxValue - minValue)/3) + "";
+        this.mark3.innerHTML = minValue + Math.round((maxValue - minValue)*2/3) + "";
         this.mark4.innerHTML = maxValue + "";
+
+        if (!vertical) {
+            this.mark1.style.marginLeft = - this.mark1.getBoundingClientRect().width/2 + "px";
+            this.mark4.style.marginRight = - this.mark4.getBoundingClientRect().width/2 + "px";
+        }
     }
 }
 class Button {
@@ -150,19 +161,38 @@ class View {
             label2.elem.style.display = "block";
         }
 
-        this.graduation.init(minValue, maxValue);
+        this.graduation.init(minValue, maxValue, this.vertical);
         
         function round(val: number, step: number): number {
             let whole = Math.floor(val/step);
             let reminder = val % step;
             return reminder < step/2 ? whole*step : (whole + 1)*step;
         }
+
+        function roundOffsetButt(currOffset: number) {
+            let currValue = minValue + (currOffset + butt1.getWidth()/2)*(maxValue - minValue)/scale.getWidth();
+            let roundValue = round(currValue, step);
+            if (roundValue < minValue) {
+                roundValue = minValue;
+            } else if (roundValue > maxValue) {
+                roundValue = maxValue;
+            } else {
+                roundValue = round(currValue, step);
+            }
+            let roundLeft = (roundValue - minValue)*scale.getWidth()/(maxValue - minValue) - butt1.getWidth()/2;
+            return [roundLeft, roundValue];
+        }
         
         //Button1  Handlers
+        function butt1Move(roundLeft: number, roundValue: number) {
+            butt1.elem.style.left = roundLeft + "px";
+            label1.elem.style.left = roundLeft - label1.getWidth()/2 + butt1.getWidth()/2 + "px";
+            label1.elem.innerHTML = roundValue + "";
+            updateElems();
+        }
         function onMouseMove1(eventMm: MouseEvent) {
             let stepWidth = step*scale.getWidth()/(maxValue - minValue);
             let newLeft = eventMm.clientX - scale.getLeft() - butt1.getWidth()/2;
-            let currValue = 0;
             let roundValue = 0;
             let roundLeft = 0;
             
@@ -183,16 +213,11 @@ class View {
                 }
             }
             if (!roundValue) {
-                currValue = minValue + (newLeft + butt1.getWidth()/2)*(maxValue - minValue)/scale.getWidth();
-                roundValue = round(currValue, step) < minValue ? minValue : round(currValue, step);
-                roundLeft = (roundValue - minValue)*scale.getWidth()/(maxValue - minValue) - butt1.getWidth()/2;
+                [roundLeft, roundValue] = roundOffsetButt(newLeft);
             }
-            butt1.elem.style.left = roundLeft + "px";
-            label1.elem.style.left = roundLeft - label1.getWidth()/2 + butt1.getWidth()/2 + "px";
-            label1.elem.innerHTML = roundValue + "";
-            updateElems();
+            butt1Move(roundLeft, roundValue);
         }
-        function onMouseUp1(eventMm: MouseEvent) {
+        function onMouseUp1(eventMu: MouseEvent) {
             document.removeEventListener("mouseup", onMouseUp1);
             document.removeEventListener("mousemove", onMouseMove1);
         }
@@ -205,10 +230,15 @@ class View {
         }
 
         //Button2  Handlers
+        function butt2Move(roundLeft: number, roundValue: number) {
+            butt2.elem.style.left = roundLeft + "px";
+            label2.elem.style.left = roundLeft - label2.getWidth()/2 + butt2.getWidth()/2 + "px";
+            label2.elem.innerHTML = roundValue + "";
+            updateElems();
+        }
         function onMouseMove2(eventMm: MouseEvent) {
             let stepWidth = step*scale.getWidth()/(maxValue - minValue);
             let newLeft = eventMm.clientX - scale.getLeft() - butt2.getWidth()/2;
-            let currValue = 0;
             let roundValue = 0;
             let roundLeft = 0;
             
@@ -221,16 +251,11 @@ class View {
                 newLeft = butt1.getLeft() - scale.getLeft() + stepWidth/1.5;
             }
             if (!roundValue) {
-                currValue = minValue + (newLeft + butt2.getWidth()/2)*(maxValue - minValue)/scale.getWidth();
-                roundValue = round(currValue, step) > maxValue ? maxValue : round(currValue, step);
-                roundLeft = (roundValue - minValue)*scale.getWidth()/(maxValue - minValue) - butt2.getWidth()/2;
+                [roundLeft, roundValue] = roundOffsetButt(newLeft);
             }
-            butt2.elem.style.left = roundLeft + "px";
-            label2.elem.style.left = roundLeft - label2.getWidth()/2 + butt2.getWidth()/2 + "px";
-            label2.elem.innerHTML = roundValue + "";
-            updateElems();
+            butt2Move(roundLeft, roundValue);
         }
-        function onMouseUp2(eventMm: MouseEvent) {
+        function onMouseUp2(eventMu: MouseEvent) {
             document.removeEventListener("mouseup", onMouseUp2);
             document.removeEventListener("mousemove", onMouseMove2);
         }
@@ -245,7 +270,8 @@ class View {
         //Scale EventListeners
         scale.elem.onclick = (event) => {
             if(range) {
-                if (Math.abs(event.clientX - butt1.getLeft()) < Math.abs(event.clientX - butt2.getLeft())) {
+                if (Math.abs(event.clientX - butt1.getLeft() - butt1.getWidth()/2) <
+                    Math.abs(event.clientX - butt2.getLeft() - butt2.getWidth()/2)) {
                     onMouseMove1(event);
                 } else {
                     onMouseMove2(event);
@@ -254,25 +280,45 @@ class View {
                 onMouseMove1(event);
             }
         }
-        /*
-        //graduation EventListeners
-        if (!this.range) {
+
+        //Graduation EventListeners
+        function interMarkHandler (currValue: number) {
+            let roundLeft = 0;
+            let roundValue = 0;
+            let markX = (currValue - minValue)/(maxValue - minValue)*scale.getWidth();
+            [roundLeft, roundValue] = roundOffsetButt(markX - butt1.getWidth()/2);
+            if (Math.abs(markX + scale.getLeft() - butt1.getLeft() - butt1.getWidth()/2) <
+                Math.abs(markX + scale.getLeft() - butt2.getLeft() - butt2.getWidth()/2)) {
+                butt1Move(roundLeft, roundValue);
+            } else {
+                butt2Move(roundLeft, roundValue);
+            }
+        }
+        if (range) {
             this.graduation.mark1.onclick = (event) => {
-                buttElem1.style.left = buttElem1.getBoundingClientRect().width/2 + "px";
-                label2.style.left = - label2Width/2 + buttWidth/2 + "px";
-                label2.innerHTML = roundValue + "";
-                updateElems();
+                let roundLeft = - butt1.getWidth()/2;
+                let roundValue = minValue;
+                butt1Move(roundLeft, roundValue);
+            }
+            this.graduation.mark4.onclick = (event) => {
+                let roundLeft = scale.getWidth() - butt2.getWidth()/2;
+                let roundValue = maxValue;
+                butt2Move(roundLeft, roundValue);
             }
             this.graduation.mark2.onclick = (event) => {
-                buttElem1.style.left = buttElem1.getBoundingClientRect().width/2 + "px";
+                interMarkHandler(parseInt(this.graduation.mark2.innerHTML));
             }
-        }*/
+            this.graduation.mark3.onclick = (event) => {
+                interMarkHandler(parseInt(this.graduation.mark3.innerHTML));
+            }
+        }
     }
 
     append(entry: Element) {
         entry.appendChild(this.scale.elem).appendChild(this.scaleFilling.elem);
         entry.appendChild(this.button1.elem);
         entry.appendChild(this.label1.elem);
+        entry.appendChild(this.graduation.gradElem);
         if (this.range) {
             entry.appendChild(this.button2.elem);
             entry.appendChild(this.label2.elem);
@@ -288,7 +334,7 @@ myView1.maxValue = 10000;
 myView1.step = 1200;
 const entry = document.getElementsByClassName("slider")[0];
 
-myView1.init();
 myView1.append(entry);
+myView1.init();
 myView1.initLabels();
 myView1.updateElems();

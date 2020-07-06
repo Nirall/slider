@@ -4,7 +4,7 @@ $red: #990033;
 
 
 .slider {
-    width: 600px;
+    width: 400px;
     margin: 60px;
     position: relative;
     font: 14px/18px "Montserrat";
@@ -22,13 +22,14 @@ $red: #990033;
 }
 .slider__graduation {
     position: absolute;
-    top: 30px;
+    top: 15px;
     display: flex;
     justify-content: space-between;
     width: 100%;
 }
 .slider__graduation__mark {
-    min-width: 20px;
+    min-width: 30px;
+    cursor: pointer;
 }
 
 .slider__scale__filling {
