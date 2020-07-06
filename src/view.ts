@@ -9,28 +9,69 @@ class Scale {
     elem: HTMLElement;
     constructor() {
         this.elem = createElem("slider__scale");
+        this.elem.ondragstart = () => false;
+    }
+    getLeft() {
+        return this.elem.getBoundingClientRect().left;
+    }
+    getWidth() {
+        return this.elem.getBoundingClientRect().width;
+    }
+}
+class Graduation {
+    gradElem: HTMLElement;
+    mark1: HTMLElement;
+    mark2: HTMLElement;
+    mark3: HTMLElement;
+    mark4: HTMLElement;
+    constructor() {
+        this.gradElem = createElem("slider__graduation");
+        this.mark1 = createElem("slider__graduation__mark");
+        this.mark2 = createElem("slider__graduation__mark");
+        this.mark3 = createElem("slider__graduation__mark");
+        this.mark4 = createElem("slider__graduation__mark");
+        this.init = this.init.bind(this);
+    }
+    init(minValue: number, maxValue: number) {
+        this.mark1.innerHTML = minValue + "";
+        this.mark2.innerHTML = maxValue + Math.round((maxValue - minValue)/3) + "";
+        this.mark3.innerHTML = maxValue + Math.round((maxValue - minValue)*2/3) + "";
+        this.mark4.innerHTML = maxValue + "";
     }
 }
 class Button {
     elem: HTMLElement;
     constructor() {
         this.elem = createElem("slider__button");
+        this.elem.ondragstart = () => false;
+    }
+    getLeft() {
+        return this.elem.getBoundingClientRect().left;
+    }
+    getWidth() {
+        return this.elem.getBoundingClientRect().width;
     }
 }
 class Label {
     elem: HTMLElement;
     constructor() {
         this.elem = createElem("slider__button__label");
+        this.elem.ondragstart = () => false;
+    }
+    getWidth() {
+        return this.elem.getBoundingClientRect().width;
     }
 }
 class ScaleFilling {
     elem: HTMLElement;
     constructor() {
         this.elem = createElem("slider__scale__filling");
+        this.elem.ondragstart = () => false;
     }
 }
 class View {
     scale: Scale;
+    graduation: Graduation;
     scaleFilling: ScaleFilling;
     button1: Button;
     button2: Button;
@@ -38,28 +79,36 @@ class View {
     label2: Label;
     range: boolean;
     vertical: boolean;
-    label: boolean;
+    showLabel: boolean;
     minValue: number;
     maxValue: number;
     step: number;
 
     constructor() {
+        this.scale = new Scale();
+        this.button1 = new Button();
+        this.button2 = new Button();
+        this.label1 = new Label();
+        this.label2 = new Label();
+        this.scaleFilling = new ScaleFilling();
+        this.graduation = new Graduation();
+
         this.getStart = this.getStart.bind(this);
         this.getEnd = this.getEnd.bind(this);
         this.updateElems = this.updateElems.bind(this);
     }
     getStart() {
         if(!this.vertical) {
-            return this.button1.elem.getBoundingClientRect().left -
-                this.scale.elem.getBoundingClientRect().left +
-                this.button1.elem.getBoundingClientRect().width/2;
+            return this.button1.getLeft() -
+                this.scale.getLeft() +
+                this.button1.getWidth()/2;
         }
     }
     getEnd() {
         if(!this.vertical) {
-            return this.button2.elem.getBoundingClientRect().left -
-                this.scale.elem.getBoundingClientRect().left +
-                this.button2.elem.getBoundingClientRect().width/2;
+            return this.button2.getLeft() -
+            this.scale.getLeft() +
+                this.button2.getWidth()/2;
         }
     }
     updateElems() {
@@ -74,154 +123,150 @@ class View {
         this.label1.elem.style.left = this.getStart() - this.label1.elem.getBoundingClientRect().width/2 + "px";
         this.label2.elem.style.left = this.getEnd() - this.label2.elem.getBoundingClientRect().width/2 + "px";
     }
-    
 
     init() {
-        this.scale = new Scale();
-        this.button1 = new Button();
-        this.button2 = new Button();
-        this.label1 = new Label();
-        this.label2 = new Label();
-        this.scaleFilling = new ScaleFilling();
-        
+        const scale = this.scale;
+        const butt1 = this.button1;
+        const butt2 = this.button2;
+        const label1 = this.label1;
+        const label2 = this.label2;
         const minValue = this.minValue;
         const maxValue = this.maxValue;
-        let range = this.range;
-        let label = this.label;
-        let vertical = this.vertical;
-        const buttElem1 = this.button1.elem;
-        const buttElem2 = this.button2.elem;
-        const label1 = this.label1.elem;
-        const label2 = this.label2.elem;
-        const scaleElem = this.scale.elem;
-        const scaleFillingElem = this.scaleFilling.elem;
         const step = this.step;
-        
-        buttElem1.ondragstart = () => false;
-        buttElem2.ondragstart = () => false;
-        scaleElem.ondragstart = () => false;
-        scaleFillingElem.ondragstart = () => false;
+        let range = this.range;
+        let showLabel = this.showLabel;
+        let vertical = this.vertical;
 
-        buttElem2.style.display = "none";
+        butt2.elem.style.display = "none";
 
         const updateElems = this.updateElems;
-        //const getStart = this.getStart;
-        //const getEnd = this.getEnd;
 
         if (range) {
-            buttElem2.style.display = "block";
-            scaleFillingElem.style.display = "block";
+            butt2.elem.style.display = "block";
+            this.scaleFilling.elem.style.display = "block";
         }
-        if (label) {
-            label1.style.display = "block";
-            label2.style.display = "block";
+        if (showLabel) {
+            label1.elem.style.display = "block";
+            label2.elem.style.display = "block";
         }
+
+        this.graduation.init(minValue, maxValue);
         
         function round(val: number, step: number): number {
             let whole = Math.floor(val/step);
             let reminder = val % step;
             return reminder < step/2 ? whole*step : (whole + 1)*step;
         }
-
-        //Scale EventListeners
-        scaleElem.onclick = (event) => {
-            if(!range) {
-                buttElem1.style.left = event.offsetX + "px";
-                updateElems();
-            }
-        }
         
-        //Button1 EventListeners
-        buttElem1.onmousedown = (eventMd) => {
-            eventMd.preventDefault();
-            document.addEventListener("mousemove", onMouseMove1);
-            document.addEventListener("mouseup", onMouseUp1);
-            function onMouseMove1(eventMm: MouseEvent) {
-                let scaleLeft = scaleElem.getBoundingClientRect().left;
-                let scaleWidth = scaleElem.getBoundingClientRect().width;
-                let buttWidth = buttElem1.getBoundingClientRect().width;
-                let butt1Left = buttElem1.getBoundingClientRect().left;
-                let butt2Left = buttElem2.getBoundingClientRect().left;
-                let label1Width = label1.getBoundingClientRect().width;
-                let stepWidth = step*scaleWidth/(maxValue - minValue);
-                let newLeft = eventMm.clientX - scaleLeft - buttWidth/2;
-                let currValue = 0;
-                let roundValue = 0;
-                let roundLeft = 0;
-                
-                if (newLeft < -buttWidth/2) {
-                    newLeft = -buttWidth/2;
-                    roundValue = minValue;
-                    roundLeft = newLeft;
-                }
-                if (!range) {
-                    if (newLeft > scaleWidth - buttWidth/2) {
-                        newLeft = scaleWidth - buttWidth/2;
-                        roundValue = maxValue;
-                        roundLeft = newLeft;
-                    }
-                } else {
-                    if (newLeft > butt2Left - scaleLeft - stepWidth/1.5) {
-                        newLeft = butt2Left - scaleLeft - stepWidth/1.5;
-                    }
-                }
-                if (!roundValue) {
-                    currValue = minValue + (newLeft + buttWidth/2)*(maxValue - minValue)/scaleWidth;
-                    roundValue = round(currValue, step) < minValue ? minValue : round(currValue, step);
-                    roundLeft = (roundValue - minValue)*scaleWidth/(maxValue - minValue) - buttWidth/2;
-                }
-                buttElem1.style.left = roundLeft + "px";
-                label1.style.left = roundLeft - label1Width/2 + buttWidth/2 + "px";
-                label1.innerHTML = roundValue + "";
-                updateElems();
+        //Button1  Handlers
+        function onMouseMove1(eventMm: MouseEvent) {
+            let stepWidth = step*scale.getWidth()/(maxValue - minValue);
+            let newLeft = eventMm.clientX - scale.getLeft() - butt1.getWidth()/2;
+            let currValue = 0;
+            let roundValue = 0;
+            let roundLeft = 0;
+            
+            if (newLeft < -butt1.getWidth()/2) {
+                newLeft = -butt1.getWidth()/2;
+                roundValue = minValue;
+                roundLeft = newLeft;
             }
-            function onMouseUp1(eventMm: MouseEvent) {
-                document.removeEventListener("mouseup", onMouseUp1);
-                document.removeEventListener("mousemove", onMouseMove1);
-            }
-        }
-
-        //Button2 EventListeners
-        buttElem2.onmousedown = (eventMd) => {
-            eventMd.preventDefault();
-            document.addEventListener("mousemove", onMouseMove2);
-            document.addEventListener("mouseup", onMouseUp2);
-            function onMouseMove2(eventMm: MouseEvent) {
-                let scaleLeft = scaleElem.getBoundingClientRect().left;
-                let scaleWidth = scaleElem.getBoundingClientRect().width;
-                let buttWidth = buttElem1.getBoundingClientRect().width;
-                let butt1Left = buttElem1.getBoundingClientRect().left;
-                let butt2Left = buttElem2.getBoundingClientRect().left;
-                let label2Width = label2.getBoundingClientRect().width;
-                let stepWidth = step*scaleWidth/(maxValue - minValue);
-                let newLeft = eventMm.clientX - scaleLeft - buttWidth/2;
-                let currValue = 0;
-                let roundValue = 0;
-                let roundLeft = 0;
-                
-                if (newLeft > scaleWidth - buttWidth/2) {
-                    newLeft = scaleWidth - buttWidth/2;
+            if (!range) {
+                if (newLeft > scale.getWidth() - butt1.getWidth()/2) {
+                    newLeft = scale.getWidth() - butt1.getWidth()/2;
                     roundValue = maxValue;
                     roundLeft = newLeft;
                 }
-                if (newLeft < butt1Left - scaleLeft + stepWidth/1.5) {
-                    newLeft = butt1Left - scaleLeft + stepWidth/1.5;
+            } else {
+                if (newLeft > butt2.getLeft() - scale.getLeft() - stepWidth/1.5) {
+                    newLeft = butt2.getLeft() - scale.getLeft() - stepWidth/1.5;
                 }
-                if (!roundValue) {
-                    currValue = minValue + (newLeft + buttWidth/2)*(maxValue - minValue)/scaleWidth;
-                    roundValue = round(currValue, step) > maxValue ? maxValue : round(currValue, step);
-                    roundLeft = (roundValue - minValue)*scaleWidth/(maxValue - minValue) - buttWidth/2;
+            }
+            if (!roundValue) {
+                currValue = minValue + (newLeft + butt1.getWidth()/2)*(maxValue - minValue)/scale.getWidth();
+                roundValue = round(currValue, step) < minValue ? minValue : round(currValue, step);
+                roundLeft = (roundValue - minValue)*scale.getWidth()/(maxValue - minValue) - butt1.getWidth()/2;
+            }
+            butt1.elem.style.left = roundLeft + "px";
+            label1.elem.style.left = roundLeft - label1.getWidth()/2 + butt1.getWidth()/2 + "px";
+            label1.elem.innerHTML = roundValue + "";
+            updateElems();
+        }
+        function onMouseUp1(eventMm: MouseEvent) {
+            document.removeEventListener("mouseup", onMouseUp1);
+            document.removeEventListener("mousemove", onMouseMove1);
+        }
+
+        //Button1 EventListeners
+        butt1.elem.onmousedown = (eventMd) => {
+            eventMd.preventDefault();
+            document.addEventListener("mousemove", onMouseMove1);
+            document.addEventListener("mouseup", onMouseUp1);
+        }
+
+        //Button2  Handlers
+        function onMouseMove2(eventMm: MouseEvent) {
+            let stepWidth = step*scale.getWidth()/(maxValue - minValue);
+            let newLeft = eventMm.clientX - scale.getLeft() - butt2.getWidth()/2;
+            let currValue = 0;
+            let roundValue = 0;
+            let roundLeft = 0;
+            
+            if (newLeft > scale.getWidth() - butt2.getWidth()/2) {
+                newLeft = scale.getWidth() - butt2.getWidth()/2;
+                roundValue = maxValue;
+                roundLeft = newLeft;
+            }
+            if (newLeft < butt1.getLeft() - scale.getLeft() + stepWidth/1.5) {
+                newLeft = butt1.getLeft() - scale.getLeft() + stepWidth/1.5;
+            }
+            if (!roundValue) {
+                currValue = minValue + (newLeft + butt2.getWidth()/2)*(maxValue - minValue)/scale.getWidth();
+                roundValue = round(currValue, step) > maxValue ? maxValue : round(currValue, step);
+                roundLeft = (roundValue - minValue)*scale.getWidth()/(maxValue - minValue) - butt2.getWidth()/2;
+            }
+            butt2.elem.style.left = roundLeft + "px";
+            label2.elem.style.left = roundLeft - label2.getWidth()/2 + butt2.getWidth()/2 + "px";
+            label2.elem.innerHTML = roundValue + "";
+            updateElems();
+        }
+        function onMouseUp2(eventMm: MouseEvent) {
+            document.removeEventListener("mouseup", onMouseUp2);
+            document.removeEventListener("mousemove", onMouseMove2);
+        }
+
+        //Button2 EventListeners
+        butt2.elem.onmousedown = (eventMd) => {
+            eventMd.preventDefault();
+            document.addEventListener("mousemove", onMouseMove2);
+            document.addEventListener("mouseup", onMouseUp2);
+        }
+
+        //Scale EventListeners
+        scale.elem.onclick = (event) => {
+            if(range) {
+                if (Math.abs(event.clientX - butt1.getLeft()) < Math.abs(event.clientX - butt2.getLeft())) {
+                    onMouseMove1(event);
+                } else {
+                    onMouseMove2(event);
                 }
-                buttElem2.style.left = roundLeft + "px";
-                label2.style.left = roundLeft - label2Width/2 + buttWidth/2 + "px";
+            } else {
+                onMouseMove1(event);
+            }
+        }
+        /*
+        //graduation EventListeners
+        if (!this.range) {
+            this.graduation.mark1.onclick = (event) => {
+                buttElem1.style.left = buttElem1.getBoundingClientRect().width/2 + "px";
+                label2.style.left = - label2Width/2 + buttWidth/2 + "px";
                 label2.innerHTML = roundValue + "";
                 updateElems();
             }
-            function onMouseUp2(eventMm: MouseEvent) {
-                document.removeEventListener("mouseup", onMouseUp2);
-                document.removeEventListener("mousemove", onMouseMove2);
+            this.graduation.mark2.onclick = (event) => {
+                buttElem1.style.left = buttElem1.getBoundingClientRect().width/2 + "px";
             }
-        }
+        }*/
     }
 
     append(entry: Element) {
@@ -237,10 +282,10 @@ class View {
 
 const myView1 = new View();
 myView1.range = true;
-myView1.label = true;
+myView1.showLabel = true;
 myView1.minValue = 1000;
 myView1.maxValue = 10000;
-myView1.step = 1000;
+myView1.step = 1200;
 const entry = document.getElementsByClassName("slider")[0];
 
 myView1.init();
