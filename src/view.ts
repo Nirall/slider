@@ -74,9 +74,6 @@ class Button {
     getTop() {
         return this.elem.getBoundingClientRect().top;
     }
-    getHeight() {
-        return this.elem.getBoundingClientRect().height;
-    }
 }
 class Label {
     elem: HTMLElement;
@@ -223,8 +220,8 @@ class View {
                 } else {
                     roundValue = round(currValue, step);
                 }
-                let roundLeft = (roundValue - minValue)*scale.getHeight()/(maxValue - minValue) - butt1.getWidth()/2;
-                return [roundLeft, roundValue];
+                let roundOffset = (roundValue - minValue)*scale.getHeight()/(maxValue - minValue) - butt1.getWidth()/2;
+                return [roundOffset, roundValue];
             } else {
                 let currValue = minValue + (currOffset + butt1.getWidth()/2)*(maxValue - minValue)/scale.getWidth();
                 let roundValue = round(currValue, step);
@@ -235,77 +232,77 @@ class View {
                 } else {
                     roundValue = round(currValue, step);
                 }
-                let roundLeft = (roundValue - minValue)*scale.getWidth()/(maxValue - minValue) - butt1.getWidth()/2;
-                return [roundLeft, roundValue];
+                let roundOffset = (roundValue - minValue)*scale.getWidth()/(maxValue - minValue) - butt1.getWidth()/2;
+                return [roundOffset, roundValue];
             }
         }
         
         //Button1  Handlers
-        function butt1Move(roundLeft: number, roundValue: number) {
+        function butt1Move(roundOffset: number, roundValue: number) {
             if (vertical) {
-                butt1.elem.style.top = roundLeft + "px";
-                label1.elem.style.top = roundLeft - label1.getHeight()/2 + butt1.getWidth()/2 + "px";
+                butt1.elem.style.top = roundOffset + "px";
+                label1.elem.style.top = roundOffset - label1.getHeight()/2 + butt1.getWidth()/2 + "px";
                 label1.elem.innerHTML = roundValue + "";
                 updateElems();
             } else {
-                butt1.elem.style.left = roundLeft + "px";
-                label1.elem.style.left = roundLeft - label1.getWidth()/2 + butt1.getWidth()/2 + "px";
+                butt1.elem.style.left = roundOffset + "px";
+                label1.elem.style.left = roundOffset - label1.getWidth()/2 + butt1.getWidth()/2 + "px";
                 label1.elem.innerHTML = roundValue + "";
                 updateElems();
             }
         }
         function onMouseMove1(eventMm: MouseEvent) {
             let roundValue = 0;
-            let roundLeft = 0;
+            let roundOffset = 0;
             
             if (vertical) {
                 let stepWidth = step*scale.getHeight()/(maxValue - minValue);
-                let newLeft = eventMm.clientY - scale.getTop() - butt1.getWidth()/2;
+                let newOffset = eventMm.clientY - scale.getTop() - butt1.getWidth()/2;
                 
-                if (newLeft < -butt1.getWidth()/2) {
-                    newLeft = -butt1.getWidth()/2;
+                if (newOffset < -butt1.getWidth()/2) {
+                    newOffset = -butt1.getWidth()/2;
                     roundValue = minValue;
-                    roundLeft = newLeft;
+                    roundOffset = newOffset;
                 }
                 if (!range) {
-                    if (newLeft > scale.getHeight() - butt1.getWidth()/2) {
-                        newLeft = scale.getHeight() - butt1.getWidth()/2;
+                    if (newOffset > scale.getHeight() - butt1.getWidth()/2) {
+                        newOffset = scale.getHeight() - butt1.getWidth()/2;
                         roundValue = maxValue;
-                        roundLeft = newLeft;
+                        roundOffset = newOffset;
                     }
                 } else {
-                    if (newLeft > butt2.getTop() - scale.getTop() - stepWidth/1.5) {
-                        newLeft = butt2.getTop() - scale.getLeft() - stepWidth/1.5;
+                    if (newOffset > butt2.getTop() - scale.getTop() - stepWidth/1.5) {
+                        newOffset = butt2.getTop() - scale.getLeft() - stepWidth/1.5;
                     }
                 }
                 if (!roundValue) {
-                    [roundLeft, roundValue] = roundOffsetButt(newLeft);
+                    [roundOffset, roundValue] = roundOffsetButt(newOffset);
                 }
-                butt1Move(roundLeft, roundValue);
+                butt1Move(roundOffset, roundValue);
             } else {
                 let stepWidth = step*scale.getWidth()/(maxValue - minValue);
-                let newLeft = eventMm.clientX - scale.getLeft() - butt1.getWidth()/2;
+                let newOffset = eventMm.clientX - scale.getLeft() - butt1.getWidth()/2;
                 
-                if (newLeft < -butt1.getWidth()/2) {
-                    newLeft = -butt1.getWidth()/2;
+                if (newOffset < -butt1.getWidth()/2) {
+                    newOffset = -butt1.getWidth()/2;
                     roundValue = minValue;
-                    roundLeft = newLeft;
+                    roundOffset = newOffset;
                 }
                 if (!range) {
-                    if (newLeft > scale.getWidth() - butt1.getWidth()/2) {
-                        newLeft = scale.getWidth() - butt1.getWidth()/2;
+                    if (newOffset > scale.getWidth() - butt1.getWidth()/2) {
+                        newOffset = scale.getWidth() - butt1.getWidth()/2;
                         roundValue = maxValue;
-                        roundLeft = newLeft;
+                        roundOffset = newOffset;
                     }
                 } else {
-                    if (newLeft > butt2.getLeft() - scale.getLeft() - stepWidth/1.5) {
-                        newLeft = butt2.getLeft() - scale.getLeft() - stepWidth/1.5;
+                    if (newOffset > butt2.getLeft() - scale.getLeft() - stepWidth/1.5) {
+                        newOffset = butt2.getLeft() - scale.getLeft() - stepWidth/1.5;
                     }
                 }
                 if (!roundValue) {
-                    [roundLeft, roundValue] = roundOffsetButt(newLeft);
+                    [roundOffset, roundValue] = roundOffsetButt(newOffset);
                 }
-                butt1Move(roundLeft, roundValue);
+                butt1Move(roundOffset, roundValue);
             }
         }
         function onMouseUp1(eventMu: MouseEvent) {
@@ -321,15 +318,15 @@ class View {
         }
 
         //Button2  Handlers
-        function butt2Move(roundLeft: number, roundValue: number) {
+        function butt2Move(roundOffset: number, roundValue: number) {
             if (vertical) {
-                butt2.elem.style.top = roundLeft + "px";
-                label2.elem.style.top = roundLeft - label2.getHeight()/2 + butt2.getWidth()/2 + "px";
+                butt2.elem.style.top = roundOffset + "px";
+                label2.elem.style.top = roundOffset - label2.getHeight()/2 + butt2.getWidth()/2 + "px";
                 label2.elem.innerHTML = roundValue + "";
                 updateElems();  
             } else {
-                butt2.elem.style.left = roundLeft + "px";
-                label2.elem.style.left = roundLeft - label2.getWidth()/2 + butt2.getWidth()/2 + "px";
+                butt2.elem.style.left = roundOffset + "px";
+                label2.elem.style.left = roundOffset - label2.getWidth()/2 + butt2.getWidth()/2 + "px";
                 label2.elem.innerHTML = roundValue + "";
                 updateElems();
             }
@@ -337,40 +334,40 @@ class View {
         function onMouseMove2(eventMm: MouseEvent) {
             if (vertical) {
                 let stepWidth = step*scale.getHeight()/(maxValue - minValue);
-                let newLeft = eventMm.clientY - scale.getTop() - butt2.getWidth()/2;
+                let newOffset = eventMm.clientY - scale.getTop() - butt2.getWidth()/2;
                 let roundValue = 0;
-                let roundLeft = 0;
+                let roundOffset = 0;
 
-                if (newLeft > scale.getHeight() - butt2.getWidth()/2) {
-                    newLeft = scale.getHeight() - butt2.getWidth()/2;
+                if (newOffset > scale.getHeight() - butt2.getWidth()/2) {
+                    newOffset = scale.getHeight() - butt2.getWidth()/2;
                     roundValue = maxValue;
-                    roundLeft = newLeft;
+                    roundOffset = newOffset;
                 }
-                if (newLeft < butt1.getTop() - scale.getTop() + stepWidth/1.5) {
-                    newLeft = butt1.getTop() - scale.getTop() + stepWidth/1.5;
+                if (newOffset < butt1.getTop() - scale.getTop() + stepWidth/1.5) {
+                    newOffset = butt1.getTop() - scale.getTop() + stepWidth/1.5;
                 }
                 if (!roundValue) {
-                    [roundLeft, roundValue] = roundOffsetButt(newLeft);
+                    [roundOffset, roundValue] = roundOffsetButt(newOffset);
                 }
-                butt2Move(roundLeft, roundValue); 
+                butt2Move(roundOffset, roundValue); 
             } else {
                 let stepWidth = step*scale.getWidth()/(maxValue - minValue);
-                let newLeft = eventMm.clientX - scale.getLeft() - butt2.getWidth()/2;
+                let newOffset = eventMm.clientX - scale.getLeft() - butt2.getWidth()/2;
                 let roundValue = 0;
-                let roundLeft = 0;
+                let roundOffset = 0;
                 
-                if (newLeft > scale.getWidth() - butt2.getWidth()/2) {
-                    newLeft = scale.getWidth() - butt2.getWidth()/2;
+                if (newOffset > scale.getWidth() - butt2.getWidth()/2) {
+                    newOffset = scale.getWidth() - butt2.getWidth()/2;
                     roundValue = maxValue;
-                    roundLeft = newLeft;
+                    roundOffset = newOffset;
                 }
-                if (newLeft < butt1.getLeft() - scale.getLeft() + stepWidth/1.5) {
-                    newLeft = butt1.getLeft() - scale.getLeft() + stepWidth/1.5;
+                if (newOffset < butt1.getLeft() - scale.getLeft() + stepWidth/1.5) {
+                    newOffset = butt1.getLeft() - scale.getLeft() + stepWidth/1.5;
                 }
                 if (!roundValue) {
-                    [roundLeft, roundValue] = roundOffsetButt(newLeft);
+                    [roundOffset, roundValue] = roundOffsetButt(newOffset);
                 }
-                butt2Move(roundLeft, roundValue);
+                butt2Move(roundOffset, roundValue);
             }
         }
         function onMouseUp2(eventMu: MouseEvent) {
@@ -415,61 +412,61 @@ class View {
         //Graduation EventListeners
         function interMarkHandler (currValue: number) {
             if (vertical) {
-                let roundLeft = 0;
+                let roundOffset = 0;
                 let roundValue = 0;
                 let markX = (currValue - minValue)/(maxValue - minValue)*scale.getHeight();
-                [roundLeft, roundValue] = roundOffsetButt(markX - butt1.getWidth()/2);
+                [roundOffset, roundValue] = roundOffsetButt(markX - butt1.getWidth()/2);
                 if (range) {
                     if (Math.abs(markX + scale.getTop() - butt1.getTop() - butt1.getWidth()/2) <
                     Math.abs(markX + scale.getTop() - butt2.getTop() - butt2.getWidth()/2))
                     {
-                    butt1Move(roundLeft, roundValue);
+                    butt1Move(roundOffset, roundValue);
                     } else {
-                        butt2Move(roundLeft, roundValue);
+                        butt2Move(roundOffset, roundValue);
                     }
                 } else {
-                    butt1Move(roundLeft, roundValue);
+                    butt1Move(roundOffset, roundValue);
                 }
             } else {
-                let roundLeft = 0;
+                let roundOffset = 0;
                 let roundValue = 0;
                 let markX = (currValue - minValue)/(maxValue - minValue)*scale.getWidth();
-                [roundLeft, roundValue] = roundOffsetButt(markX - butt1.getWidth()/2);
+                [roundOffset, roundValue] = roundOffsetButt(markX - butt1.getWidth()/2);
                 if (range) {
                     if (Math.abs(markX + scale.getLeft() - butt1.getLeft() - butt1.getWidth()/2) <
                     Math.abs(markX + scale.getLeft() - butt2.getLeft() - butt2.getWidth()/2))
                     {
-                    butt1Move(roundLeft, roundValue);
+                    butt1Move(roundOffset, roundValue);
                     } else {
-                        butt2Move(roundLeft, roundValue);
+                        butt2Move(roundOffset, roundValue);
                     }
                 } else {
-                    butt1Move(roundLeft, roundValue);
+                    butt1Move(roundOffset, roundValue);
                 }
             }
         }
 
         this.graduation.mark1.onclick = (event) => {
-            let roundLeft = - butt1.getWidth()/2;
+            let roundOffset = - butt1.getWidth()/2;
             let roundValue = minValue;
-            butt1Move(roundLeft, roundValue);
+            butt1Move(roundOffset, roundValue);
         }
         this.graduation.mark4.onclick = (event) => {
             if (vertical) {
-                let roundLeft = scale.getHeight() - butt2.getWidth()/2;
+                let roundOffset = scale.getHeight() - butt2.getWidth()/2;
                 let roundValue = maxValue;
                 if (range) {
-                    butt2Move(roundLeft, roundValue); 
+                    butt2Move(roundOffset, roundValue); 
                 } else {
-                    butt1Move(roundLeft, roundValue);
+                    butt1Move(roundOffset, roundValue);
                 }   
             } else {
-                let roundLeft = scale.getWidth() - butt2.getWidth()/2;
+                let roundOffset = scale.getWidth() - butt2.getWidth()/2;
                 let roundValue = maxValue;
                 if (range) {
-                    butt2Move(roundLeft, roundValue); 
+                    butt2Move(roundOffset, roundValue); 
                 } else {
-                    butt1Move(roundLeft, roundValue);
+                    butt1Move(roundOffset, roundValue);
                 }
             }
         }
@@ -479,7 +476,6 @@ class View {
         this.graduation.mark3.onclick = (event) => {
             interMarkHandler(parseInt(this.graduation.mark3.innerHTML));
         }
-        
     }
 
     append(entry: Element) {
@@ -495,7 +491,7 @@ class View {
 }
 
 const myView1 = new View();
-myView1.vertical = true;
+//myView1.vertical = true;
 myView1.range = true;
 myView1.showLabel = true;
 myView1.minValue = 1000;
