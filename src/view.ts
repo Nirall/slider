@@ -490,14 +490,19 @@ class View {
     }
 }
 
+export {createElem, View};
+
+
 const myView1 = new View();
-//myView1.vertical = true;
+myView1.vertical = true;
 myView1.range = true;
 myView1.showLabel = true;
 myView1.minValue = 1000;
 myView1.maxValue = 10000;
 myView1.step = 1200;
-const entry = document.getElementsByClassName("slider")[0];
+
+const entry = createElem("slider");
+document.body.appendChild(entry);
 
 myView1.append(entry);
 myView1.init();

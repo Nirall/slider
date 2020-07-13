@@ -43,5 +43,9 @@ module.exports = {
     },
     resolve: {
         extensions: [ '.ts', '.tsx', '.js' ]
+    },
+    devServer: {
+        contentBase: path.resolve(__dirname, "dist"),
+        hot: true,
     }
 }
