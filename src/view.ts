@@ -125,10 +125,45 @@ class View {
         this.scaleFilling = new ScaleFilling();
         this.graduation = new Graduation();
 
+        this.button1.elem.onmousedown = (eventMd: MouseEvent) => {
+            eventMd.preventDefault();
+            document.addEventListener("mousemove", this.onMouseMove1);
+            document.addEventListener("mouseup", this.onMouseUp1);
+        }
+        this.button2.elem.onmousedown = (eventMd: MouseEvent) => {
+            eventMd.preventDefault();
+            document.addEventListener("mousemove", this.onMouseMove2);
+            document.addEventListener("mouseup", this.onMouseUp2);
+        }
+        this.scale.elem.onclick = this.scaleOnclick;
+        this.graduation.mark1.onclick = this.mark1Onclick;
+        this.graduation.mark2.onclick = this.mark2Onclick;
+        this.graduation.mark3.onclick = this.mark3Onclick;
+        this.graduation.mark4.onclick = this.mark4Onclick;
+
         this.getStart = this.getStart.bind(this);
         this.getEnd = this.getEnd.bind(this);
         this.updateElems = this.updateElems.bind(this);
+        this.round = this.round.bind(this);
+        this.roundOffsetButt = this.roundOffsetButt.bind(this);
+
+        this.butt1Move = this.butt1Move.bind(this);
+        this.onMouseMove1 = this.onMouseMove1.bind(this);
+        this.onMouseUp1 = this.onMouseUp1.bind(this);
+
+        this.butt2Move = this.butt2Move.bind(this);
+        this.onMouseMove2 = this.onMouseMove2.bind(this);
+        this.onMouseUp2 = this.onMouseUp2.bind(this);
+
+        this.scaleOnclick = this.scaleOnclick.bind(this);
+
+        this.interMarkHandler = this.interMarkHandler.bind(this);
+        this.mark1Onclick = this.mark1Onclick.bind(this);
+        this.mark2Onclick = this.mark2Onclick.bind(this);
+        this.mark3Onclick = this.mark3Onclick.bind(this);
+        this.mark4Onclick = this.mark4Onclick.bind(this);
     }
+
     getStart() {
         if(!this.vertical) {
             return this.button1.getLeft() - this.scale.getLeft() + this.button1.getWidth()/2;
@@ -136,6 +171,7 @@ class View {
             return this.button1.getTop() - this.scale.getTop() + this.button1.getWidth()/2;
         }
     }
+
     getEnd() {
         if(!this.vertical) {
             return this.button2.getLeft() - this.scale.getLeft() + this.button2.getWidth()/2;
@@ -143,6 +179,7 @@ class View {
             return this.button2.getTop() - this.scale.getTop() + this.button2.getWidth()/2;
         } 
     }
+
     updateElems() {
         if (this.vertical) {
             this.scaleFilling.elem.style.top = this.getStart() + "px";
@@ -152,8 +189,294 @@ class View {
             this.scaleFilling.elem.style.width = this.getEnd() - this.getStart() + "px";
         }
     }
-    initLabels() {
+
+    round(val: number, step: number): number {
+        let whole = Math.floor(val/step);
+        let reminder = val % step;
+        return reminder < step/2 ? whole*step : (whole + 1)*step;
+    }
+
+    roundOffsetButt(currOffset: number) {
+        let currValue = 0;
+        let scaleMessure = 0;
+        
+        if(this.vertical) {
+            currValue = this.minValue + (currOffset + this.button1.getWidth()/2)*(this.maxValue - this.minValue)/this.scale.getHeight();
+            scaleMessure = this.scale.getHeight();
+        } else {
+            currValue = this.minValue + (currOffset + this.button1.getWidth()/2)*(this.maxValue - this.minValue)/this.scale.getWidth();
+            scaleMessure = this.scale.getWidth();
+        }
+        
+        let roundValue = this.round(currValue, this.step);
+        if (roundValue < this.minValue) {
+            roundValue = this.minValue;
+        } else if (roundValue > this.maxValue) {
+            roundValue = this.maxValue;
+        }
+        
+        let roundOffset = (roundValue - this.minValue)*scaleMessure/(this.maxValue - this.minValue) - this.button1.getWidth()/2;
+        return [roundOffset, roundValue];
+    }
+
+    //Button1  Handlers-------------------------------------------------------------------------------
+    butt1Move(roundOffset: number, roundValue: number) {
         if (this.vertical) {
+            this.button1.elem.style.top = roundOffset + "px";
+            this.label1.elem.style.top = roundOffset - this.label1.getHeight()/2 + this.button1.getWidth()/2 + "px";
+            this.label1.elem.innerHTML = roundValue + "";
+        } else {
+            this.button1.elem.style.left = roundOffset + "px";
+            this.label1.elem.style.left = roundOffset - this.label1.getWidth()/2 + this.button1.getWidth()/2 + "px";
+            this.label1.elem.innerHTML = roundValue + "";
+        }
+        this.updateElems();
+    }
+
+    onMouseMove1(eventMm: MouseEvent) {
+        let roundValue = 0;
+        let roundOffset = 0;
+        
+        if (this.vertical) {
+            let stepWidth = this.step*this.scale.getHeight()/(this.maxValue - this.minValue);
+            let newOffset = eventMm.clientY - this.scale.getTop() - this.button1.getWidth()/2;
+            
+            if (newOffset < -this.button1.getWidth()/2) {
+                newOffset = -this.button1.getWidth()/2;
+                roundValue = this.minValue;
+                roundOffset = newOffset;
+            }
+            if (!this.range) {
+                if (newOffset > this.scale.getHeight() - this.button1.getWidth()/2) {
+                    newOffset = this.scale.getHeight() - this.button1.getWidth()/2;
+                    roundValue = this.maxValue;
+                    roundOffset = newOffset;
+                }
+            } else {
+                if (newOffset > this.button2.getTop() - this.scale.getTop() - stepWidth/1.5) {
+                    newOffset = this.button2.getTop() - this.scale.getTop() - stepWidth/1.5;
+                }
+            }
+            if (!roundValue) {
+                [roundOffset, roundValue] = this.roundOffsetButt(newOffset);
+            }
+        } else {
+            let stepWidth = this.step*this.scale.getWidth()/(this.maxValue - this.minValue);
+            let newOffset = eventMm.clientX - this.scale.getLeft() - this.button1.getWidth()/2;
+            
+            if (newOffset < -this.button1.getWidth()/2) {
+                newOffset = -this.button1.getWidth()/2;
+                roundValue = this.minValue;
+                roundOffset = newOffset;
+            }
+            if (!this.range) {
+                if (newOffset > this.scale.getWidth() - this.button1.getWidth()/2) {
+                    newOffset = this.scale.getWidth() - this.button1.getWidth()/2;
+                    roundValue = this.maxValue;
+                    roundOffset = newOffset;
+                }
+            } else {
+                if (newOffset > this.button2.getLeft() - this.scale.getLeft() - stepWidth/1.5) {
+                    newOffset = this.button2.getLeft() - this.scale.getLeft() - stepWidth/1.5;
+                }
+            }
+            if (!roundValue) {
+                [roundOffset, roundValue] = this.roundOffsetButt(newOffset);
+            }
+        }
+
+        this.butt1Move(roundOffset, roundValue);
+    }
+
+    onMouseUp1(eventMu: MouseEvent) {
+        document.removeEventListener("mouseup", this.onMouseUp1);
+        document.removeEventListener("mousemove", this.onMouseMove1);
+    }
+
+    //Button2  Handlers----------------------------------------------------------------
+    butt2Move(roundOffset: number, roundValue: number) {
+        if (this.vertical) {
+            this.button2.elem.style.top = roundOffset + "px";
+            this.label2.elem.style.top = roundOffset - this.label2.getHeight()/2 + this.button2.getWidth()/2 + "px";
+            this.label2.elem.innerHTML = roundValue + "";
+        } else {
+            this.button2.elem.style.left = roundOffset + "px";
+            this.label2.elem.style.left = roundOffset - this.label2.getWidth()/2 + this.button2.getWidth()/2 + "px";
+            this.label2.elem.innerHTML = roundValue + "";
+        }
+        this.updateElems(); 
+    }
+
+    onMouseMove2(eventMm: MouseEvent) {
+        let roundValue = 0;
+        let roundOffset = 0;
+
+        if (this.vertical) {
+            let stepWidth = this.step*this.scale.getHeight()/(this.maxValue - this.minValue);
+            let newOffset = eventMm.clientY - this.scale.getTop() - this.button2.getWidth()/2;
+
+            if (newOffset > this.scale.getHeight() - this.button2.getWidth()/2) {
+                newOffset = this.scale.getHeight() - this.button2.getWidth()/2;
+                roundValue = this.maxValue;
+                roundOffset = newOffset;
+            }
+            if (newOffset < this.button1.getTop() - this.scale.getTop() + stepWidth/1.5) {
+                newOffset = this.button1.getTop() - this.scale.getTop() + stepWidth/1.5;
+            }
+            if (!roundValue) {
+                [roundOffset, roundValue] = this.roundOffsetButt(newOffset);
+            }
+        } else {
+            let stepWidth = this.step*this.scale.getWidth()/(this.maxValue - this.minValue);
+            let newOffset = eventMm.clientX - this.scale.getLeft() - this.button2.getWidth()/2;
+            
+            if (newOffset > this.scale.getWidth() - this.button2.getWidth()/2) {
+                newOffset = this.scale.getWidth() - this.button2.getWidth()/2;
+                roundValue = this.maxValue;
+                roundOffset = newOffset;
+            }
+            if (newOffset < this.button1.getLeft() - this.scale.getLeft() + stepWidth/1.5) {
+                newOffset = this.button1.getLeft() - this.scale.getLeft() + stepWidth/1.5;
+            }
+            if (!roundValue) {
+                [roundOffset, roundValue] = this.roundOffsetButt(newOffset);
+            }
+        }
+
+        this.butt2Move(roundOffset, roundValue);
+    }
+
+    onMouseUp2(eventMu: MouseEvent) {
+        document.removeEventListener("mouseup", this.onMouseUp2);
+        document.removeEventListener("mousemove", this.onMouseMove2);
+    }
+
+    //Scale EventListeners------------------------------------------------------------------
+    scaleOnclick = (event: MouseEvent) => {
+        if (this.vertical) {
+            if(this.range) {
+                if (Math.abs(event.clientY - this.button1.getTop() - this.button1.getWidth()/2) <
+                    Math.abs(event.clientY - this.button2.getTop() - this.button2.getWidth()/2)) {
+                        this.onMouseMove1(event);
+                } else {
+                    this.onMouseMove2(event);
+                }
+            } else {
+                this.onMouseMove1(event);
+            }
+        } else {
+            if(this.range) {
+                if (Math.abs(event.clientX - this.button1.getLeft() - this.button1.getWidth()/2) <
+                    Math.abs(event.clientX - this.button2.getLeft() - this.button2.getWidth()/2)) {
+                        this.onMouseMove1(event);
+                } else {
+                    this.onMouseMove2(event);
+                }
+            } else {
+                this.onMouseMove1(event);
+            }
+        }
+    }
+
+    //Graduation EventListeners-------------------------------------------------------------------
+    interMarkHandler (currValue: number) {
+        let roundOffset = 0;
+        let roundValue = 0;
+
+        if (this.vertical) {
+            let markX = (currValue - this.minValue)/(this.maxValue - this.minValue)*this.scale.getHeight();
+            [roundOffset, roundValue] = this.roundOffsetButt(markX - this.button1.getWidth()/2);
+            if (this.range) {
+                if (Math.abs(markX + this.scale.getTop() - this.button1.getTop() - this.button1.getWidth()/2) <
+                Math.abs(markX + this.scale.getTop() - this.button2.getTop() - this.button2.getWidth()/2))
+                {
+                    this.butt1Move(roundOffset, roundValue);
+                } else {
+                    this.butt2Move(roundOffset, roundValue);
+                }
+            } else {
+                this.butt1Move(roundOffset, roundValue);
+            }
+        } else {
+            let markX = (currValue - this.minValue)/(this.maxValue - this.minValue)*this.scale.getWidth();
+            [roundOffset, roundValue] = this.roundOffsetButt(markX - this.button1.getWidth()/2);
+            if (this.range) {
+                if (Math.abs(markX + this.scale.getLeft() - this.button1.getLeft() - this.button1.getWidth()/2) <
+                Math.abs(markX + this.scale.getLeft() - this.button2.getLeft() - this.button2.getWidth()/2))
+                {
+                    this.butt1Move(roundOffset, roundValue);
+                } else {
+                    this.butt2Move(roundOffset, roundValue);
+                }
+            } else {
+                this.butt1Move(roundOffset, roundValue);
+            }
+        }
+    }
+
+    mark1Onclick = (event: MouseEvent) => {
+        let roundOffset = -this.button1.getWidth()/2;
+        let roundValue = this.minValue;
+        this.butt1Move(roundOffset, roundValue);
+    }
+
+    mark4Onclick = (event: MouseEvent) => {
+        if (this.vertical) {
+            let roundOffset = this.scale.getHeight() - this.button2.getWidth()/2;
+            let roundValue = this.maxValue;
+            if (this.range) {
+                this.butt2Move(roundOffset, roundValue); 
+            } else {
+                this.butt1Move(roundOffset, roundValue);
+            }   
+        } else {
+            let roundOffset = this.scale.getWidth() - this.button2.getWidth()/2;
+            let roundValue = this.maxValue;
+            if (this.range) {
+                this.butt2Move(roundOffset, roundValue); 
+            } else {
+                this.butt1Move(roundOffset, roundValue);
+            }
+        }
+    }
+
+    mark2Onclick = (event: MouseEvent) => {
+        this.interMarkHandler(parseInt(this.graduation.mark2.innerHTML));
+    }
+
+    mark3Onclick = (event: MouseEvent) => {
+        this.interMarkHandler(parseInt(this.graduation.mark3.innerHTML));
+    }
+
+    init() {
+        this.button2.elem.style.display = "none";
+        this.graduation.init(this.minValue, this.maxValue, this.vertical);
+
+        if (this.range) {
+            this.button2.elem.style.display = "block";
+            this.scaleFilling.elem.style.display = "block";
+        } else {
+            this.button2.elem.style.display = "none";
+            this.scaleFilling.elem.style.display = "none";
+        }
+        if (this.showLabel) {
+            this.label1.elem.style.display = "block";
+            this.label2.elem.style.display = "block";
+        } else {
+            this.label1.elem.style.display = "none";
+            this.label2.elem.style.display = "none";
+        }
+
+        if (this.vertical) {
+            this.scale.elem.classList.add("slider__scale_vertical");
+            this.scaleFilling.elem.classList.add("slider__scale__filling_vertical");
+            this.graduation.gradElem.classList.add("slider__graduation_vertical");
+            this.graduation.gradElem.style.height = this.scale.getHeight() +"px";
+            this.button1.elem.classList.add("slider__button_vertical");
+            this.button2.elem.classList.add("slider__button_vertical");
+            this.label1.elem.classList.add("slider__button__label_vertical");
+            this.label2.elem.classList.add("slider__button__label_vertical");
+
             this.button1.elem.style.top = -this.button1.getWidth()/2 + "px";
             this.button2.elem.style.top = this.scale.getHeight() - this.button2.getWidth()/2 + "px";
             this.label1.elem.innerHTML = this.minValue + "";
@@ -161,332 +484,23 @@ class View {
             this.label2.elem.style.top = this.getEnd() - this.label2.getHeight()/2 + "px";
             this.label1.elem.style.top = this.getStart() - this.label1.getHeight()/2 + "px";
         } else {
+            this.scale.elem.classList.remove("slider__scale_vertical");
+            this.scaleFilling.elem.classList.remove("slider__scale__filling_vertical");
+            this.graduation.gradElem.classList.remove("slider__graduation_vertical");
+            this.graduation.gradElem.style.height = 20 +"px";
+            this.button1.elem.classList.remove("slider__button_vertical");
+            this.button2.elem.classList.remove("slider__button_vertical");
+            this.label1.elem.classList.remove("slider__button__label_vertical");
+            this.label2.elem.classList.remove("slider__button__label_vertical");
+
             this.button1.elem.style.left = -this.button1.getWidth()/2 + "px";
-            this.button2.elem.style.left = this.scale.getWidth() -this.button1.getWidth()/2 + "px";
+            this.button2.elem.style.left = this.scale.getWidth() - this.button2.getWidth()/2 + "px";
             this.label1.elem.innerHTML = this.minValue + "";
             this.label2.elem.innerHTML = this.maxValue + "";
             this.label1.elem.style.left = this.getStart() - this.label1.getWidth()/2 + "px";
             this.label2.elem.style.left = this.getEnd() - this.label2.getWidth()/2 + "px";
         }
-    }
-
-    init() {
-        const scale = this.scale;
-        const butt1 = this.button1;
-        const butt2 = this.button2;
-        const label1 = this.label1;
-        const label2 = this.label2;
-        const minValue = this.minValue;
-        const maxValue = this.maxValue;
-        const step = this.step;
-        let range = this.range;
-        let showLabel = this.showLabel;
-        let vertical = this.vertical;
-
-        butt2.elem.style.display = "none";
-
-        const updateElems = this.updateElems;
-
-        if (vertical) {
-            this.scale.elem.classList.add("slider__scale_vertical");
-            this.scaleFilling.elem.classList.add("slider__scale__filling_vertical");
-            this.graduation.gradElem.classList.add("slider__graduation_vertical");
-            this.graduation.gradElem.style.height = this.scale.getHeight() +"px";
-            butt1.elem.classList.add("slider__button_vertical");
-            butt2.elem.classList.add("slider__button_vertical");
-            label1.elem.classList.add("slider__button__label_vertical");
-            label2.elem.classList.add("slider__button__label_vertical");
-        } else {
-            this.scale.elem.classList.remove("slider__scale_vertical");
-            this.scaleFilling.elem.classList.remove("slider__scale__filling_vertical");
-            this.graduation.gradElem.classList.remove("slider__graduation_vertical");
-            this.graduation.gradElem.style.height = 20 +"px";
-            butt1.elem.classList.remove("slider__button_vertical");
-            butt2.elem.classList.remove("slider__button_vertical");
-            label1.elem.classList.remove("slider__button__label_vertical");
-            label2.elem.classList.remove("slider__button__label_vertical")
-        }
-        if (range) {
-            butt2.elem.style.display = "block";
-            this.scaleFilling.elem.style.display = "block";
-        } else {
-            butt2.elem.style.display = "none";
-            this.scaleFilling.elem.style.display = "none";
-        }
-        if (showLabel) {
-            label1.elem.style.display = "block";
-            label2.elem.style.display = "block";
-        } else {
-            label1.elem.style.display = "none";
-            label2.elem.style.display = "none";
-        }
-
-        this.graduation.init(minValue, maxValue, this.vertical);
         
-        function round(val: number, step: number): number {
-            let whole = Math.floor(val/step);
-            let reminder = val % step;
-            return reminder < step/2 ? whole*step : (whole + 1)*step;
-        }
-
-        function roundOffsetButt(currOffset: number) {
-            let currValue = 0;
-            let scaleMessure = 0;
-            
-            if(vertical) {
-                currValue = minValue + (currOffset + butt1.getWidth()/2)*(maxValue - minValue)/scale.getHeight();
-                scaleMessure = scale.getHeight();
-            } else {
-                currValue = minValue + (currOffset + butt1.getWidth()/2)*(maxValue - minValue)/scale.getWidth();
-                scaleMessure = scale.getWidth();
-            }
-            
-            let roundValue = round(currValue, step);
-            if (roundValue < minValue) {
-                roundValue = minValue;
-            } else if (roundValue > maxValue) {
-                roundValue = maxValue;
-            }
-            
-            let roundOffset = (roundValue - minValue)*scaleMessure/(maxValue - minValue) - butt1.getWidth()/2;
-            return [roundOffset, roundValue];
-        }
-        
-        //Button1  Handlers
-        function butt1Move(roundOffset: number, roundValue: number) {
-            if (vertical) {
-                butt1.elem.style.top = roundOffset + "px";
-                label1.elem.style.top = roundOffset - label1.getHeight()/2 + butt1.getWidth()/2 + "px";
-                label1.elem.innerHTML = roundValue + "";
-            } else {
-                butt1.elem.style.left = roundOffset + "px";
-                label1.elem.style.left = roundOffset - label1.getWidth()/2 + butt1.getWidth()/2 + "px";
-                label1.elem.innerHTML = roundValue + "";
-            }
-            updateElems();
-        }
-        function onMouseMove1(eventMm: MouseEvent) {
-            let roundValue = 0;
-            let roundOffset = 0;
-            
-            if (vertical) {
-                let stepWidth = step*scale.getHeight()/(maxValue - minValue);
-                let newOffset = eventMm.clientY - scale.getTop() - butt1.getWidth()/2;
-                
-                if (newOffset < -butt1.getWidth()/2) {
-                    newOffset = -butt1.getWidth()/2;
-                    roundValue = minValue;
-                    roundOffset = newOffset;
-                }
-                if (!range) {
-                    if (newOffset > scale.getHeight() - butt1.getWidth()/2) {
-                        newOffset = scale.getHeight() - butt1.getWidth()/2;
-                        roundValue = maxValue;
-                        roundOffset = newOffset;
-                    }
-                } else {
-                    if (newOffset > butt2.getTop() - scale.getTop() - stepWidth/1.5) {
-                        newOffset = butt2.getTop() - scale.getLeft() - stepWidth/1.5;
-                    }
-                }
-                if (!roundValue) {
-                    [roundOffset, roundValue] = roundOffsetButt(newOffset);
-                }
-            } else {
-                let stepWidth = step*scale.getWidth()/(maxValue - minValue);
-                let newOffset = eventMm.clientX - scale.getLeft() - butt1.getWidth()/2;
-                
-                if (newOffset < -butt1.getWidth()/2) {
-                    newOffset = -butt1.getWidth()/2;
-                    roundValue = minValue;
-                    roundOffset = newOffset;
-                }
-                if (!range) {
-                    if (newOffset > scale.getWidth() - butt1.getWidth()/2) {
-                        newOffset = scale.getWidth() - butt1.getWidth()/2;
-                        roundValue = maxValue;
-                        roundOffset = newOffset;
-                    }
-                } else {
-                    if (newOffset > butt2.getLeft() - scale.getLeft() - stepWidth/1.5) {
-                        newOffset = butt2.getLeft() - scale.getLeft() - stepWidth/1.5;
-                    }
-                }
-                if (!roundValue) {
-                    [roundOffset, roundValue] = roundOffsetButt(newOffset);
-                }
-            }
-
-            butt1Move(roundOffset, roundValue);
-        }
-        function onMouseUp1(eventMu: MouseEvent) {
-            document.removeEventListener("mouseup", onMouseUp1);
-            document.removeEventListener("mousemove", onMouseMove1);
-        }
-
-        //Button1 EventListeners
-        butt1.elem.onmousedown = (eventMd) => {
-            eventMd.preventDefault();
-            document.addEventListener("mousemove", onMouseMove1);
-            document.addEventListener("mouseup", onMouseUp1);
-        }
-
-        //Button2  Handlers
-        function butt2Move(roundOffset: number, roundValue: number) {
-            if (vertical) {
-                butt2.elem.style.top = roundOffset + "px";
-                label2.elem.style.top = roundOffset - label2.getHeight()/2 + butt2.getWidth()/2 + "px";
-                label2.elem.innerHTML = roundValue + "";
-            } else {
-                butt2.elem.style.left = roundOffset + "px";
-                label2.elem.style.left = roundOffset - label2.getWidth()/2 + butt2.getWidth()/2 + "px";
-                label2.elem.innerHTML = roundValue + "";
-            }
-            updateElems(); 
-        }
-        function onMouseMove2(eventMm: MouseEvent) {
-            let roundValue = 0;
-            let roundOffset = 0;
-
-            if (vertical) {
-                let stepWidth = step*scale.getHeight()/(maxValue - minValue);
-                let newOffset = eventMm.clientY - scale.getTop() - butt2.getWidth()/2;
-
-                if (newOffset > scale.getHeight() - butt2.getWidth()/2) {
-                    newOffset = scale.getHeight() - butt2.getWidth()/2;
-                    roundValue = maxValue;
-                    roundOffset = newOffset;
-                }
-                if (newOffset < butt1.getTop() - scale.getTop() + stepWidth/1.5) {
-                    newOffset = butt1.getTop() - scale.getTop() + stepWidth/1.5;
-                }
-                if (!roundValue) {
-                    [roundOffset, roundValue] = roundOffsetButt(newOffset);
-                }
-            } else {
-                let stepWidth = step*scale.getWidth()/(maxValue - minValue);
-                let newOffset = eventMm.clientX - scale.getLeft() - butt2.getWidth()/2;
-                
-                if (newOffset > scale.getWidth() - butt2.getWidth()/2) {
-                    newOffset = scale.getWidth() - butt2.getWidth()/2;
-                    roundValue = maxValue;
-                    roundOffset = newOffset;
-                }
-                if (newOffset < butt1.getLeft() - scale.getLeft() + stepWidth/1.5) {
-                    newOffset = butt1.getLeft() - scale.getLeft() + stepWidth/1.5;
-                }
-                if (!roundValue) {
-                    [roundOffset, roundValue] = roundOffsetButt(newOffset);
-                }
-            }
-
-            butt2Move(roundOffset, roundValue);
-        }
-        function onMouseUp2(eventMu: MouseEvent) {
-            document.removeEventListener("mouseup", onMouseUp2);
-            document.removeEventListener("mousemove", onMouseMove2);
-        }
-
-        //Button2 EventListeners
-        butt2.elem.onmousedown = (eventMd) => {
-            eventMd.preventDefault();
-            document.addEventListener("mousemove", onMouseMove2);
-            document.addEventListener("mouseup", onMouseUp2);
-        }
-
-        //Scale EventListeners
-        scale.elem.onclick = (event) => {
-            if (vertical) {
-                if(range) {
-                    if (Math.abs(event.clientY - butt1.getTop() - butt1.getWidth()/2) <
-                        Math.abs(event.clientY - butt2.getTop() - butt2.getWidth()/2)) {
-                        onMouseMove1(event);
-                    } else {
-                        onMouseMove2(event);
-                    }
-                } else {
-                    onMouseMove1(event);
-                }
-            } else {
-                if(range) {
-                    if (Math.abs(event.clientX - butt1.getLeft() - butt1.getWidth()/2) <
-                        Math.abs(event.clientX - butt2.getLeft() - butt2.getWidth()/2)) {
-                        onMouseMove1(event);
-                    } else {
-                        onMouseMove2(event);
-                    }
-                } else {
-                    onMouseMove1(event);
-                }
-            }
-        }
-
-        //Graduation EventListeners
-        function interMarkHandler (currValue: number) {
-            let roundOffset = 0;
-            let roundValue = 0;
-
-            if (vertical) {
-                let markX = (currValue - minValue)/(maxValue - minValue)*scale.getHeight();
-                [roundOffset, roundValue] = roundOffsetButt(markX - butt1.getWidth()/2);
-                if (range) {
-                    if (Math.abs(markX + scale.getTop() - butt1.getTop() - butt1.getWidth()/2) <
-                    Math.abs(markX + scale.getTop() - butt2.getTop() - butt2.getWidth()/2))
-                    {
-                    butt1Move(roundOffset, roundValue);
-                    } else {
-                        butt2Move(roundOffset, roundValue);
-                    }
-                } else {
-                    butt1Move(roundOffset, roundValue);
-                }
-            } else {
-                let markX = (currValue - minValue)/(maxValue - minValue)*scale.getWidth();
-                [roundOffset, roundValue] = roundOffsetButt(markX - butt1.getWidth()/2);
-                if (range) {
-                    if (Math.abs(markX + scale.getLeft() - butt1.getLeft() - butt1.getWidth()/2) <
-                    Math.abs(markX + scale.getLeft() - butt2.getLeft() - butt2.getWidth()/2))
-                    {
-                    butt1Move(roundOffset, roundValue);
-                    } else {
-                        butt2Move(roundOffset, roundValue);
-                    }
-                } else {
-                    butt1Move(roundOffset, roundValue);
-                }
-            }
-        }
-
-        this.graduation.mark1.onclick = (event) => {
-            let roundOffset = -butt1.getWidth()/2;
-            let roundValue = minValue;
-            butt1Move(roundOffset, roundValue);
-        }
-        this.graduation.mark4.onclick = (event) => {
-            if (vertical) {
-                let roundOffset = scale.getHeight() - butt2.getWidth()/2;
-                let roundValue = maxValue;
-                if (range) {
-                    butt2Move(roundOffset, roundValue); 
-                } else {
-                    butt1Move(roundOffset, roundValue);
-                }   
-            } else {
-                let roundOffset = scale.getWidth() - butt2.getWidth()/2;
-                let roundValue = maxValue;
-                if (range) {
-                    butt2Move(roundOffset, roundValue); 
-                } else {
-                    butt1Move(roundOffset, roundValue);
-                }
-            }
-        }
-        this.graduation.mark2.onclick = (event) => {
-            interMarkHandler(parseInt(this.graduation.mark2.innerHTML));
-        }
-        this.graduation.mark3.onclick = (event) => {
-            interMarkHandler(parseInt(this.graduation.mark3.innerHTML));
-        }
     }
 
     append(entry: Element) {
@@ -517,5 +531,4 @@ document.body.appendChild(entry);
 
 myView1.append(entry);
 myView1.init();
-myView1.initLabels();
 myView1.updateElems();
