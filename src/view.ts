@@ -116,7 +116,9 @@ class View {
     maxValue: number;
     step: number;
 
-    constructor() {
+    constructor(minValue: number = 0, maxValue: number = 1000, step: number = 1,
+        range: boolean = false, vertical: boolean = false, showLabel: boolean = false) {
+
         this.scale = new Scale();
         this.button1 = new Button();
         this.button2 = new Button();
@@ -124,6 +126,12 @@ class View {
         this.label2 = new Label();
         this.scaleFilling = new ScaleFilling();
         this.graduation = new Graduation();
+        this.minValue = minValue;
+        this.maxValue = maxValue;
+        this.step = step;
+        this.range = range;
+        this.vertical = vertical;
+        this.showLabel = showLabel;
 
         this.button1.elem.onmousedown = (eventMd: MouseEvent) => {
             eventMd.preventDefault();
@@ -224,12 +232,11 @@ class View {
         if (this.vertical) {
             this.button1.elem.style.top = roundOffset + "px";
             this.label1.elem.style.top = roundOffset - this.label1.getHeight()/2 + this.button1.getWidth()/2 + "px";
-            this.label1.elem.innerHTML = roundValue + "";
         } else {
             this.button1.elem.style.left = roundOffset + "px";
             this.label1.elem.style.left = roundOffset - this.label1.getWidth()/2 + this.button1.getWidth()/2 + "px";
-            this.label1.elem.innerHTML = roundValue + "";
         }
+        this.label1.elem.innerHTML = roundValue + "";
         this.updateElems();
     }
 
@@ -519,16 +526,22 @@ export {createElem, Scale, Label, Button, ScaleFilling, View, Graduation};
 
 
 const myView1 = new View();
-myView1.vertical = true;
+//myView1.vertical = true;
 myView1.range = true;
 myView1.showLabel = true;
 myView1.minValue = 1000;
 myView1.maxValue = 10000;
 myView1.step = 1200;
 
-const entry = createElem("slider");
-document.body.appendChild(entry);
+const entry1 = createElem("slider");
+document.body.appendChild(entry1);
 
-myView1.append(entry);
+myView1.append(entry1);
 myView1.init();
 myView1.updateElems();
+
+
+
+
+
+
