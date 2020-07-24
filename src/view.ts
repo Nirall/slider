@@ -1,3 +1,5 @@
+import {MakeObservableObject} from "./MOO";
+
 // Elements factory
 function createElem(className: string) :HTMLElement {
     const elem = document.createElement("div");
@@ -114,7 +116,10 @@ class View {
     showLabel: boolean;
     minValue: number;
     maxValue: number;
+    curMinValue: number;
+    curMaxValue: number;
     step: number;
+    observers: MakeObservableObject;
 
     constructor(minValue: number = 0, maxValue: number = 1000, step: number = 1,
         range: boolean = false, vertical: boolean = false, showLabel: boolean = false) {
@@ -128,11 +133,15 @@ class View {
         this.graduation = new Graduation();
         this.minValue = minValue;
         this.maxValue = maxValue;
+        this.curMinValue = minValue;
+        this.curMaxValue = maxValue;
         this.step = step;
         this.range = range;
         this.vertical = vertical;
         this.showLabel = showLabel;
-
+        this.observers = new MakeObservableObject()
+        this.checkValues();
+        
         this.button1.elem.onmousedown = (eventMd: MouseEvent) => {
             eventMd.preventDefault();
             document.addEventListener("mousemove", this.onMouseMove1);
@@ -148,12 +157,13 @@ class View {
         this.graduation.mark2.onclick = this.mark2Onclick;
         this.graduation.mark3.onclick = this.mark3Onclick;
         this.graduation.mark4.onclick = this.mark4Onclick;
-
+        
         this.getStart = this.getStart.bind(this);
         this.getEnd = this.getEnd.bind(this);
         this.updateElems = this.updateElems.bind(this);
         this.round = this.round.bind(this);
         this.roundOffsetButt = this.roundOffsetButt.bind(this);
+        this.checkValues = this.checkValues.bind(this);
 
         this.butt1Move = this.butt1Move.bind(this);
         this.onMouseMove1 = this.onMouseMove1.bind(this);
@@ -196,6 +206,7 @@ class View {
             this.scaleFilling.elem.style.left = this.getStart() + "px";
             this.scaleFilling.elem.style.width = this.getEnd() - this.getStart() + "px";
         }
+        this.observers.notifyObservers();
     }
 
     round(val: number, step: number): number {
@@ -237,6 +248,7 @@ class View {
             this.label1.elem.style.left = roundOffset - this.label1.getWidth()/2 + this.button1.getWidth()/2 + "px";
         }
         this.label1.elem.innerHTML = roundValue + "";
+        this.curMinValue = roundValue;
         this.updateElems();
     }
 
@@ -260,8 +272,14 @@ class View {
                     roundOffset = newOffset;
                 }
             } else {
-                if (newOffset > this.button2.getTop() - this.scale.getTop() - stepWidth/1.5) {
-                    newOffset = this.button2.getTop() - this.scale.getTop() - stepWidth/1.5;
+                if (stepWidth/1.5 > this.button1.getWidth()) {
+                    if (newOffset > this.button2.getTop() - this.scale.getTop() - stepWidth/1.5) {
+                        newOffset = this.button2.getTop() - this.scale.getTop() - stepWidth/1.5;
+                    }
+                } else {
+                    if (newOffset > this.button2.getTop() - this.scale.getTop() - this.button1.getWidth()) {
+                        newOffset = this.button2.getTop() - this.scale.getTop() - this.button1.getWidth();
+                    }
                 }
             }
             if (!roundValue) {
@@ -283,8 +301,14 @@ class View {
                     roundOffset = newOffset;
                 }
             } else {
-                if (newOffset > this.button2.getLeft() - this.scale.getLeft() - stepWidth/1.5) {
-                    newOffset = this.button2.getLeft() - this.scale.getLeft() - stepWidth/1.5;
+                if (stepWidth/1.5 > this.button1.getWidth()) {
+                    if (newOffset > this.button2.getLeft() - this.scale.getLeft() - stepWidth/1.5) {
+                        newOffset = this.button2.getLeft() - this.scale.getLeft() - stepWidth/1.5;
+                    }
+                } else {
+                    if (newOffset > this.button2.getLeft() - this.scale.getLeft() - this.button1.getWidth()) {
+                        newOffset = this.button2.getLeft() - this.scale.getLeft() - this.button1.getWidth();
+                    }
                 }
             }
             if (!roundValue) {
@@ -311,6 +335,7 @@ class View {
             this.label2.elem.style.left = roundOffset - this.label2.getWidth()/2 + this.button2.getWidth()/2 + "px";
             this.label2.elem.innerHTML = roundValue + "";
         }
+        this.curMaxValue = roundValue;
         this.updateElems(); 
     }
 
@@ -327,9 +352,16 @@ class View {
                 roundValue = this.maxValue;
                 roundOffset = newOffset;
             }
-            if (newOffset < this.button1.getTop() - this.scale.getTop() + stepWidth/1.5) {
-                newOffset = this.button1.getTop() - this.scale.getTop() + stepWidth/1.5;
+            if (stepWidth/1.5 > this.button1.getWidth()) {
+                if (newOffset < this.button1.getTop() - this.scale.getTop() + stepWidth/1.5) {
+                    newOffset = this.button1.getTop() - this.scale.getTop() + stepWidth/1.5;
+                }
+            } else {
+                if (newOffset < this.button1.getTop() - this.scale.getTop() + this.button1.getWidth()) {
+                    newOffset = this.button1.getTop() - this.scale.getTop() + this.button1.getWidth();
+                }
             }
+            
             if (!roundValue) {
                 [roundOffset, roundValue] = this.roundOffsetButt(newOffset);
             }
@@ -342,8 +374,14 @@ class View {
                 roundValue = this.maxValue;
                 roundOffset = newOffset;
             }
-            if (newOffset < this.button1.getLeft() - this.scale.getLeft() + stepWidth/1.5) {
-                newOffset = this.button1.getLeft() - this.scale.getLeft() + stepWidth/1.5;
+            if (stepWidth/1.5 > this.button1.getWidth()) {
+                if (newOffset < this.button1.getLeft() - this.scale.getLeft() + stepWidth/1.5) {
+                    newOffset = this.button1.getLeft() - this.scale.getLeft() + stepWidth/1.5;
+                }
+            } else {
+                if (newOffset < this.button1.getLeft() - this.scale.getLeft() + this.button1.getWidth()) {
+                    newOffset = this.button1.getLeft() - this.scale.getLeft() + this.button1.getWidth();
+                }
             }
             if (!roundValue) {
                 [roundOffset, roundValue] = this.roundOffsetButt(newOffset);
@@ -458,6 +496,7 @@ class View {
     init() {
         this.button2.elem.style.display = "none";
         this.graduation.init(this.minValue, this.maxValue, this.vertical);
+        this.checkValues();
 
         if (this.range) {
             this.button2.elem.style.display = "block";
@@ -507,10 +546,35 @@ class View {
             this.label1.elem.style.left = this.getStart() - this.label1.getWidth()/2 + "px";
             this.label2.elem.style.left = this.getEnd() - this.label2.getWidth()/2 + "px";
         }
-        
+        this.updateElems();
     }
 
-    append(entry: Element) {
+    checkValues() {
+        if (typeof this.maxValue !== "number") {
+            console.error("Maxvalue should be a number");
+        }
+        if (typeof this.minValue !== "number") {
+            console.error("Maxvalue should be a number");
+        }
+        if (typeof this.step !== "number") {
+            console.error("Step should be a number");
+        }
+        if (typeof this.range !== "boolean") {
+            console.error("Range should be a boolean");
+        }
+        if (typeof this.vertical !== "boolean") {
+            console.error("Vertical should be a boolean");
+        }
+        if (typeof this.showLabel !== "boolean") {
+            console.error("ShowLabel should be a boolean");
+        }
+        if (this.step > this.maxValue - this.minValue) {
+            this.step = this.maxValue - this.minValue;
+            console.error("Step is setted to the max");
+        }
+    }
+
+    append(entry: HTMLElement) {
         entry.appendChild(this.scale.elem).appendChild(this.scaleFilling.elem);
         entry.appendChild(this.button1.elem);
         entry.appendChild(this.label1.elem);
@@ -523,24 +587,6 @@ class View {
 }
 
 export {createElem, Scale, Label, Button, ScaleFilling, View, Graduation};
-
-
-const myView1 = new View();
-//myView1.vertical = true;
-myView1.range = true;
-myView1.showLabel = true;
-myView1.minValue = 1000;
-myView1.maxValue = 10000;
-myView1.step = 1200;
-
-const entry1 = createElem("slider");
-document.body.appendChild(entry1);
-
-myView1.append(entry1);
-myView1.init();
-myView1.updateElems();
-
-
 
 
 
