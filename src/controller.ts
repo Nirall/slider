@@ -1,6 +1,10 @@
 import { View } from "./view";
 import { Model } from "./model";
 
+interface configType {
+    [index: string]: number | boolean;
+}
+
 class Controller {
     view: View;
     model: Model;
@@ -15,14 +19,26 @@ class Controller {
             this.model.curMaxValue = this.view.curMaxValue;
         });
         this.model.observers.addObserver(() => {
-            this.view.interMarkHandler(this.model.curMinValue);
-            this.view.interMarkHandler(this.model.curMaxValue);
+            let curMinValue = this.model.curMinValue;
+            let curMaxValue = this.model.curMaxValue;
+            this.view.butt1Move(this.view.offsetValueConv(curMinValue), curMinValue);
+            this.view.butt2Move(this.view.offsetValueConv(curMaxValue), curMaxValue);
         });
+        this.update = this.update.bind(this);
     }
     append(entry: JQuery) {
         this.view.append(entry.get(0));
-        this.view.init()
+        this.view.init();
+    }
+    update(args: configType) {
+        Object.keys(args).map((item)  => {
+            if (this.view[item] !== undefined) {
+                this.view[item] = args[item];
+            }
+        });
+        this.view.init();
+        this.view.butt1Move(this.view.offsetValueConv(this.model.curMinValue), this.model.curMinValue);
+        this.view.butt2Move(this.view.offsetValueConv(this.model.curMaxValue), this.model.curMaxValue);
     }
 }
-
 export {Controller};

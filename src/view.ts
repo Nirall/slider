@@ -54,11 +54,15 @@ class Graduation {
         this.mark4.innerHTML = maxValue + "";
 
         if (!vertical) {
-            this.mark1.style.marginLeft = - this.mark1.getBoundingClientRect().width/2 + "px";
-            this.mark4.style.marginRight = - this.mark4.getBoundingClientRect().width/2 + "px";
+            this.mark1.style.marginLeft = -15 + "px";
+            this.mark1.style.marginTop = "0";
+            this.mark4.style.marginRight = -15 + "px";
+            this.mark4.style.marginTop = "0";
         } else {
-            this.mark1.style.marginTop = - this.mark1.getBoundingClientRect().height/2 + "px";
-            this.mark4.style.marginBottom = - this.mark4.getBoundingClientRect().height/2 + "px";
+            this.mark1.style.marginTop = -9  + "px";
+            this.mark1.style.marginLeft = "0";
+            this.mark4.style.marginBottom = -9 + "px";
+            this.mark4.style.marginLeft = "0";
         }
     }
 }
@@ -104,6 +108,7 @@ class ScaleFilling {
 }
 
 class View {
+    [index: string]: number|boolean|Scale|Graduation|ScaleFilling|Button|Label|MakeObservableObject|Function;
     scale: Scale;
     graduation: Graduation;
     scaleFilling: ScaleFilling;
@@ -164,6 +169,7 @@ class View {
         this.round = this.round.bind(this);
         this.roundOffsetButt = this.roundOffsetButt.bind(this);
         this.checkValues = this.checkValues.bind(this);
+        this.offsetValueConv = this.offsetValueConv.bind(this);
 
         this.butt1Move = this.butt1Move.bind(this);
         this.onMouseMove1 = this.onMouseMove1.bind(this);
@@ -201,10 +207,14 @@ class View {
     updateElems() {
         if (this.vertical) {
             this.scaleFilling.elem.style.top = this.getStart() + "px";
+            this.scaleFilling.elem.style.left = "0";
             this.scaleFilling.elem.style.height = this.getEnd() - this.getStart() + "px";
+            this.scaleFilling.elem.style.width = "100%";
         } else {
             this.scaleFilling.elem.style.left = this.getStart() + "px";
+            this.scaleFilling.elem.style.top = "0";
             this.scaleFilling.elem.style.width = this.getEnd() - this.getStart() + "px";
+            this.scaleFilling.elem.style.height = "100%";
         }
         this.observers.notifyObservers();
     }
@@ -236,6 +246,13 @@ class View {
         
         let roundOffset = (roundValue - this.minValue)*scaleMessure/(this.maxValue - this.minValue) - this.button1.getWidth()/2;
         return [roundOffset, roundValue];
+    }
+    offsetValueConv(value: number) {
+        if (this.vertical) {
+            return ((value - this.minValue)/(this.maxValue - this.minValue)*this.scale.getHeight());
+        } else {
+            return ((value - this.minValue)/(this.maxValue - this.minValue)*this.scale.getWidth());
+        }
     }
 
     //Button1  Handlers-------------------------------------------------------------------------------
@@ -467,7 +484,7 @@ class View {
 
     mark4Onclick = (event: MouseEvent) => {
         if (this.vertical) {
-            let roundOffset = this.scale.getHeight() - this.button2.getWidth()/2;
+            let roundOffset = this.scale.getHeight() - this.button1.getWidth()/2;
             let roundValue = this.maxValue;
             if (this.range) {
                 this.butt2Move(roundOffset, roundValue); 
@@ -475,7 +492,7 @@ class View {
                 this.butt1Move(roundOffset, roundValue);
             }   
         } else {
-            let roundOffset = this.scale.getWidth() - this.button2.getWidth()/2;
+            let roundOffset = this.scale.getWidth() - this.button1.getWidth()/2;
             let roundValue = this.maxValue;
             if (this.range) {
                 this.butt2Move(roundOffset, roundValue); 
@@ -495,22 +512,24 @@ class View {
 
     init() {
         this.button2.elem.style.display = "none";
+        this.label2.elem.style.display = "none";
         this.graduation.init(this.minValue, this.maxValue, this.vertical);
         this.checkValues();
 
-        if (this.range) {
-            this.button2.elem.style.display = "block";
-            this.scaleFilling.elem.style.display = "block";
-        } else {
-            this.button2.elem.style.display = "none";
-            this.scaleFilling.elem.style.display = "none";
-        }
         if (this.showLabel) {
             this.label1.elem.style.display = "block";
             this.label2.elem.style.display = "block";
         } else {
             this.label1.elem.style.display = "none";
             this.label2.elem.style.display = "none";
+        }
+        if (this.range) {
+            this.button2.elem.style.display = "block";
+            this.scaleFilling.elem.style.display = "block";
+        } else {
+            this.button2.elem.style.display = "none";
+            this.label2.elem.style.display = "none";
+            this.scaleFilling.elem.style.display = "none";
         }
 
         if (this.vertical) {
@@ -524,11 +543,15 @@ class View {
             this.label2.elem.classList.add("slider__button__label_vertical");
 
             this.button1.elem.style.top = -this.button1.getWidth()/2 + "px";
+            this.button1.elem.style.left = "50%";
             this.button2.elem.style.top = this.scale.getHeight() - this.button2.getWidth()/2 + "px";
+            this.button2.elem.style.left = "50%";
             this.label1.elem.innerHTML = this.minValue + "";
             this.label2.elem.innerHTML = this.maxValue + "";
-            this.label2.elem.style.top = this.getEnd() - this.label2.getHeight()/2 + "px";
             this.label1.elem.style.top = this.getStart() - this.label1.getHeight()/2 + "px";
+            this.label1.elem.style.left = "50%";
+            this.label2.elem.style.top = this.getEnd() - this.label2.getHeight()/2 + "px";
+            this.label2.elem.style.left = "50%";
         } else {
             this.scale.elem.classList.remove("slider__scale_vertical");
             this.scaleFilling.elem.classList.remove("slider__scale__filling_vertical");
@@ -540,11 +563,15 @@ class View {
             this.label2.elem.classList.remove("slider__button__label_vertical");
 
             this.button1.elem.style.left = -this.button1.getWidth()/2 + "px";
+            this.button1.elem.style.top = "50%";
             this.button2.elem.style.left = this.scale.getWidth() - this.button2.getWidth()/2 + "px";
+            this.button2.elem.style.top = "50%"
             this.label1.elem.innerHTML = this.minValue + "";
             this.label2.elem.innerHTML = this.maxValue + "";
             this.label1.elem.style.left = this.getStart() - this.label1.getWidth()/2 + "px";
+            this.label1.elem.style.top = "50%";
             this.label2.elem.style.left = this.getEnd() - this.label2.getWidth()/2 + "px";
+            this.label2.elem.style.top = "50%";
         }
         this.updateElems();
     }
@@ -579,10 +606,8 @@ class View {
         entry.appendChild(this.button1.elem);
         entry.appendChild(this.label1.elem);
         entry.appendChild(this.graduation.gradElem);
-        if (this.range) {
-            entry.appendChild(this.button2.elem);
-            entry.appendChild(this.label2.elem);
-        }
+        entry.appendChild(this.button2.elem);
+        entry.appendChild(this.label2.elem);
     }
 }
 

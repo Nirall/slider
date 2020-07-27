@@ -336,6 +336,28 @@ describe("View class", () => {
         const value = newItem.roundOffsetButt(-100)[1];
         expect(value).toEqual(100);
     });
+    it("offsetValueConv(), should return offset for the value (horizontal)", () => {
+        const newItem = new View(100, 500, 100, true, false);
+        newItem.init();
+        const entry = createElem("slider");
+        entry.style.width = "400px";
+        entry.style.height = "400px";
+        document.body.appendChild(entry);
+        newItem.append(entry);
+        const value = newItem.offsetValueConv(200);
+        expect(value > 97 && value < 103).toBeTrue;
+    });
+    it("offsetValueConv(), should return offset for the value (vertical)", () => {
+        const newItem = new View(100, 500, 100, false, true);
+        newItem.init();
+        const entry = createElem("slider");
+        entry.style.width = "400px";
+        entry.style.height = "400px";
+        document.body.appendChild(entry);
+        newItem.append(entry);
+        const value = newItem.offsetValueConv(200);
+        expect(value > 97 && value < 103).toBeTrue;
+    });
     it("butt1Move() should move butt1 on the certain offset (horizontal)", () => {
         const newItem = new View(0, 400);
         newItem.init();
@@ -525,8 +547,8 @@ describe("View class", () => {
         const butt1Offset = newItem.button1.getTop() - newItem.scale.getTop();
         expect(butt1Offset).toEqual(-6);
     });
-    it("onMouseMove1(), if offset < min, button1 offset should be 0 (horizontal)", () => {
-        const newItem = new View(0, 1000, 1, true, false);
+    it("onMouseMove1(), if offset > max, button1 offset should be max (horizontal)", () => {
+        const newItem = new View(0, 1000, 1, false, false);
         const entry = createElem("slider");
         entry.style.width = "400px";
         entry.style.height = "400px";
@@ -536,13 +558,30 @@ describe("View class", () => {
         const mDown = new MouseEvent("mousedown");
         const mUp = new Event("mouseup");
         const butt1OffsetOld = newItem.button1.getLeft();
-        newItem.butt1Move(100, 100);
-        const mMove1 = new MouseEvent("mousemove", {clientX: butt1OffsetOld - 200});
+        const mMove1 = new MouseEvent("mousemove", {clientX: butt1OffsetOld + 800});
         newItem.button1.elem.dispatchEvent(mDown);
         document.dispatchEvent(mMove1);
         document.dispatchEvent(mUp);
         const butt1Offset = newItem.button1.getLeft() - newItem.scale.getLeft();
-        expect(butt1Offset).toEqual(-6);
+        expect(butt1Offset).toEqual(396);
+    });
+    it("onMouseMove1(), if offset > max, button1 offset should be max (vertical)", () => {
+        const newItem = new View(0, 1000, 1, false, true);
+        const entry = createElem("slider");
+        entry.style.width = "400px";
+        entry.style.height = "400px";
+        document.body.appendChild(entry);
+        newItem.append(entry);
+        newItem.init();
+        const mDown = new MouseEvent("mousedown");
+        const mUp = new Event("mouseup");
+        const butt1OffsetOld = newItem.button1.getTop();
+        const mMove1 = new MouseEvent("mousemove", {clientY: butt1OffsetOld + 800});
+        newItem.button1.elem.dispatchEvent(mDown);
+        document.dispatchEvent(mMove1);
+        document.dispatchEvent(mUp);
+        const butt1Offset = newItem.button1.getTop() - newItem.scale.getTop();
+        expect(butt1Offset).toEqual(396);
     });
     it("onMouseMove1(), button1 offset shouldn't be more the button2 (horizontal)", () => {
         const newItem = new View(0, 1000, 100, true, false);
@@ -582,6 +621,46 @@ describe("View class", () => {
         const butt1Offset = newItem.button1.getTop() - newItem.scale.getTop();
         const butt2Offset = newItem.button2.getTop() - newItem.scale.getTop();
         expect(butt1Offset < butt2Offset).toBeTrue();
+    });
+    it("onMouseMove1(), with the small step butt1 shouldn't run over butt2 (horizontal)", () => {
+        const newItem = new View(0, 1000, 1, true, false);
+        const entry = createElem("slider");
+        entry.style.width = "400px";
+        entry.style.height = "400px";
+        document.body.appendChild(entry);
+        newItem.append(entry);
+        newItem.init();
+        const mDown = new MouseEvent("mousedown");
+        const mUp = new Event("mouseup");
+        newItem.butt2Move(300, 300);
+        const OffsetTarget = newItem.button2.getLeft();
+        const mMove1 = new MouseEvent("mousemove", {clientX: OffsetTarget - 4});
+        newItem.button1.elem.dispatchEvent(mDown);
+        document.dispatchEvent(mMove1);
+        document.dispatchEvent(mUp);
+        const butt1Offset = newItem.button1.getLeft() - newItem.scale.getLeft();
+        const butt2Offset = newItem.button2.getLeft() - newItem.scale.getLeft();
+        expect(butt2Offset - butt1Offset > newItem.button1.getWidth()).toBeTrue();
+    });
+    it("onMouseMove1(), with the small step butt1 shouldn't run over butt2 (vertical)", () => {
+        const newItem = new View(0, 1000, 1, true, true);
+        const entry = createElem("slider");
+        entry.style.width = "400px";
+        entry.style.height = "400px";
+        document.body.appendChild(entry);
+        newItem.append(entry);
+        newItem.init();
+        const mDown = new MouseEvent("mousedown");
+        const mUp = new Event("mouseup");
+        newItem.butt2Move(300, 300);
+        const OffsetTarget = newItem.button2.getTop();
+        const mMove1 = new MouseEvent("mousemove", {clientY: OffsetTarget - 4});
+        newItem.button1.elem.dispatchEvent(mDown);
+        document.dispatchEvent(mMove1);
+        document.dispatchEvent(mUp);
+        const butt1Offset = newItem.button1.getTop() - newItem.scale.getTop();
+        const butt2Offset = newItem.button2.getTop() - newItem.scale.getTop();
+        expect(butt2Offset - butt1Offset > newItem.button1.getWidth()).toBeTrue();
     });
     it("onMouseMove2() should move button2 according to the mouse (horizontal)", () => {
         const newItem = new View(0, 1000, 1, true, false);
@@ -692,8 +771,61 @@ describe("View class", () => {
         const butt2Offset = newItem.button2.getTop() - newItem.scale.getTop();
         expect(butt1Offset < butt2Offset).toBeTrue();
     });
+    it("onMouseMove2(), with the small step butt2 shouldn't run over butt1 (horizontal)", () => {
+        const newItem = new View(0, 1000, 1, true, false);
+        const entry = createElem("slider");
+        entry.style.width = "400px";
+        entry.style.height = "400px";
+        document.body.appendChild(entry);
+        newItem.append(entry);
+        newItem.init();
+        const mDown = new MouseEvent("mousedown");
+        const mUp = new Event("mouseup");
+        newItem.butt1Move(300, 300);
+        const OffsetTarget = newItem.button1.getLeft();
+        const mMove1 = new MouseEvent("mousemove", {clientX: OffsetTarget + 4});
+        newItem.button2.elem.dispatchEvent(mDown);
+        document.dispatchEvent(mMove1);
+        document.dispatchEvent(mUp);
+        const butt1Offset = newItem.button1.getLeft() - newItem.scale.getLeft();
+        const butt2Offset = newItem.button2.getLeft() - newItem.scale.getLeft();
+        expect(butt2Offset - butt1Offset > newItem.button1.getWidth() - 1).toBeTrue();
+    });
+    it("onMouseMove2(), with the small step butt2 shouldn't run over butt1 (vertical)", () => {
+        const newItem = new View(0, 1000, 1, true, true);
+        const entry = createElem("slider");
+        entry.style.width = "400px";
+        entry.style.height = "400px";
+        document.body.appendChild(entry);
+        newItem.append(entry);
+        newItem.init();
+        const mDown = new MouseEvent("mousedown");
+        const mUp = new Event("mouseup");
+        newItem.butt1Move(300, 300);
+        const OffsetTarget = newItem.button1.getTop();
+        const mMove1 = new MouseEvent("mousemove", {clientY: OffsetTarget + 4});
+        newItem.button2.elem.dispatchEvent(mDown);
+        document.dispatchEvent(mMove1);
+        document.dispatchEvent(mUp);
+        const butt1Offset = newItem.button1.getTop() - newItem.scale.getTop();
+        const butt2Offset = newItem.button2.getTop() - newItem.scale.getTop();
+        expect(butt2Offset - butt1Offset > newItem.button1.getWidth() - 1).toBeTrue();
+    });
     it("scaleOnclick() should move button1 according to the mouse (horizontal)", () => {
         const newItem = new View(0, 1000, 1, true, false);
+        const entry = createElem("slider");
+        entry.style.width = "400px";
+        entry.style.height = "400px";
+        document.body.appendChild(entry);
+        newItem.append(entry);
+        newItem.init();
+        const mClick = new MouseEvent("mouseclick", {clientX: 150});
+        newItem.scaleOnclick(mClick);
+        const butt1Offset = newItem.button1.getLeft();
+        expect(butt1Offset < 147 && butt1Offset > 141).toBeTrue();
+    });
+    it("scaleOnclick() should move button1 according to the mouse (horizontal, not range)", () => {
+        const newItem = new View(0, 1000, 1, false, false);
         const entry = createElem("slider");
         entry.style.width = "400px";
         entry.style.height = "400px";
@@ -719,6 +851,20 @@ describe("View class", () => {
         const butt1Offset = newItem.button1.getTop();
         expect(butt1Offset < butt1OffsetOld + 97 && butt1Offset > butt1OffsetOld + 91).toBeTrue();
     });
+    it("scaleOnclick() should move button1 according to the mouse (vertical, not range)", () => {
+        const newItem = new View(0, 1000, 1, false, true);
+        const entry = createElem("slider");
+        entry.style.width = "400px";
+        entry.style.height = "400px";
+        document.body.appendChild(entry);
+        newItem.append(entry);
+        newItem.init();
+        const butt1OffsetOld = newItem.button1.getTop();
+        const mClick = new MouseEvent("mouseclick", {clientY: butt1OffsetOld + 100});
+        newItem.scaleOnclick(mClick);
+        const butt1Offset = newItem.button1.getTop();
+        expect(butt1Offset < butt1OffsetOld + 97 && butt1Offset > butt1OffsetOld + 91).toBeTrue();
+    });
     it("scaleOnclick() should move button2 according to the mouse (horizontal)", () => {
         const newItem = new View(0, 1000, 1, true, false);
         const entry = createElem("slider");
@@ -732,6 +878,7 @@ describe("View class", () => {
         const butt2Offset = newItem.button2.getLeft();
         expect(butt2Offset < 347 && butt2Offset > 341).toBeTrue();
     });
+    
     it("scaleOnclick() should move button2 according to the mouse (vertical)", () => {
         const newItem = new View(0, 1000, 1, true, true);
         const entry = createElem("slider");
@@ -758,8 +905,32 @@ describe("View class", () => {
         const butt1Offset = newItem.button1.getLeft() - newItem.scale.getLeft();
         expect(butt1Offset < 97 && butt1Offset > 91).toBeTrue();
     });
+    it("interMarkHandler() should move button1 according to the value (horizontal, not range)", () => {
+        const newItem = new View(0, 800, 1, false, false);
+        const entry = createElem("slider");
+        entry.style.width = "400px";
+        entry.style.height = "400px";
+        document.body.appendChild(entry);
+        newItem.append(entry);
+        newItem.init();
+        newItem.interMarkHandler(200);
+        const butt1Offset = newItem.button1.getLeft() - newItem.scale.getLeft();
+        expect(butt1Offset < 97 && butt1Offset > 91).toBeTrue();
+    });
     it("interMarkHandler() should move button1 according to the value (vertical)", () => {
         const newItem = new View(0, 800, 1, true, true);
+        const entry = createElem("slider");
+        entry.style.width = "400px";
+        entry.style.height = "400px";
+        document.body.appendChild(entry);
+        newItem.append(entry);
+        newItem.init();
+        newItem.interMarkHandler(200);
+        const butt1Offset = newItem.button1.getTop() - newItem.scale.getTop();
+        expect(butt1Offset < 97 && butt1Offset > 91).toBeTrue();
+    });
+    it("interMarkHandler() should move button1 according to the value (vertical, not range)", () => {
+        const newItem = new View(0, 800, 1, false, true);
         const entry = createElem("slider");
         entry.style.width = "400px";
         entry.style.height = "400px";
@@ -824,6 +995,21 @@ describe("View class", () => {
         const offset = newItem.getEnd();
         expect(offset < 403 && offset > 397 && offset != offsetBefore).toBeTrue();
     });
+    it("mark4Handler should move button1 to the end (horizontal)", ()=> {
+        const newItem = new View(0, 800, 1, false, false);
+        const entry = createElem("slider");
+        entry.style.width = "400px";
+        entry.style.height = "400px";
+        document.body.appendChild(entry);
+        newItem.append(entry);
+        newItem.init();
+        newItem.butt1Move(200, 200);
+        const offsetBefore = newItem.getStart();
+        const mClick = new MouseEvent("click");
+        newItem.mark4Onclick(mClick);
+        const offset = newItem.getStart();
+        expect(offset < 403 && offset > 397 && offset != offsetBefore).toBeTrue();
+    });
     it("mark4Handler should move button2 to the end (vertical)", ()=> {
         const newItem = new View(0, 800, 1, true, true);
         const entry = createElem("slider");
@@ -837,7 +1023,21 @@ describe("View class", () => {
         const mClick = new MouseEvent("click");
         newItem.mark4Onclick(mClick);
         const offset = newItem.getEnd();
-        //expect(newItem.getEnd()).toEqual(offsetBefore);
+        expect(offset < 403 && offset > 397 && offset != offsetBefore).toBeTrue();
+    });
+    it("mark4Handler should move button1 to the end (vertical)", ()=> {
+        const newItem = new View(0, 800, 1, false, true);
+        const entry = createElem("slider");
+        entry.style.width = "400px";
+        entry.style.height = "400px";
+        document.body.appendChild(entry);
+        newItem.append(entry);
+        newItem.init();
+        newItem.butt1Move(200, 200);
+        const offsetBefore = newItem.getStart();
+        const mClick = new MouseEvent("click");
+        newItem.mark4Onclick(mClick);
+        const offset = newItem.getStart();
         expect(offset < 403 && offset > 397 && offset != offsetBefore).toBeTrue();
     });
     it("mark2Onclick() should move buttons using mark2.innerHTML", () => {
@@ -1048,6 +1248,7 @@ describe("View class", () => {
         newItem.init();
         expect(newItem.label2.elem.classList.contains("slider__button__label_vertical")).toBeFalse();
     });
+    
     it("checkValues(), if step > maxvalue - minvalue, step should be setted to the maxvalue - minvalue", () => {
         //spyOn(console, "error");
         const newItem = new View(0, 800, 900, true, false);
