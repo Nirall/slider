@@ -640,7 +640,7 @@ describe("View class", () => {
         document.dispatchEvent(mUp);
         const butt1Offset = newItem.button1.getLeft() - newItem.scale.getLeft();
         const butt2Offset = newItem.button2.getLeft() - newItem.scale.getLeft();
-        expect(butt2Offset - butt1Offset > newItem.button1.getWidth()).toBeTrue();
+        expect(butt2Offset - butt1Offset > newItem.button1.getWidth() - 1).toBeTrue();
     });
     it("onMouseMove1(), with the small step butt1 shouldn't run over butt2 (vertical)", () => {
         const newItem = new View(0, 1000, 1, true, true);
@@ -660,7 +660,7 @@ describe("View class", () => {
         document.dispatchEvent(mUp);
         const butt1Offset = newItem.button1.getTop() - newItem.scale.getTop();
         const butt2Offset = newItem.button2.getTop() - newItem.scale.getTop();
-        expect(butt2Offset - butt1Offset > newItem.button1.getWidth()).toBeTrue();
+        expect(butt2Offset - butt1Offset > newItem.button1.getWidth() - 1).toBeTrue();
     });
     it("onMouseMove2() should move button2 according to the mouse (horizontal)", () => {
         const newItem = new View(0, 1000, 1, true, false);

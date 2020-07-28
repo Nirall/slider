@@ -1,5 +1,4 @@
 import {Controller} from "./controller.ts";
-//import { data } from "jquery";
 
 (function($) {
     
@@ -7,9 +6,9 @@ import {Controller} from "./controller.ts";
         minValue: 0,
         maxValue: 1000,
         step: 1,
-        range: true,
+        range: false,
         vertical: false,
-        showLabel: true,
+        showLabel: false,
         curMinValue: 0,
         curMaxValue: 1000
     };
@@ -25,10 +24,18 @@ import {Controller} from "./controller.ts";
             const slider = $(this).data("slider");
             slider.update(opt);
         },
-        update2: function() {
+        getConfig: function() {
             const slider = $(this).data("slider");
-            slider.update2();
-        }
+            return slider.getConfig();
+        },
+        inputsAttach: function(opt) {
+            const slider = $(this).data("slider");
+            slider.addObserver(() => {
+                opt.minValueIn.val(slider.getValues()[0]);
+                opt.maxValueIn.val(slider.getValues()[1]);
+            })
+        },
+        
     }
     
     $.fn.omfgslider = function(method) {

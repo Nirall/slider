@@ -172,6 +172,7 @@ class View {
         this.offsetValueConv = this.offsetValueConv.bind(this);
 
         this.butt1Move = this.butt1Move.bind(this);
+        this.butt1OffsetCheck = this.butt1OffsetCheck.bind(this);
         this.onMouseMove1 = this.onMouseMove1.bind(this);
         this.onMouseUp1 = this.onMouseUp1.bind(this);
 
@@ -258,6 +259,9 @@ class View {
     //Button1  Handlers-------------------------------------------------------------------------------
     butt1Move(roundOffset: number, roundValue: number) {
         if (this.vertical) {
+            if (roundOffset < this.scale.getTop()) {
+                this.button1.elem.style.top = roundOffset + "px";
+            } 
             this.button1.elem.style.top = roundOffset + "px";
             this.label1.elem.style.top = roundOffset - this.label1.getHeight()/2 + this.button1.getWidth()/2 + "px";
         } else {
@@ -269,13 +273,11 @@ class View {
         this.updateElems();
     }
 
-    onMouseMove1(eventMm: MouseEvent) {
+    butt1OffsetCheck(newOffset: number) {
         let roundValue = 0;
         let roundOffset = 0;
-        
         if (this.vertical) {
             let stepWidth = this.step*this.scale.getHeight()/(this.maxValue - this.minValue);
-            let newOffset = eventMm.clientY - this.scale.getTop() - this.button1.getWidth()/2;
             
             if (newOffset < -this.button1.getWidth()/2) {
                 newOffset = -this.button1.getWidth()/2;
@@ -299,12 +301,8 @@ class View {
                     }
                 }
             }
-            if (!roundValue) {
-                [roundOffset, roundValue] = this.roundOffsetButt(newOffset);
-            }
         } else {
             let stepWidth = this.step*this.scale.getWidth()/(this.maxValue - this.minValue);
-            let newOffset = eventMm.clientX - this.scale.getLeft() - this.button1.getWidth()/2;
             
             if (newOffset < -this.button1.getWidth()/2) {
                 newOffset = -this.button1.getWidth()/2;
@@ -328,9 +326,21 @@ class View {
                     }
                 }
             }
-            if (!roundValue) {
-                [roundOffset, roundValue] = this.roundOffsetButt(newOffset);
-            }
+        }
+        return [roundValue, roundOffset, newOffset];
+    }
+    
+    onMouseMove1(eventMm: MouseEvent) {
+        let newOffset, roundValue, roundOffset;
+        
+        if (this.vertical) {
+            newOffset = eventMm.clientY - this.scale.getTop() - this.button1.getWidth()/2;
+        } else {
+            newOffset = eventMm.clientX - this.scale.getLeft() - this.button1.getWidth()/2;
+        } 
+        [roundValue, roundOffset, newOffset] = this.butt1OffsetCheck(newOffset);
+        if (!roundValue) {
+            [roundOffset, roundValue] = this.roundOffsetButt(newOffset);
         }
 
         this.butt1Move(roundOffset, roundValue);

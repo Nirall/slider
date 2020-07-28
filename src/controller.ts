@@ -1,5 +1,6 @@
 import { View } from "./view";
 import { Model } from "./model";
+import {MakeObservableObject} from "./MOO";
 
 interface configType {
     [index: string]: number | boolean;
@@ -8,23 +9,30 @@ interface configType {
 class Controller {
     view: View;
     model: Model;
+    observers: MakeObservableObject;
 
     constructor(minValue: number = 0, maxValue: number = 1000, step: number = 1,
         range: boolean = false, vertical: boolean = false, showLabel: boolean = false) {
         this.view = new View(minValue, maxValue, step, range, vertical, showLabel);
         this.model = new Model(minValue, maxValue);
+        this.observers = new MakeObservableObject();
 
         this.view.observers.addObserver(() => {
             this.model.curMinValue = this.view.curMinValue;
             this.model.curMaxValue = this.view.curMaxValue;
+            this.observers.notifyObservers();
         });
         this.model.observers.addObserver(() => {
             let curMinValue = this.model.curMinValue;
             let curMaxValue = this.model.curMaxValue;
             this.view.butt1Move(this.view.offsetValueConv(curMinValue), curMinValue);
             this.view.butt2Move(this.view.offsetValueConv(curMaxValue), curMaxValue);
+            this.observers.notifyObservers();
         });
+
         this.update = this.update.bind(this);
+        this.getValues = this.getValues.bind(this);
+        this.addObserver = this.addObserver.bind(this);
     }
     append(entry: JQuery) {
         this.view.append(entry.get(0));
@@ -39,6 +47,19 @@ class Controller {
         this.view.init();
         this.view.butt1Move(this.view.offsetValueConv(this.model.curMinValue), this.model.curMinValue);
         this.view.butt2Move(this.view.offsetValueConv(this.model.curMaxValue), this.model.curMaxValue);
+    }
+    getValues() {
+        if (this.view.range) {
+            return [this.model.curMinValue, this.model.curMaxValue];
+        }
+        return [this.view.minValue, this.model.curMinValue];
+    }
+    getConfig() {
+        return {minValue: this.view.minValue, maxValue: this.view.maxValue, step: this.view.step,
+            range: this.view.range, vertical: this.view.vertical, showLabel: this.view.showLabel}
+    }
+    addObserver(fn: Function) {
+        this.observers.addObserver(fn);
     }
 }
 export {Controller};

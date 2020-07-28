@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+    <header>
+        <meta charset = "utf-8">
+        <link rel="stylesheet" href="style.css">
+        <style>
+            .slider-wrapper {
+                display: flex;
+            }
+            .input-wrapper {
+                height: 400px;
+                margin: 60px 0;
+            }
+        </style>
+    </header>
+    <body>
+        <div class = "slider-wrapper">
+            <div class = "slider" id = "s1">
+            </div>
+            <div class = "input-wrapper">
+                <div class = "slider__values">
+                    <h3>Значения</h3>
+                    <input type = "text" class = "minValueIn">
+                    <input type = "text" class = "maxValueIn">
+                </div>
+                <div class = "slider__config">
+                    <<div class = "row">
+                        <h3>Значения</h3>
+                        <input type = "text" class = "minValue">
+                        <input type = "text" class = "maxValue">
+                        <input type = "text" class = "step">
+                    </div>
+                    <div class = "row">
+                        <h3>Диапазон</h3>
+                        <label>
+                            <input type = "radio" name = "range" value = "single" checked>
+                            Одиночный
+                        </label>
+                        <label>
+                            <input type = "radio" name = "range" value = "range">
+                            Диапазон
+                        </label>
+                    </div>
+                    <div class = "row">
+                        <h3>Ориентация</h3>
+                        <label>
+                            <input type = "radio" name = "vertical" value = "horizontal" checked>
+                            Горизонтальный
+                        </label>
+                        <label>
+                            <input type = "radio" name = "vertical" value = "vertical">
+                            Вертикальный
+                        </label>
+                    </div>
+                    <div class = "row">
+                        <h3>Отображение значений</h3>
+                        <label>
+                            <input type = "radio" name = "showLabel" value = "noLabel" checked>
+                            Без значений
+                        </label>
+                        <label>
+                            <input type = "radio" name = "showLabel" value = "showLabel">
+                            Со значениями
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </body>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"
+        integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="
+        crossorigin="anonymous">
+    </script>
+    <script src = "bundle.js">
+    </script>
+    <script>
+        $("#s1").omfgslider();
+        $("#s1").omfgslider("inputsAttach", {minValueIn: $('#s1 + .input-wrapper .minValueIn'), maxValueIn: $('#s1 + .input-wrapper .maxValueIn')});
+        $('#s1 + .input-wrapper .minValue').focusout(() => {
+            let conf = $("#s1").omfgslider("getConfig");
+            $("#s1").omfgslider("update", {minValue: parseInt($('#s1 + .input-wrapper .minValue').val())});
+        })
+        $('#s1 + .input-wrapper input[name = "range"]').change(() => {
+            let conf = $("#s1").omfgslider("getConfig");
+            (conf.range === false) ? $("#s1").omfgslider("update", {range: true}) : $("#s1").omfgslider("update", {range: false});
+        })
+        $('#s1 + .input-wrapper input[name = "vertical"]').change(() => {
+            let conf = $("#s1").omfgslider("getConfig");
+            (conf.vertical === false) ? $("#s1").omfgslider("update", {vertical: true}) : $("#s1").omfgslider("update", {vertical: false});
+        })
+        $('#s1 + .input-wrapper input[name = "showLabel"]').change(() => {
+            let conf = $("#s1").omfgslider("getConfig");
+            (conf.showLabel === false) ? $("#s1").omfgslider("update", {showLabel: true}) : $("#s1").omfgslider("update", {showLabel: false});
+        })
+    </script>
+</html>

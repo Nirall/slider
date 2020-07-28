@@ -39,6 +39,7 @@ $red: #990033;
 }
 .slider__graduation_vertical {
     flex-direction: column;
+    max-width: 250px;
     top: 0;
     left: 50%;
     margin: 0 0 0 -60px;
