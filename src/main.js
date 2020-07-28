@@ -9,8 +9,6 @@ import {Controller} from "./controller.ts";
         range: false,
         vertical: false,
         showLabel: false,
-        curMinValue: 0,
-        curMaxValue: 1000
     };
     const methods = {
         init: function(opt) {
@@ -27,6 +25,10 @@ import {Controller} from "./controller.ts";
         getConfig: function() {
             const slider = $(this).data("slider");
             return slider.getConfig();
+        },
+        setValues: function(opt) {
+            const slider = $(this).data("slider");
+            slider.setValues(opt.curMinValue, opt.curMaxValue);
         },
         inputsAttach: function(opt) {
             const slider = $(this).data("slider");

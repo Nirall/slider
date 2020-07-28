@@ -32,6 +32,7 @@ class Controller {
 
         this.update = this.update.bind(this);
         this.getValues = this.getValues.bind(this);
+        this.getConfig = this.getConfig.bind(this);
         this.addObserver = this.addObserver.bind(this);
     }
     append(entry: JQuery) {
@@ -45,14 +46,19 @@ class Controller {
             }
         });
         this.view.init();
-        this.view.butt1Move(this.view.offsetValueConv(this.model.curMinValue), this.model.curMinValue);
-        this.view.butt2Move(this.view.offsetValueConv(this.model.curMaxValue), this.model.curMaxValue);
+        this.view.butt1Move(this.view.butt1OffsetCheck(this.view.offsetValueConv(this.model.curMinValue))[0], this.model.curMinValue);
+        this.view.butt2Move(this.view.butt2OffsetCheck(this.view.offsetValueConv(this.model.curMaxValue))[0], this.model.curMaxValue);
     }
     getValues() {
-        if (this.view.range) {
-            return [this.model.curMinValue, this.model.curMaxValue];
+        return [this.model.curMinValue, this.model.curMaxValue];
+    }
+    setValues(curMinValue: number, curMaxValue: number) {
+        if (curMinValue) {
+            this.view.butt1Move(this.view.butt1OffsetCheck(this.view.offsetValueConv(curMinValue))[0], curMinValue);
         }
-        return [this.view.minValue, this.model.curMinValue];
+        if (curMaxValue) {
+            this.view.butt2Move(this.view.butt2OffsetCheck(this.view.offsetValueConv(curMaxValue))[0], curMaxValue);
+        }
     }
     getConfig() {
         return {minValue: this.view.minValue, maxValue: this.view.maxValue, step: this.view.step,

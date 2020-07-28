@@ -6,6 +6,7 @@
         <style>
             .slider-wrapper {
                 display: flex;
+                font-family: Helvetica, sans-serif; 
             }
             .input-wrapper {
                 height: 400px;
@@ -24,11 +25,21 @@
                     <input type = "text" class = "maxValueIn">
                 </div>
                 <div class = "slider__config">
-                    <<div class = "row">
-                        <h3>Значения</h3>
-                        <input type = "text" class = "minValue">
-                        <input type = "text" class = "maxValue">
-                        <input type = "text" class = "step">
+                    <div class = "row">
+                        <h3>Конфигурация</h3>
+                        <div>
+                            <input type = "text" class = "minValue">
+                            Минимум
+                        </div>
+                        <div>
+                            <input type = "text" class = "maxValue">
+                            Максимум
+                        </div>
+                        <div>
+                            <input type = "text" class = "step">
+                            Шаг
+                        </div>
+                        
                     </div>
                     <div class = "row">
                         <h3>Диапазон</h3>
@@ -76,22 +87,45 @@
     </script>
     <script>
         $("#s1").omfgslider();
+
+        let conf = $("#s1").omfgslider("getConfig");
+        $('#s1 + .input-wrapper .minValueIn').val(conf.minValue);
+        $('#s1 + .input-wrapper .maxValueIn').val(conf.maxValue);
+
+        $('#s1 + .input-wrapper .minValue').val(conf.minValue);
+        $('#s1 + .input-wrapper .maxValue').val(conf.maxValue);
+        $('#s1 + .input-wrapper .step').val(conf.step);
+        
         $("#s1").omfgslider("inputsAttach", {minValueIn: $('#s1 + .input-wrapper .minValueIn'), maxValueIn: $('#s1 + .input-wrapper .maxValueIn')});
+
+        $('#s1 + .input-wrapper .minValueIn').focusout(() => {
+            $("#s1").omfgslider("setValues", {curMinValue: parseInt($('#s1 + .input-wrapper .minValueIn').val())})
+        });
+        $('#s1 + .input-wrapper .maxValueIn').focusout(() => {
+            $("#s1").omfgslider("setValues", {curMaxValue: parseInt($('#s1 + .input-wrapper .maxValueIn').val())})
+        });
+        
         $('#s1 + .input-wrapper .minValue').focusout(() => {
-            let conf = $("#s1").omfgslider("getConfig");
             $("#s1").omfgslider("update", {minValue: parseInt($('#s1 + .input-wrapper .minValue').val())});
-        })
+        });
+        $('#s1 + .input-wrapper .maxValue').focusout(() => {
+            $("#s1").omfgslider("update", {maxValue: parseInt($('#s1 + .input-wrapper .maxValue').val())});
+        });
+        $('#s1 + .input-wrapper .step').focusout(() => {
+            $("#s1").omfgslider("update", {step: parseInt($('#s1 + .input-wrapper .step').val())});
+        });
+        
         $('#s1 + .input-wrapper input[name = "range"]').change(() => {
             let conf = $("#s1").omfgslider("getConfig");
             (conf.range === false) ? $("#s1").omfgslider("update", {range: true}) : $("#s1").omfgslider("update", {range: false});
-        })
+        });
         $('#s1 + .input-wrapper input[name = "vertical"]').change(() => {
             let conf = $("#s1").omfgslider("getConfig");
             (conf.vertical === false) ? $("#s1").omfgslider("update", {vertical: true}) : $("#s1").omfgslider("update", {vertical: false});
-        })
+        });
         $('#s1 + .input-wrapper input[name = "showLabel"]').change(() => {
             let conf = $("#s1").omfgslider("getConfig");
             (conf.showLabel === false) ? $("#s1").omfgslider("update", {showLabel: true}) : $("#s1").omfgslider("update", {showLabel: false});
-        })
+        });
     </script>
 </html>
