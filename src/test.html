@@ -4,157 +4,33 @@
         <meta charset = "utf-8">
         <link rel="stylesheet" href="style.css">
         <style>
-            .slider-wrapper {
-                display: flex;
+            .sliders-container {
+                width: 900px;
+                margin: 0 auto;
                 font-family: Helvetica, sans-serif; 
             }
-            .input-wrapper {
-                height: 400px;
-                margin: 60px 0;
+            h1 {
+                text-align: center;
+            }
+            .slider-wrapper {
+                display: flex;
             }
         </style>
     </header>
     <body>
-        <div class = "slider-wrapper">
-            <div class = "slider" id = "s1">
-            </div>
-            <div class = "input-wrapper">
-                <form name = "slider1">
-                    <div class = "slider__values">
-                        <h3>Значения</h3>
-                        <input type = "text" class = "minValueIn">
-                        <input type = "text" class = "maxValueIn">
-                    </div>
-                    <div class = "slider__config">
-                    <div class = "row">
-                        <h3>Конфигурация</h3>
-                        <div>
-                            <input type = "text" class = "minValue">
-                            Минимум
+        <div class = "sliders-container">
+            <h1>Слайдеры</h1>
+            <div class = "slider-wrapper">
+                <div class = "slider" id = "s1">
+                </div>
+                <div class = "input-wrapper">
+                    <form name = "slider1">
+                        <div class = "slider__values">
+                            <h3>Значения</h3>
+                            <input type = "text" class = "minValueIn">
+                            <input type = "text" class = "maxValueIn">
                         </div>
-                        <div>
-                            <input type = "text" class = "maxValue">
-                            Максимум
-                        </div>
-                        <div>
-                            <input type = "text" class = "step">
-                            Шаг
-                        </div>
-                        
-                    </div>
-                    <div class = "row">
-                        <h3>Диапазон</h3>
-                        <label>
-                            <input type = "radio" name = "range" value = "single" checked>
-                            Одиночный
-                        </label>
-                        <label>
-                            <input type = "radio" name = "range" value = "range">
-                            Диапазон
-                        </label>
-                    </div>
-                    <div class = "row">
-                        <h3>Ориентация</h3>
-                        <label>
-                            <input type = "radio" name = "vertical" value = "horizontal" checked>
-                            Горизонтальный
-                        </label>
-                        <label>
-                            <input type = "radio" name = "vertical" value = "vertical">
-                            Вертикальный
-                        </label>
-                    </div>
-                    <div class = "row">
-                        <h3>Отображение значений</h3>
-                        <label>
-                            <input type = "radio" name = "showLabel" value = "noLabel">
-                            Без значений
-                        </label>
-                        <label>
-                            <input type = "radio" name = "showLabel" value = "showLabel" checked>
-                            Со значениями
-                        </label>
-                    </div>
-                
-                    </div>
-                </form>
-            </div>
-        </div>
-        <div class = "slider-wrapper">
-            <div class = "slider" id = "s2">
-            </div>
-            <div class = "input-wrapper">
-                <form name = "slider2">
-                    <div class = "slider__values">
-                        <h3>Значения</h3>
-                        <input type = "text" class = "minValueIn">
-                        <input type = "text" class = "maxValueIn">
-                    </div>
-                    <div class = "slider__config">
-                        <div class = "row">
-                            <h3>Конфигурация</h3>
-                            <div>
-                                <input type = "text" class = "minValue">
-                                Минимум
-                            </div>
-                            <div>
-                                <input type = "text" class = "maxValue">
-                                Максимум
-                            </div>
-                            <div>
-                                <input type = "text" class = "step">
-                                Шаг
-                            </div>
-                            
-                        </div>
-                        <div class = "row">
-                            <h3>Диапазон</h3>
-                            <label>
-                                <input type = "radio" name = "range" value = "single">
-                                Одиночный
-                            </label>
-                            <label>
-                                <input type = "radio" name = "range" value = "range" checked>
-                                Диапазон
-                            </label>
-                        </div>
-                        <div class = "row">
-                            <h3>Ориентация</h3>
-                            <label>
-                                <input type = "radio" name = "vertical" value = "horizontal" checked>
-                                Горизонтальный
-                            </label>
-                            <label>
-                                <input type = "radio" name = "vertical" value = "vertical">
-                                Вертикальный
-                            </label>
-                        </div>
-                        <div class = "row">
-                            <h3>Отображение значений</h3>
-                            <label>
-                                <input type = "radio" name = "showLabel" value = "noLabel">
-                                Без значений
-                            </label>
-                            <label>
-                                <input type = "radio" name = "showLabel" value = "showLabel" checked>
-                                Со значениями
-                            </label>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-        <div class = "slider-wrapper">
-            <div class = "slider" id = "s3">
-            </div>
-            <div class = "input-wrapper">
-                <form name = "slider3">
-                    <div class = "slider__values">
-                        <h3>Значения</h3>
-                        <input type = "text" class = "minValueIn">
-                        <input type = "text" class = "maxValueIn">
-                    </div>
-                    <div class = "slider__config">
+                        <div class = "slider__config">
                         <div class = "row">
                             <h3>Конфигурация</h3>
                             <div>
@@ -185,11 +61,11 @@
                         <div class = "row">
                             <h3>Ориентация</h3>
                             <label>
-                                <input type = "radio" name = "vertical" value = "horizontal">
+                                <input type = "radio" name = "vertical" value = "horizontal" checked>
                                 Горизонтальный
                             </label>
                             <label>
-                                <input type = "radio" name = "vertical" value = "vertical" checked>
+                                <input type = "radio" name = "vertical" value = "vertical">
                                 Вертикальный
                             </label>
                         </div>
@@ -204,72 +80,202 @@
                                 Со значениями
                             </label>
                         </div>
-                    </div>
-                </form>
+                    
+                        </div>
+                    </form>
+                </div>
             </div>
-        </div>
-        <div class = "slider-wrapper">
-            <div class = "slider" id = "s4">
+            <div class = "slider-wrapper">
+                <div class = "slider" id = "s2">
+                </div>
+                <div class = "input-wrapper">
+                    <form name = "slider2">
+                        <div class = "slider__values">
+                            <h3>Значения</h3>
+                            <input type = "text" class = "minValueIn">
+                            <input type = "text" class = "maxValueIn">
+                        </div>
+                        <div class = "slider__config">
+                            <div class = "row">
+                                <h3>Конфигурация</h3>
+                                <div>
+                                    <input type = "text" class = "minValue">
+                                    Минимум
+                                </div>
+                                <div>
+                                    <input type = "text" class = "maxValue">
+                                    Максимум
+                                </div>
+                                <div>
+                                    <input type = "text" class = "step">
+                                    Шаг
+                                </div>
+                                
+                            </div>
+                            <div class = "row">
+                                <h3>Диапазон</h3>
+                                <label>
+                                    <input type = "radio" name = "range" value = "single">
+                                    Одиночный
+                                </label>
+                                <label>
+                                    <input type = "radio" name = "range" value = "range" checked>
+                                    Диапазон
+                                </label>
+                            </div>
+                            <div class = "row">
+                                <h3>Ориентация</h3>
+                                <label>
+                                    <input type = "radio" name = "vertical" value = "horizontal" checked>
+                                    Горизонтальный
+                                </label>
+                                <label>
+                                    <input type = "radio" name = "vertical" value = "vertical">
+                                    Вертикальный
+                                </label>
+                            </div>
+                            <div class = "row">
+                                <h3>Отображение значений</h3>
+                                <label>
+                                    <input type = "radio" name = "showLabel" value = "noLabel">
+                                    Без значений
+                                </label>
+                                <label>
+                                    <input type = "radio" name = "showLabel" value = "showLabel" checked>
+                                    Со значениями
+                                </label>
+                            </div>
+                        </div>
+                    </form>
+                </div>
             </div>
-            <div class = "input-wrapper">
-                <form name = "slider4">
-                    <div class = "slider__values">
-                        <h3>Значения</h3>
-                        <input type = "text" class = "minValueIn">
-                        <input type = "text" class = "maxValueIn">
-                    </div>
-                    <div class = "slider__config">
-                        <div class = "row">
-                            <h3>Конфигурация</h3>
-                            <div>
-                                <input type = "text" class = "minValue">
-                                Минимум
+            <div class = "slider-wrapper">
+                <div class = "slider" id = "s3">
+                </div>
+                <div class = "input-wrapper">
+                    <form name = "slider3">
+                        <div class = "slider__values">
+                            <h3>Значения</h3>
+                            <input type = "text" class = "minValueIn">
+                            <input type = "text" class = "maxValueIn">
+                        </div>
+                        <div class = "slider__config">
+                            <div class = "row">
+                                <h3>Конфигурация</h3>
+                                <div>
+                                    <input type = "text" class = "minValue">
+                                    Минимум
+                                </div>
+                                <div>
+                                    <input type = "text" class = "maxValue">
+                                    Максимум
+                                </div>
+                                <div>
+                                    <input type = "text" class = "step">
+                                    Шаг
+                                </div>
+                                
                             </div>
-                            <div>
-                                <input type = "text" class = "maxValue">
-                                Максимум
+                            <div class = "row">
+                                <h3>Диапазон</h3>
+                                <label>
+                                    <input type = "radio" name = "range" value = "single" checked>
+                                    Одиночный
+                                </label>
+                                <label>
+                                    <input type = "radio" name = "range" value = "range">
+                                    Диапазон
+                                </label>
                             </div>
-                            <div>
-                                <input type = "text" class = "step">
-                                Шаг
+                            <div class = "row">
+                                <h3>Ориентация</h3>
+                                <label>
+                                    <input type = "radio" name = "vertical" value = "horizontal">
+                                    Горизонтальный
+                                </label>
+                                <label>
+                                    <input type = "radio" name = "vertical" value = "vertical" checked>
+                                    Вертикальный
+                                </label>
                             </div>
-                            
+                            <div class = "row">
+                                <h3>Отображение значений</h3>
+                                <label>
+                                    <input type = "radio" name = "showLabel" value = "noLabel">
+                                    Без значений
+                                </label>
+                                <label>
+                                    <input type = "radio" name = "showLabel" value = "showLabel" checked>
+                                    Со значениями
+                                </label>
+                            </div>
                         </div>
-                        <div class = "row">
-                            <h3>Диапазон</h3>
-                            <label>
-                                <input type = "radio" name = "range" value = "single">
-                                Одиночный
-                            </label>
-                            <label>
-                                <input type = "radio" name = "range" value = "range" checked>
-                                Диапазон
-                            </label>
+                    </form>
+                </div>
+            </div>
+            <div class = "slider-wrapper">
+                <div class = "slider" id = "s4">
+                </div>
+                <div class = "input-wrapper">
+                    <form name = "slider4">
+                        <div class = "slider__values">
+                            <h3>Значения</h3>
+                            <input type = "text" class = "minValueIn">
+                            <input type = "text" class = "maxValueIn">
                         </div>
-                        <div class = "row">
-                            <h3>Ориентация</h3>
-                            <label>
-                                <input type = "radio" name = "vertical" value = "horizontal">
-                                Горизонтальный
-                            </label>
-                            <label>
-                                <input type = "radio" name = "vertical" value = "vertical" checked>
-                                Вертикальный
-                            </label>
+                        <div class = "slider__config">
+                            <div class = "row">
+                                <h3>Конфигурация</h3>
+                                <div>
+                                    <input type = "text" class = "minValue">
+                                    Минимум
+                                </div>
+                                <div>
+                                    <input type = "text" class = "maxValue">
+                                    Максимум
+                                </div>
+                                <div>
+                                    <input type = "text" class = "step">
+                                    Шаг
+                                </div>
+                                
+                            </div>
+                            <div class = "row">
+                                <h3>Диапазон</h3>
+                                <label>
+                                    <input type = "radio" name = "range" value = "single">
+                                    Одиночный
+                                </label>
+                                <label>
+                                    <input type = "radio" name = "range" value = "range" checked>
+                                    Диапазон
+                                </label>
+                            </div>
+                            <div class = "row">
+                                <h3>Ориентация</h3>
+                                <label>
+                                    <input type = "radio" name = "vertical" value = "horizontal">
+                                    Горизонтальный
+                                </label>
+                                <label>
+                                    <input type = "radio" name = "vertical" value = "vertical" checked>
+                                    Вертикальный
+                                </label>
+                            </div>
+                            <div class = "row">
+                                <h3>Отображение значений</h3>
+                                <label>
+                                    <input type = "radio" name = "showLabel" value = "noLabel">
+                                    Без значений
+                                </label>
+                                <label>
+                                    <input type = "radio" name = "showLabel" value = "showLabel" checked>
+                                    Со значениями
+                                </label>
+                            </div>
                         </div>
-                        <div class = "row">
-                            <h3>Отображение значений</h3>
-                            <label>
-                                <input type = "radio" name = "showLabel" value = "noLabel">
-                                Без значений
-                            </label>
-                            <label>
-                                <input type = "radio" name = "showLabel" value = "showLabel" checked>
-                                Со значениями
-                            </label>
-                        </div>
-                    </div>
-                </form>
+                    </form>
+                </div>
             </div>
         </div>
     </body>
@@ -282,8 +288,8 @@
     <script>
         $("#s1").omfgslider({showLabel: true});
         $("#s2").omfgslider({minValue: -1000, maxValue: 0, step: 100, range: true, showLabel: true});
-        $("#s3").omfgslider({minValue: 0, maxValue: 1, step: 0.05, vertical: true, showLabel: true});
-        $("#s4").omfgslider({minValue: 1000, maxValue: 20000, step: 100, vertical: true, range: true, showLabel: true});
+        $("#s3").omfgslider({minValue: 0, maxValue: 1, step: 0.05, vertical: true, showLabel: true, float: true});
+        $("#s4").omfgslider({minValue: 1000, maxValue: 20000, step: 100, range: true, vertical: true, showLabel: true});
         for (let i of ["#s1", "#s2", "#s3", "#s4"]) {
             $(`${i}`).omfgslider();
 
@@ -300,10 +306,18 @@
             $(`${i}`).omfgslider("inputsAttach", {minValueIn: minValueIn, maxValueIn: maxValueIn});
 
             minValueIn.focusout(() => {
-                $(`${i}`).omfgslider("setValues", {curMinValue: parseInt(minValueIn.val())})
+                if ($(`${i}`).omfgslider("getConfig").float) {
+                    $(`${i}`).omfgslider("setValues", {curMinValue: parseFloat(minValueIn.val())});
+                } else {
+                    $(`${i}`).omfgslider("setValues", {curMinValue: parseInt(minValueIn.val())});
+                }
             });
             maxValueIn.focusout(() => {
-                $(`${i}`).omfgslider("setValues", {curMaxValue: parseInt(maxValueIn.val())})
+                if ($(`${i}`).omfgslider("getConfig").float) {
+                    $(`${i}`).omfgslider("setValues", {curMaxValue: parseFloat(maxValueIn.val())});
+                } else {
+                    $(`${i}`).omfgslider("setValues", {curMaxValue: parseInt(maxValueIn.val())});
+                }
             });
             
             $(`${i} + .input-wrapper .minValue`).focusout(() => {

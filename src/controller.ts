@@ -12,8 +12,8 @@ class Controller {
     observers: MakeObservableObject;
 
     constructor(minValue: number = 0, maxValue: number = 1000, step: number = 1,
-        range: boolean = false, vertical: boolean = false, showLabel: boolean = false) {
-        this.view = new View(minValue, maxValue, step, range, vertical, showLabel);
+        range: boolean = false, vertical: boolean = false, showLabel: boolean = false, float: boolean = false) {
+        this.view = new View(minValue, maxValue, step, range, vertical, showLabel, float);
         this.model = new Model(minValue, maxValue);
         this.observers = new MakeObservableObject();
 
@@ -62,7 +62,7 @@ class Controller {
     }
     getConfig() {
         return {minValue: this.view.minValue, maxValue: this.view.maxValue, step: this.view.step,
-            range: this.view.range, vertical: this.view.vertical, showLabel: this.view.showLabel}
+            range: this.view.range, vertical: this.view.vertical, showLabel: this.view.showLabel, float: this.view.float}
     }
     addObserver(fn: Function) {
         this.observers.addObserver(fn);

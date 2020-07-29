@@ -9,11 +9,13 @@ import {Controller} from "./controller.ts";
         range: false,
         vertical: false,
         showLabel: false,
+        float: false,
     };
     const methods = {
         init: function(opt) {
             if (!$(this).data("slider")) {
-                const slider = new Controller(...Object.values($.extend(config, opt)));
+                const newConfig = JSON.parse(JSON.stringify(config));
+                const slider = new Controller(...Object.values($.extend(newConfig, opt)));
                 $(this).data("slider", slider);
                 slider.append($(this));
             }

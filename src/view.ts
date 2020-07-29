@@ -47,9 +47,9 @@ class Graduation {
 
         this.init = this.init.bind(this);
     }
-    init(minValue: number, maxValue: number, vertical: boolean) {
+    init(minValue: number, maxValue: number, vertical: boolean, float: boolean = false) {
         this.mark1.innerHTML = minValue + "";
-        if ((maxValue - minValue) % 3 && (maxValue - minValue) < 10) {
+        if (float) {
             this.mark2.innerHTML = minValue + parseFloat(((maxValue - minValue)/3).toFixed(2)) + "";
             this.mark3.innerHTML = minValue + parseFloat(((maxValue - minValue)*2/3).toFixed(2)) + "";
         } else {
@@ -130,10 +130,12 @@ class View {
     curMinValue: number;
     curMaxValue: number;
     step: number;
+    float: boolean;
     observers: MakeObservableObject;
+    
 
     constructor(minValue: number = 0, maxValue: number = 1000, step: number = 1,
-        range: boolean = false, vertical: boolean = false, showLabel: boolean = false) {
+        range: boolean = false, vertical: boolean = false, showLabel: boolean = false, float: boolean = false) {
 
         this.scale = new Scale();
         this.button1 = new Button();
@@ -150,6 +152,7 @@ class View {
         this.range = range;
         this.vertical = vertical;
         this.showLabel = showLabel;
+        this.float = float;
         this.observers = new MakeObservableObject()
         this.checkValues();
         
@@ -236,7 +239,7 @@ class View {
 
     round(val: number, step: number): number {
         let whole = Math.floor(val/step);
-        let reminder =val % step;
+        let reminder = val % step;
         if (val < 0) {
             return Math.abs(reminder) > step/2 ? whole*step : (whole + 1)*step;
         }
@@ -253,6 +256,9 @@ class View {
         currValue = this.minValue + (currOffset + this.button2.getWidth()/2)*(this.maxValue - this.minValue)/scaleMessure;
         
         let roundValue = this.round(currValue, this.step);
+        if (this.float) {
+            roundValue = parseFloat(roundValue.toFixed(2));
+        }
         if (roundValue < this.minValue) {
             roundValue = this.minValue;
         } else if (roundValue > this.maxValue) {
@@ -483,6 +489,7 @@ class View {
         } else {
             let markX = (currValue - this.minValue)/(this.maxValue - this.minValue)*this.scale.getWidth();
             [roundOffset, roundValue] = this.roundOffsetButt(markX - this.button2.getWidth()/2);
+            console.log(currValue, markX, roundOffset, roundValue);
             if (this.range) {
                 if (Math.abs(markX + this.scale.getLeft() - this.button1.getLeft() - this.button2.getWidth()/2) <
                 Math.abs(markX + this.scale.getLeft() - this.button2.getLeft() - this.button2.getWidth()/2))
@@ -521,17 +528,19 @@ class View {
     }
 
     mark2Onclick = (event: MouseEvent) => {
-        this.interMarkHandler(parseInt(this.graduation.mark2.innerHTML));
+        let val = this.float ? parseFloat(this.graduation.mark2.innerHTML) : parseInt(this.graduation.mark2.innerHTML);
+        this.interMarkHandler(val);
     }
 
     mark3Onclick = (event: MouseEvent) => {
-        this.interMarkHandler(parseInt(this.graduation.mark3.innerHTML));
+        let val = this.float ? parseFloat(this.graduation.mark3.innerHTML) : parseInt(this.graduation.mark3.innerHTML);
+        this.interMarkHandler(val);
     }
 
     init() {
         this.button1.elem.style.display = "none";
         this.label1.elem.style.display = "none";
-        this.graduation.init(this.minValue, this.maxValue, this.vertical);
+        this.graduation.init(this.minValue, this.maxValue, this.vertical, this.float);
         this.checkValues();
 
         if (this.showLabel) {
