@@ -55,8 +55,8 @@ class Graduation {
         } else {
             this.mark2.innerHTML = minValue + Math.round((maxValue - minValue)/3) + "";
             this.mark3.innerHTML = minValue + Math.round((maxValue - minValue)*2/3) + "";
-            this.mark4.innerHTML = maxValue + "";
         }
+        this.mark4.innerHTML = maxValue + "";
         
 
         if (!vertical) {
@@ -110,7 +110,6 @@ class ScaleFilling {
         this.elem = createElem("slider__scale__filling");
         this.elem.ondragstart = () => false;
     }
-    
 }
 
 class View {
@@ -288,8 +287,6 @@ class View {
         }
         if (roundValue < this.minValue) {
             roundValue = this.minValue;
-        } else if (roundValue > this.maxValue) {
-            roundValue = this.maxValue;
         }
         this.label1.elem.innerHTML = roundValue + "";
         this.curMinValue = roundValue;
@@ -440,31 +437,25 @@ class View {
         document.removeEventListener("mouseup", this.onMouseUp2);
         document.removeEventListener("mousemove", this.onMouseMove2);
     }
-
+    
     //Scale EventListeners------------------------------------------------------------------
     scaleOnclick = (event: MouseEvent) => {
-        if (this.vertical) {
-            if(this.range) {
-                if (Math.abs(event.clientY - this.button1.getTop() - this.button1.getWidth()/2) <
-                    Math.abs(event.clientY - this.button2.getTop() - this.button2.getWidth()/2)) {
-                        this.onMouseMove1(event);
-                } else {
-                    this.onMouseMove2(event);
-                }
+        if(this.range) {
+            let butt1Closer;
+            if (this.vertical) {
+                butt1Closer = Math.abs(event.clientY - this.button1.getTop() - this.button1.getWidth()/2) <
+                    Math.abs(event.clientY - this.button2.getTop() - this.button2.getWidth()/2);
+            } else {
+                butt1Closer = Math.abs(event.clientX - this.button1.getLeft() - this.button1.getWidth()/2) <
+                    Math.abs(event.clientX - this.button2.getLeft() - this.button2.getWidth()/2);
+            }
+            if (butt1Closer) {
+                    this.onMouseMove1(event);
             } else {
                 this.onMouseMove2(event);
             }
         } else {
-            if(this.range) {
-                if (Math.abs(event.clientX - this.button1.getLeft() - this.button1.getWidth()/2) <
-                    Math.abs(event.clientX - this.button2.getLeft() - this.button2.getWidth()/2)) {
-                        this.onMouseMove1(event);
-                } else {
-                    this.onMouseMove2(event);
-                }
-            } else {
-                this.onMouseMove2(event);
-            }
+            this.onMouseMove2(event);
         }
     }
 
@@ -489,7 +480,6 @@ class View {
         } else {
             let markX = (currValue - this.minValue)/(this.maxValue - this.minValue)*this.scale.getWidth();
             [roundOffset, roundValue] = this.roundOffsetButt(markX - this.button2.getWidth()/2);
-            console.log(currValue, markX, roundOffset, roundValue);
             if (this.range) {
                 if (Math.abs(markX + this.scale.getLeft() - this.button1.getLeft() - this.button2.getWidth()/2) <
                 Math.abs(markX + this.scale.getLeft() - this.button2.getLeft() - this.button2.getWidth()/2))

@@ -39,7 +39,6 @@ import {Controller} from "./controller.ts";
                 opt.maxValueIn.val(slider.getValues()[1]);
             })
         },
-        
     }
     
     $.fn.omfgslider = function(method) {
