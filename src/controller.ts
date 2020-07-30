@@ -54,10 +54,10 @@ class Controller {
     }
     setValues(curMinValue: number, curMaxValue: number) {
         if (curMinValue) {
-            this.view.butt1Move(this.view.butt1OffsetCheck(this.view.offsetValueConv(curMinValue))[0], curMinValue);
+            this.model.setCurMinValue(curMinValue);
         }
         if (curMaxValue) {
-            this.view.butt2Move(this.view.butt2OffsetCheck(this.view.offsetValueConv(curMaxValue))[0], curMaxValue);
+            this.model.setCurMaxValue(curMaxValue);
         }
     }
     getConfig() {

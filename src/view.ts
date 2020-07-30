@@ -439,7 +439,7 @@ class View {
     }
     
     //Scale EventListeners------------------------------------------------------------------
-    scaleOnclick = (event: MouseEvent) => {
+    scaleOnclick (event: MouseEvent) {
         if(this.range) {
             let butt1Closer;
             if (this.vertical) {
@@ -494,7 +494,7 @@ class View {
         }
     }
 
-    mark1Onclick = (event: MouseEvent) => {
+    mark1Onclick (event: MouseEvent) {
         let roundOffset = -this.button2.getWidth()/2;
         let roundValue = this.minValue;
         if (!this.range) {
@@ -504,7 +504,7 @@ class View {
         }
     }
 
-    mark4Onclick = (event: MouseEvent) => {
+    mark4Onclick (event: MouseEvent) {
         if (this.vertical) {
             let roundOffset = this.scale.getHeight() - this.button2.getWidth()/2;
             let roundValue = this.maxValue;
@@ -517,12 +517,12 @@ class View {
         }
     }
 
-    mark2Onclick = (event: MouseEvent) => {
+    mark2Onclick (event: MouseEvent) {
         let val = this.float ? parseFloat(this.graduation.mark2.innerHTML) : parseInt(this.graduation.mark2.innerHTML);
         this.interMarkHandler(val);
     }
 
-    mark3Onclick = (event: MouseEvent) => {
+    mark3Onclick (event: MouseEvent) {
         let val = this.float ? parseFloat(this.graduation.mark3.innerHTML) : parseInt(this.graduation.mark3.innerHTML);
         this.interMarkHandler(val);
     }
