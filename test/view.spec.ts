@@ -203,34 +203,6 @@ describe("View class", () => {
         const newItem = new View(1, 1000, 10, true, true, true);
         expect(newItem.showLabel).toEqual(true);
     });
-    it("button1.elem should has eventlistener mousedown", () => {
-        const newItem = new View();
-        expect(typeof newItem.button1.elem.onmousedown).toEqual("function");
-    });
-    it("button2.elem should has eventlistener mousedown", () => {
-        const newItem = new View();
-        expect(typeof newItem.button2.elem.onmousedown).toEqual("function");
-    });
-    it("scale.elem should has eventlistener onclick", () => {
-        const newItem = new View();
-        expect(newItem.scale.elem.onclick).toBeInstanceOf(Function);
-    });
-    it("graduation.mark1 should has eventlistener onclick", () => {
-        const newItem = new View();
-        expect(newItem.graduation.mark1.onclick).toBeInstanceOf(Function);
-    });
-    it("graduation.mark2 should has eventlistener onclick", () => {
-        const newItem = new View();
-        expect(newItem.graduation.mark2.onclick).toBeInstanceOf(Function);
-    });
-    it("graduation.mark3 should has eventlistener onclick", () => {
-        const newItem = new View();
-        expect(newItem.graduation.mark3.onclick).toBeInstanceOf(Function);
-    });
-    it("graduation.mark4 should has eventlistener onclick", () => {
-        const newItem = new View();
-        expect(newItem.graduation.mark4.onclick).toBeInstanceOf(Function);
-    });
     it("getStart() should return offset the middle of button1(horizontal) if .range = true", () => {
         const newItem = new View(1000, 10000, 1200, true);
         newItem.init();

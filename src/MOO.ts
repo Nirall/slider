@@ -3,7 +3,7 @@ class MakeObservableObject {
     constructor() {
         this.observers = [];
     }
-    addObserver (fn: Function) {
+    addObserver (fn: Function): void {
         if (typeof fn !== 'function') {
             throw new Error('observer must be a function');
         }
@@ -13,23 +13,23 @@ class MakeObservableObject {
             }
         }
         this.observers.push(fn);
-    };
-    removeObserver (fn: Function) {
+    }
+    removeObserver (fn: Function): void {
         for (let i = 0; i < this.observers.length; i++) {
-            var observer = this.observers[i];
+            let observer = this.observers[i];
             if (observer === fn) {
                 this.observers.splice(i, 1);
                 return;
             }
         }
         throw new Error('could not find observer in list of observers');
-    };
-    notifyObservers () {
+    }
+    notifyObservers (): void {
         const observersSnapshot = this.observers.slice(0);
         for (let i = 0; i < observersSnapshot.length; i++) {
             observersSnapshot[i]();
         }
-    };
+    }
 }
 
 export {MakeObservableObject};

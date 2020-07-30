@@ -3,15 +3,14 @@ import {MakeObservableObject} from "./MOO";
 // Elements factory
 function createElem(className: string) :HTMLElement {
     const elem = document.createElement("div");
+    elem.ondragstart = () => false;
     elem.classList.add(className);
     return elem;
 }
 
 class Scale {
     elem: HTMLElement;
-    constructor() {
-        this.elem = createElem("slider__scale");
-        this.elem.ondragstart = () => false;
+    constructor() {this.elem = createElem("slider__scale");
     }
     getLeft(): number {
         return this.elem.getBoundingClientRect().left;
@@ -77,7 +76,6 @@ class Button {
     elem: HTMLElement;
     constructor() {
         this.elem = createElem("slider__button");
-        this.elem.ondragstart = () => false;
     }
     getLeft(): number {
         return this.elem.getBoundingClientRect().left;
@@ -94,7 +92,6 @@ class Label {
     elem: HTMLElement;
     constructor() {
         this.elem = createElem("slider__button__label");
-        this.elem.ondragstart = () => false;
     }
     getWidth(): number {
         return this.elem.getBoundingClientRect().width;
@@ -108,7 +105,6 @@ class ScaleFilling {
     elem: HTMLElement;
     constructor() {
         this.elem = createElem("slider__scale__filling");
-        this.elem.ondragstart = () => false;
     }
 }
 
@@ -154,22 +150,6 @@ class View {
         this.observers = new MakeObservableObject()
         this.checkValues();
         
-        this.button1.elem.onmousedown = (eventMd: MouseEvent) => {
-            eventMd.preventDefault();
-            document.addEventListener("mousemove", this.onMouseMove1);
-            document.addEventListener("mouseup", this.onMouseUp1);
-        }
-        this.button2.elem.onmousedown = (eventMd: MouseEvent) => {
-            eventMd.preventDefault();
-            document.addEventListener("mousemove", this.onMouseMove2);
-            document.addEventListener("mouseup", this.onMouseUp2);
-        }
-        this.scale.elem.onclick = this.scaleOnclick;
-        this.graduation.mark1.onclick = this.mark1Onclick;
-        this.graduation.mark2.onclick = this.mark2Onclick;
-        this.graduation.mark3.onclick = this.mark3Onclick;
-        this.graduation.mark4.onclick = this.mark4Onclick;
-        
         this.getStart = this.getStart.bind(this);
         this.getEnd = this.getEnd.bind(this);
         this.updateElems = this.updateElems.bind(this);
@@ -195,6 +175,8 @@ class View {
         this.mark2Onclick = this.mark2Onclick.bind(this);
         this.mark3Onclick = this.mark3Onclick.bind(this);
         this.mark4Onclick = this.mark4Onclick.bind(this);
+
+        this.append = this.append.bind(this);
     }
 
     getStart(): number {
@@ -622,6 +604,22 @@ class View {
         entry.appendChild(this.graduation.gradElem);
         entry.appendChild(this.button2.elem);
         entry.appendChild(this.label2.elem);
+
+        this.scale.elem.onclick = this.scaleOnclick;
+        this.graduation.mark1.onclick = this.mark1Onclick;
+        this.graduation.mark2.onclick = this.mark2Onclick;
+        this.graduation.mark3.onclick = this.mark3Onclick;
+        this.graduation.mark4.onclick = this.mark4Onclick;
+        this.button1.elem.onmousedown = (eventMd: MouseEvent) => {
+            eventMd.preventDefault();
+            document.addEventListener("mousemove", this.onMouseMove1);
+            document.addEventListener("mouseup", this.onMouseUp1);
+        }
+        this.button2.elem.onmousedown = (eventMd: MouseEvent) => {
+            eventMd.preventDefault();
+            document.addEventListener("mousemove", this.onMouseMove2);
+            document.addEventListener("mouseup", this.onMouseUp2);
+        }
     }
 }
 
