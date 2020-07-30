@@ -5,19 +5,19 @@ class Model {
     curMaxValue: number;
     observers: MakeObservableObject;
 
-    constructor(curMinValue: number = 0, curMaxValue: number = 1000) {
+    constructor(curMinValue = 0, curMaxValue = 1000) {
         this.curMinValue = curMinValue;
         this.curMaxValue = curMaxValue;
         this.observers = new MakeObservableObject();
     }
     
-    setCurMinValue(data: number) {
+    setCurMinValue(data: number): void {
         if (this.curMinValue != data) {
             this.curMinValue = data;
             this.observers.notifyObservers();
         }
     }
-    setCurMaxValue(data: number) {
+    setCurMaxValue(data: number): void {
         if (this.curMaxValue != data) {
             this.curMaxValue = data;
             this.observers.notifyObservers();

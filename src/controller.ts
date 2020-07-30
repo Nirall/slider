@@ -11,8 +11,7 @@ class Controller {
     model: Model;
     observers: MakeObservableObject;
 
-    constructor(minValue: number = 0, maxValue: number = 1000, step: number = 1,
-        range: boolean = false, vertical: boolean = false, showLabel: boolean = false, float: boolean = false) {
+    constructor(minValue = 0, maxValue = 1000, step = 1, range = false, vertical = false, showLabel = false, float = false) {
         this.view = new View(minValue, maxValue, step, range, vertical, showLabel, float);
         this.model = new Model(minValue, maxValue);
         this.observers = new MakeObservableObject();
@@ -23,8 +22,8 @@ class Controller {
             this.observers.notifyObservers();
         });
         this.model.observers.addObserver(() => {
-            let curMinValue = this.model.curMinValue;
-            let curMaxValue = this.model.curMaxValue;
+            const curMinValue = this.model.curMinValue;
+            const curMaxValue = this.model.curMaxValue;
             this.view.butt1Move(this.view.offsetValueConv(curMinValue), curMinValue);
             this.view.butt2Move(this.view.offsetValueConv(curMaxValue), curMaxValue);
             this.observers.notifyObservers();
@@ -35,11 +34,11 @@ class Controller {
         this.getConfig = this.getConfig.bind(this);
         this.addObserver = this.addObserver.bind(this);
     }
-    append(entry: JQuery) {
+    append(entry: JQuery): void {
         this.view.append(entry.get(0));
         this.view.init();
     }
-    update(args: configType) {
+    update(args: configType): void {
         Object.keys(args).map((item)  => {
             if (this.view[item] !== undefined) {
                 this.view[item] = args[item];
@@ -49,10 +48,10 @@ class Controller {
         this.view.butt1Move(this.view.butt1OffsetCheck(this.view.offsetValueConv(this.model.curMinValue))[0], this.model.curMinValue);
         this.view.butt2Move(this.view.butt2OffsetCheck(this.view.offsetValueConv(this.model.curMaxValue))[0], this.model.curMaxValue);
     }
-    getValues() {
+    getValues(): Array<number> {
         return [this.model.curMinValue, this.model.curMaxValue];
     }
-    setValues(curMinValue: number, curMaxValue: number) {
+    setValues(curMinValue: number, curMaxValue: number): void {
         if (curMinValue) {
             this.model.setCurMinValue(curMinValue);
         }
@@ -60,11 +59,11 @@ class Controller {
             this.model.setCurMaxValue(curMaxValue);
         }
     }
-    getConfig() {
+    getConfig(): configType {
         return {minValue: this.view.minValue, maxValue: this.view.maxValue, step: this.view.step,
             range: this.view.range, vertical: this.view.vertical, showLabel: this.view.showLabel, float: this.view.float}
     }
-    addObserver(fn: Function) {
+    addObserver(fn: Function): void {
         this.observers.addObserver(fn);
     }
 }
