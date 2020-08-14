@@ -1,4 +1,4 @@
-import {MakeObservableObject} from "../src/MOO";
+import MakeObservableObject from "../src/assets/MakeObservableObject";
 
 describe("MakeObservableObject", () => {
     it("constructor() should make .observers = []", () => {

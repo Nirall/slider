@@ -289,20 +289,17 @@
         $("#s1").omfgslider({showLabel: true});
         $("#s2").omfgslider({minValue: -1000, maxValue: 0, step: 100, range: true, showLabel: true});
         $("#s3").omfgslider({minValue: 0, maxValue: 1, step: 0.05, vertical: true, showLabel: true, float: true});
-        $("#s4").omfgslider({minValue: 1000, maxValue: 20000, step: 100, range: true, vertical: true, showLabel: true});
+        $("#s4").omfgslider({minValue: -3, maxValue: 0, step: 0.1, range: true, vertical: true, showLabel: true, float: true});
         for (let i of ["#s1", "#s2", "#s3", "#s4"]) {
             $(`${i}`).omfgslider();
-
             let conf = $(`${i}`).omfgslider("getConfig");
             const minValueIn = $(`${i} + .input-wrapper .minValueIn`);
             const maxValueIn = $(`${i} + .input-wrapper .maxValueIn`);
             minValueIn.val(conf.minValue);
             maxValueIn.val(conf.maxValue);
-
             $(`${i} + .input-wrapper .minValue`).val(conf.minValue);
             $(`${i} + .input-wrapper .maxValue`).val(conf.maxValue);
             $(`${i} + .input-wrapper .step`).val(conf.step);
-            
             $(`${i}`).omfgslider("inputsAttach", {minValueIn: minValueIn, maxValueIn: maxValueIn});
 
             minValueIn.focusout(() => {
@@ -312,6 +309,7 @@
                     $(`${i}`).omfgslider("setValues", {curMinValue: parseInt(minValueIn.val())});
                 }
             });
+
             maxValueIn.focusout(() => {
                 if ($(`${i}`).omfgslider("getConfig").float) {
                     $(`${i}`).omfgslider("setValues", {curMaxValue: parseFloat(maxValueIn.val())});
@@ -321,28 +319,43 @@
             });
             
             $(`${i} + .input-wrapper .minValue`).focusout(() => {
-                $(`${i}`).omfgslider("update", {minValue: parseInt($(`${i} + .input-wrapper .minValue`).val())});
+                if ($(`${i}`).omfgslider("getConfig").float) {
+                    $(`${i}`).omfgslider("update", {minValue: parseFloat($(`${i} + .input-wrapper .minValue`).val())});
+                } else {
+                    $(`${i}`).omfgslider("update", {minValue: parseInt($(`${i} + .input-wrapper .minValue`).val())});
+                }
             });
+
             $(`${i} + .input-wrapper .maxValue`).focusout(() => {
-                $(`${i}`).omfgslider("update", {maxValue: parseInt($(`${i} + .input-wrapper .maxValue`).val())});
+                if ($(`${i}`).omfgslider("getConfig").float) {
+                    $(`${i}`).omfgslider("update", {maxValue: parseFloat($(`${i} + .input-wrapper .maxValue`).val())});
+                } else {
+                    $(`${i}`).omfgslider("update", {maxValue: parseInt($(`${i} + .input-wrapper .maxValue`).val())});
+                }
             });
+
             $(`${i} + .input-wrapper .step`).focusout(() => {
-                $(`${i}`).omfgslider("update", {step: parseInt($(`${i} + .input-wrapper .step`).val())});
+                if ($(`${i}`).omfgslider("getConfig").float) {
+                    $(`${i}`).omfgslider("update", {step: parseFloat($(`${i} + .input-wrapper .step`).val())});
+                } else {
+                    $(`${i}`).omfgslider("update", {step: parseInt($(`${i} + .input-wrapper .step`).val())});
+                }
             });
-            
+
             $(`${i} + .input-wrapper input[name = "range"]`).change(() => {
                 let conf = $(`${i}`).omfgslider("getConfig");
                 (conf.range === false) ? $(`${i}`).omfgslider("update", {range: true}) : $(`${i}`).omfgslider("update", {range: false});
             });
+
             $(`${i} + .input-wrapper input[name = "vertical"]`).change(() => {
                 let conf = $(`${i}`).omfgslider("getConfig");
                 (conf.vertical === false) ? $(`${i}`).omfgslider("update", {vertical: true}) : $(`${i}`).omfgslider("update", {vertical: false});
             });
+
             $(`${i} + .input-wrapper input[name = "showLabel"]`).change(() => {
                 let conf = $(`${i}`).omfgslider("getConfig");
                 (conf.showLabel === false) ? $(`${i}`).omfgslider("update", {showLabel: true}) : $(`${i}`).omfgslider("update", {showLabel: false});
             });
         }
-        
     </script>
 </html>

@@ -1,4 +1,4 @@
-import {Controller} from "../src/controller";
+import Controller from "../src/controller";
 
 describe("Class Controller", () => {
     it("constructor() should create .view prop with the certain values", () => {

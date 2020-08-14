@@ -1,5 +1,5 @@
-import {Model} from "../src/model";
-import {MakeObservableObject} from "../src/MOO";
+import Model from "../src/model";
+import MakeObservableObject from "../src/assets/MakeObservableObject";
 
 describe("Class Model", () => {
     it("constructor() should create .curMinValue", () => {
