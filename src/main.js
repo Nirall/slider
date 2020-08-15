@@ -6,7 +6,7 @@ import Controller from "./controller.ts";
     maxValue: 1000,
     step: 1,
     range: false,
-    vertical: false,
+    isVertical: false,
     showLabel: false,
     float: false,
   };

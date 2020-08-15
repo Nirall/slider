@@ -16,7 +16,7 @@ class View {
   label1: Label;
   label2: Label;
   range: boolean;
-  vertical: boolean;
+  isVertical: boolean;
   showLabel: boolean;
   minValue: number;
   maxValue: number;
@@ -26,7 +26,7 @@ class View {
   float: boolean;
   observers: MakeObservableObject;
     
-  constructor(minValue = 0, maxValue = 1000, step = 1, range = false, vertical = false, showLabel = false, float = false) {
+  constructor(minValue = 0, maxValue = 1000, step = 1, range = false, isVertical = false, showLabel = false, float = false) {
     this.scale = new Scale();
     this.button1 = new Button();
     this.button2 = new Button();
@@ -40,7 +40,7 @@ class View {
     this.curMaxValue = maxValue;
     this.step = step;
     this.range = range;
-    this.vertical = vertical;
+    this.isVertical = isVertical;
     this.showLabel = showLabel;
     this.float = float;
     this.observers = new MakeObservableObject()
@@ -49,7 +49,7 @@ class View {
 
   getStart = (): number => {
     if (this.range) {
-      if (this.vertical) {
+      if (this.isVertical) {
         return this.button1.getTop() - this.scale.getTop() + this.button1.getWidth()/2;
       } 
           
@@ -60,7 +60,7 @@ class View {
   }
 
   getEnd = (): number => {
-    if (this.vertical) {
+    if (this.isVertical) {
       return this.button2.getTop() - this.scale.getTop() + this.button2.getWidth()/2;
     }
 
@@ -68,7 +68,7 @@ class View {
   }
 
   updateElems = (): void => {
-    if (this.vertical) {
+    if (this.isVertical) {
       this.scaleFilling.elem.style.top = this.getStart() + "px";
       this.scaleFilling.elem.style.left = "0";
       this.scaleFilling.elem.style.height = this.getEnd() - this.getStart() + "px";
@@ -99,7 +99,7 @@ class View {
 
   roundOffsetButt = (currOffset: number): Array<number> => {
     let scaleMessure;
-    if(this.vertical) {
+    if(this.isVertical) {
       scaleMessure = this.scale.getHeight();
     } else {
       scaleMessure = this.scale.getWidth();
@@ -123,7 +123,7 @@ class View {
   }
 
   offsetValueConv = (value: number): number => {
-    if (this.vertical) {
+    if (this.isVertical) {
       return ((value - this.minValue)/(this.maxValue - this.minValue)*this.scale.getHeight() - this.button2.getWidth()/2);
     } 
         
@@ -132,7 +132,7 @@ class View {
 
   //Button1  Handlers-------------------------------------------------------------------------------
   butt1Move = (roundOffset: number, roundValue: number): void => {
-    if (this.vertical) {
+    if (this.isVertical) {
       this.button1.elem.style.top = roundOffset + "px";
       this.label1.elem.style.top = roundOffset - this.label1.getHeight()/2 + this.button1.getWidth()/2 + "px";
     } else {
@@ -152,7 +152,7 @@ class View {
   butt1OffsetCheck = (newOffset: number): Array<number> => {
     let roundValue;
 
-    if (this.vertical) {
+    if (this.isVertical) {
       const stepWidth = this.step*this.scale.getHeight()/(this.maxValue - this.minValue);
       if (newOffset < -this.button2.getWidth()/2) {
         newOffset = -this.button2.getWidth()/2;
@@ -193,7 +193,7 @@ class View {
     let newOffset;
     let roundValue;
     let roundOffset;
-    if (this.vertical) {
+    if (this.isVertical) {
       newOffset = eventMm.clientY - this.scale.getTop() - this.button1.getWidth()/2;
     } else {
       newOffset = eventMm.clientX - this.scale.getLeft() - this.button1.getWidth()/2;
@@ -214,7 +214,7 @@ class View {
 
   //Button2  Handlers----------------------------------------------------------------
   butt2Move = (roundOffset: number, roundValue: number): void => {
-    if (this.vertical) {
+    if (this.isVertical) {
       this.button2.elem.style.top = roundOffset + "px";
       this.label2.elem.style.top = roundOffset - this.label2.getHeight()/2 + this.button2.getWidth()/2 + "px";
     } else {
@@ -242,7 +242,7 @@ class View {
       }
     }
 
-    if (this.vertical) {
+    if (this.isVertical) {
       const stepWidth = this.step*this.scale.getHeight()/(this.maxValue - this.minValue);
       if (newOffset > this.scale.getHeight() - this.button2.getWidth()/2) {
         newOffset = this.scale.getHeight() - this.button2.getWidth()/2;
@@ -284,7 +284,7 @@ class View {
     let newOffset;
     let roundValue;
     let roundOffset;
-    if (this.vertical) {
+    if (this.isVertical) {
       newOffset = eventMm.clientY - this.scale.getTop() - this.button2.getWidth()/2;
     } else {
       newOffset = eventMm.clientX - this.scale.getLeft() - this.button2.getWidth()/2;
@@ -307,7 +307,7 @@ class View {
   scaleOnclick = (event: MouseEvent): void => {
     if(this.range) {
       let butt1Closer;
-      if (this.vertical) {
+      if (this.isVertical) {
         butt1Closer = Math.abs(event.clientY - this.button1.getTop() - this.button1.getWidth()/2) 
         < Math.abs(event.clientY - this.button2.getTop() - this.button2.getWidth()/2);
       } else {
@@ -330,7 +330,7 @@ class View {
   interMarkHandler = (currValue: number): void => {
     let roundOffset;
     let roundValue;
-    if (this.vertical) {
+    if (this.isVertical) {
       const markX = (currValue - this.minValue)/(this.maxValue - this.minValue)*this.scale.getHeight();
       [roundOffset, roundValue] = this.roundOffsetButt(markX - this.button2.getWidth()/2);
       if (this.range) {
@@ -370,7 +370,7 @@ class View {
   }
 
   mark4Onclick = (event: MouseEvent): void => {
-    if (this.vertical) {
+    if (this.isVertical) {
       const roundOffset = this.scale.getHeight() - this.button2.getWidth()/2;
       const roundValue = this.maxValue;
       this.butt2Move(roundOffset, roundValue);
@@ -404,8 +404,8 @@ class View {
     if (typeof this.range !== "boolean") {
       console.error("Range should be a boolean");
     }
-    if (typeof this.vertical !== "boolean") {
-      console.error("Vertical should be a boolean");
+    if (typeof this.isVertical !== "boolean") {
+      console.error("isVertical should be a boolean");
     }
     if (typeof this.showLabel !== "boolean") {
       console.error("ShowLabel should be a boolean");
@@ -419,7 +419,7 @@ class View {
   init = (): void => {
     this.button1.elem.style.display = "none";
     this.label1.elem.style.display = "none";
-    this.graduation.init(this.minValue, this.maxValue, this.vertical, this.float);
+    this.graduation.init(this.minValue, this.maxValue, this.isVertical, this.float);
     this.checkValues();
     if (this.showLabel) {
       this.label1.elem.style.display = "block";
@@ -436,7 +436,7 @@ class View {
       this.label1.elem.style.display = "none";
     }
 
-    if (this.vertical) {
+    if (this.isVertical) {
       this.scale.elem.classList.add("slider__scale_vertical");
       this.scaleFilling.elem.classList.add("slider__scale-filling_vertical");
       this.graduation.gradElem.classList.add("slider__graduation_vertical");

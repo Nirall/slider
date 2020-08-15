@@ -4,13 +4,13 @@ describe("Class Controller", () => {
     it("constructor() should create .view prop with the certain values", () => {
         const item = new Controller(100, 800, 10, true, true, true, true);
         const props = [item.view.minValue, item.view.maxValue, item.view.step,
-            item.view.range, item.view.vertical, item.view.showLabel, item.view.float]
+            item.view.range, item.view.isVertical, item.view.showLabel, item.view.float]
         expect(props).toEqual([100, 800, 10, true, true, true, true]);
     });
     it("constructor() should create .view prop with the certain default values", () => {
         const item = new Controller();
         const props = [item.view.minValue, item.view.maxValue, item.view.step,
-            item.view.range, item.view.vertical, item.view.showLabel, item.view.float]
+            item.view.range, item.view.isVertical, item.view.showLabel, item.view.float]
         expect(props).toEqual([0, 1000, 1, false, false, false, false]);
     });
     it("constructor() should create .model prop with the certain values", () => {
@@ -56,10 +56,10 @@ describe("Class Controller", () => {
         document.body.appendChild(entry);
         item.view.append(entry);
         item.view.init();        
-        item.update({minValue: 1000, maxValue: 10000, step: 100, range: true, vertical: true, showLabel: true});
+        item.update({minValue: 1000, maxValue: 10000, step: 100, range: true, isVertical: true, showLabel: true});
 
         expect([item.view.minValue, item.view.maxValue, item.view.step, item.view.range,
-            item.view.vertical, item.view.showLabel]).toEqual([1000, 10000, 100, true, true, true]);
+            item.view.isVertical, item.view.showLabel]).toEqual([1000, 10000, 100, true, true, true]);
     });
     it("update(), if data to update isn't correct there is shouldn't be new property", () => {
         const item = new Controller();
@@ -100,8 +100,8 @@ describe("Class Controller", () => {
         document.body.appendChild(entry);
         item.view.append(entry);
         item.view.init();
-        item.update({vertical: true, float: true})
-        expect(item.getConfig()).toEqual({minValue: 0, maxValue: 1000, step: 1, range: true, vertical: true, showLabel: false, float:true});
+        item.update({isVertical: true, float: true})
+        expect(item.getConfig()).toEqual({minValue: 0, maxValue: 1000, step: 1, range: true, isVertical: true, showLabel: false, float:true});
     });
     it("addObserver() should add observer to the Controller", () => {
         const item = new Controller(-1000, 0, 10, false);

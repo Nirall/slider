@@ -288,8 +288,8 @@
     <script>
         $("#s1").omfgslider({showLabel: true});
         $("#s2").omfgslider({minValue: -1000, maxValue: 0, step: 100, range: true, showLabel: true});
-        $("#s3").omfgslider({minValue: 0, maxValue: 1, step: 0.05, vertical: true, showLabel: true, float: true});
-        $("#s4").omfgslider({minValue: -3, maxValue: 0, step: 0.1, range: true, vertical: true, showLabel: true, float: true});
+        $("#s3").omfgslider({minValue: 0, maxValue: 1, step: 0.05, isVertical: true, showLabel: true, float: true});
+        $("#s4").omfgslider({minValue: -3, maxValue: 0, step: 0.1, range: true, isVertical: true, showLabel: true, float: true});
         for (let i of ["#s1", "#s2", "#s3", "#s4"]) {
             $(`${i}`).omfgslider();
             let conf = $(`${i}`).omfgslider("getConfig");
@@ -349,7 +349,7 @@
 
             $(`${i} + .input-wrapper input[name = "vertical"]`).change(() => {
                 let conf = $(`${i}`).omfgslider("getConfig");
-                (conf.vertical === false) ? $(`${i}`).omfgslider("update", {vertical: true}) : $(`${i}`).omfgslider("update", {vertical: false});
+                (conf.isVertical === false) ? $(`${i}`).omfgslider("update", {isVertical: true}) : $(`${i}`).omfgslider("update", {isVertical: false});
             });
 
             $(`${i} + .input-wrapper input[name = "showLabel"]`).change(() => {

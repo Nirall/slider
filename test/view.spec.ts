@@ -59,7 +59,7 @@ describe("View class", () => {
 
   it("should has .vertical with the certain value", () => {
     const newItem = new View(1, 1000, 10, true, true);
-    expect(newItem.vertical).toEqual(true);
+    expect(newItem.isVertical).toEqual(true);
   });
 
   it("should has .showlabel with the certain value", () => {
