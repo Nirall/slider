@@ -8,7 +8,7 @@ import Controller from "./controller.ts";
     isRange: false,
     isVertical: false,
     showLabel: false,
-    float: false,
+    isFloat: false,
   };
 
   const methods = {

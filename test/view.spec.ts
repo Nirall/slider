@@ -54,7 +54,7 @@ describe("View class", () => {
 
   it("should has .range with the certain value", () => {
     const newItem = new View(1, 1000, 10, true);
-    expect(newItem.range).toEqual(true);
+    expect(newItem.isRange).toEqual(true);
   });
 
   it("should has .vertical with the certain value", () => {
@@ -1031,7 +1031,7 @@ describe("View class", () => {
     document.body.appendChild(entry);
     newItem.append(entry);
     newItem.init();
-    newItem.range = false;
+    newItem.isRange = false;
     newItem.init();
     expect(newItem.button1.elem.style.display).toEqual("none");
   });

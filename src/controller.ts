@@ -10,8 +10,8 @@ class Controller {
   view: View;
   model: Model;
   observers: MakeObservableObject;
-  constructor(minValue = 0, maxValue = 1000, step = 1, isRange = false, isVertical = false, showLabel = false, float = false) {
-    this.view = new View(minValue, maxValue, step, isRange, isVertical, showLabel, float);
+  constructor(minValue = 0, maxValue = 1000, step = 1, isRange = false, isVertical = false, showLabel = false, isFloat = false) {
+    this.view = new View(minValue, maxValue, step, isRange, isVertical, showLabel, isFloat);
     this.model = new Model(minValue, maxValue);
     this.observers = new MakeObservableObject();
 
@@ -63,7 +63,7 @@ class Controller {
 
   getConfig = (): configType => {
     return {minValue: this.view.minValue, maxValue: this.view.maxValue, step: this.view.step,
-      isRange: this.view.isRange, isVertical: this.view.isVertical, showLabel: this.view.showLabel, float: this.view.float}
+      isRange: this.view.isRange, isVertical: this.view.isVertical, showLabel: this.view.showLabel, isFloat: this.view.isFloat}
   }
   
   addObserver = (fn: Function): void => {

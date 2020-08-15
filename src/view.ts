@@ -23,10 +23,10 @@ class View {
   curMinValue: number;
   curMaxValue: number;
   step: number;
-  float: boolean;
+  isFloat: boolean;
   observers: MakeObservableObject;
     
-  constructor(minValue = 0, maxValue = 1000, step = 1, isRange = false, isVertical = false, showLabel = false, float = false) {
+  constructor(minValue = 0, maxValue = 1000, step = 1, isRange = false, isVertical = false, showLabel = false, isFloat = false) {
     this.scale = new Scale();
     this.button1 = new Button();
     this.button2 = new Button();
@@ -42,7 +42,7 @@ class View {
     this.isRange = isRange;
     this.isVertical = isVertical;
     this.showLabel = showLabel;
-    this.float = float;
+    this.isFloat = isFloat;
     this.observers = new MakeObservableObject()
     this.checkValues();
   }
@@ -108,7 +108,7 @@ class View {
     const currValue = this.minValue + (currOffset + this.button2.getWidth()/2)*(this.maxValue - this.minValue)/scaleMessure;
     let roundValue = this.round(currValue, this.step);
 
-    if (this.float) {
+    if (this.isFloat) {
       roundValue = parseFloat(roundValue.toFixed(2));
     }
     
@@ -382,12 +382,12 @@ class View {
   }
 
   mark2Onclick = (event: MouseEvent): void => {
-    const val = this.float ? parseFloat(this.graduation.mark2.innerHTML) : parseInt(this.graduation.mark2.innerHTML);
+    const val = this.isFloat ? parseFloat(this.graduation.mark2.innerHTML) : parseInt(this.graduation.mark2.innerHTML);
     this.interMarkHandler(val);
   }
 
   mark3Onclick = (event: MouseEvent): void => {
-    const val = this.float ? parseFloat(this.graduation.mark3.innerHTML) : parseInt(this.graduation.mark3.innerHTML);
+    const val = this.isFloat ? parseFloat(this.graduation.mark3.innerHTML) : parseInt(this.graduation.mark3.innerHTML);
     this.interMarkHandler(val);
   }
 
@@ -419,7 +419,7 @@ class View {
   init = (): void => {
     this.button1.elem.style.display = "none";
     this.label1.elem.style.display = "none";
-    this.graduation.init(this.minValue, this.maxValue, this.isVertical, this.float);
+    this.graduation.init(this.minValue, this.maxValue, this.isVertical, this.isFloat);
     this.checkValues();
     if (this.showLabel) {
       this.label1.elem.style.display = "block";
