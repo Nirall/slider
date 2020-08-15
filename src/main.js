@@ -5,7 +5,7 @@ import Controller from "./controller.ts";
     minValue: 0,
     maxValue: 1000,
     step: 1,
-    range: false,
+    isRange: false,
     isVertical: false,
     showLabel: false,
     float: false,

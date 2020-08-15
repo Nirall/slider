@@ -15,7 +15,7 @@ class View {
   button2: Button;
   label1: Label;
   label2: Label;
-  range: boolean;
+  isRange: boolean;
   isVertical: boolean;
   showLabel: boolean;
   minValue: number;
@@ -26,7 +26,7 @@ class View {
   float: boolean;
   observers: MakeObservableObject;
     
-  constructor(minValue = 0, maxValue = 1000, step = 1, range = false, isVertical = false, showLabel = false, float = false) {
+  constructor(minValue = 0, maxValue = 1000, step = 1, isRange = false, isVertical = false, showLabel = false, float = false) {
     this.scale = new Scale();
     this.button1 = new Button();
     this.button2 = new Button();
@@ -39,7 +39,7 @@ class View {
     this.curMinValue = minValue;
     this.curMaxValue = maxValue;
     this.step = step;
-    this.range = range;
+    this.isRange = isRange;
     this.isVertical = isVertical;
     this.showLabel = showLabel;
     this.float = float;
@@ -48,7 +48,7 @@ class View {
   }
 
   getStart = (): number => {
-    if (this.range) {
+    if (this.isRange) {
       if (this.isVertical) {
         return this.button1.getTop() - this.scale.getTop() + this.button1.getWidth()/2;
       } 
@@ -80,7 +80,7 @@ class View {
       this.scaleFilling.elem.style.height = "100%";
     }
 
-    if (!this.range) {
+    if (!this.isRange) {
       this.curMinValue = this.minValue;
     }
 
@@ -235,7 +235,7 @@ class View {
 
   butt2OffsetCheck = (newOffset: number): Array<number> => {
     let roundValue;
-    if (!this.range) {
+    if (!this.isRange) {
       if (newOffset < -this.button2.getWidth()/2) {
         newOffset = -this.button2.getWidth()/2;
         roundValue = this.minValue;
@@ -305,7 +305,7 @@ class View {
     
   // Scale EventListeners------------------------------------------------------------------
   scaleOnclick = (event: MouseEvent): void => {
-    if(this.range) {
+    if(this.isRange) {
       let butt1Closer;
       if (this.isVertical) {
         butt1Closer = Math.abs(event.clientY - this.button1.getTop() - this.button1.getWidth()/2) 
@@ -333,7 +333,7 @@ class View {
     if (this.isVertical) {
       const markX = (currValue - this.minValue)/(this.maxValue - this.minValue)*this.scale.getHeight();
       [roundOffset, roundValue] = this.roundOffsetButt(markX - this.button2.getWidth()/2);
-      if (this.range) {
+      if (this.isRange) {
         if (Math.abs(markX + this.scale.getTop() - this.button1.getTop() - this.button2.getWidth()/2)
           < Math.abs(markX + this.scale.getTop() - this.button2.getTop() - this.button2.getWidth()/2)) {
           this.butt1Move(roundOffset, roundValue);
@@ -346,7 +346,7 @@ class View {
     } else {
       const markX = (currValue - this.minValue)/(this.maxValue - this.minValue)*this.scale.getWidth();
       [roundOffset, roundValue] = this.roundOffsetButt(markX - this.button2.getWidth()/2);
-      if (this.range) {
+      if (this.isRange) {
         if (Math.abs(markX + this.scale.getLeft() - this.button1.getLeft() - this.button2.getWidth()/2)
           < Math.abs(markX + this.scale.getLeft() - this.button2.getLeft() - this.button2.getWidth()/2)) {
           this.butt1Move(roundOffset, roundValue);
@@ -362,7 +362,7 @@ class View {
   mark1Onclick = (event: MouseEvent): void => {
     const roundOffset = -this.button2.getWidth()/2;
     const roundValue = this.minValue;
-    if (!this.range) {
+    if (!this.isRange) {
       this.butt2Move(roundOffset, roundValue);
     } else {
       this.butt1Move(roundOffset, roundValue);
@@ -401,8 +401,8 @@ class View {
     if (typeof this.step !== "number") {
       console.error("Step should be a number");
     }
-    if (typeof this.range !== "boolean") {
-      console.error("Range should be a boolean");
+    if (typeof this.isRange !== "boolean") {
+      console.error("isRange should be a boolean");
     }
     if (typeof this.isVertical !== "boolean") {
       console.error("isVertical should be a boolean");
@@ -429,7 +429,7 @@ class View {
       this.label2.elem.style.display = "none";
     }
 
-    if (this.range) {
+    if (this.isRange) {
       this.button1.elem.style.display = "block";
     } else {
       this.button1.elem.style.display = "none";
