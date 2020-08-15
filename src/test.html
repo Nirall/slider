@@ -301,7 +301,6 @@
             $(`${i} + .input-wrapper .maxValue`).val(conf.maxValue);
             $(`${i} + .input-wrapper .step`).val(conf.step);
             $(`${i}`).omfgslider("inputsAttach", {minValueIn: minValueIn, maxValueIn: maxValueIn});
-
             minValueIn.focusout(() => {
                 if ($(`${i}`).omfgslider("getConfig").isFloat) {
                     $(`${i}`).omfgslider("setValues", {curMinValue: parseFloat(minValueIn.val())});

@@ -1193,13 +1193,13 @@ describe("View class", () => {
   });
 
   it("checkValues(), if step > maxvalue - minvalue, there is should be a error message", () => {
-      spyOn(console, "error");
-      const newItem = new View(0, 800, 900, true, false);
-      const entry = createElem("slider");
-      document.body.appendChild(entry);
-      newItem.append(entry);
-      newItem.init();
-      expect(console.error).toHaveBeenCalled();
+    spyOn(console, "error");
+    const newItem = new View(0, 800, 900, true, false);
+    const entry = createElem("slider");
+    document.body.appendChild(entry);
+    newItem.append(entry);
+    newItem.init();
+    expect(console.error).toHaveBeenCalled();
   });
 })
 
