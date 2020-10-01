@@ -4,7 +4,7 @@
 ### Установка
 В репозитарии имеется собранная тестовая страница с подключенными слайдерами "dist/test.html". Для установки клонируйте репозиторий, из папки проекта выполните "npm install", тесты "npm run test", сборка "npm run build".
 
-[Тестовая страница](https://nirall.github.io/slider/dist/test) 
+[Тестовая страница](https://nirall.github.io/slider/dist/index.html)
 
 ### Архитектура приложения
 

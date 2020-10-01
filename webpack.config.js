@@ -8,7 +8,11 @@ module.exports = {
         filename: "bundle.js",
         path: path.resolve(__dirname, "dist"),
     },
-    devtool : "inline-source-map",
+    devtool: "inline-source-map",
+    devServer: {
+        contentBase: path.join(__dirname, 'dist'),
+        port: 3000,
+    },
     plugins: [
         new CleanWebpackPlugin(),
         new cssExtract({
@@ -33,6 +37,15 @@ module.exports = {
             },
             {
                 test: /\.html$/,
+                use: {
+                    loader: "file-loader",
+                    options: {
+                        name: "[name].[ext]",
+                    }
+                }
+            },
+            {
+                test: /(?=init.*)\.js$/,
                 use: {
                     loader: "file-loader",
                     options: {
