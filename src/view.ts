@@ -25,13 +25,13 @@ class View {
   step: number;
   isFloat: boolean;
   observers: MakeObservableObject;
-    
+
   constructor(minValue = 0, maxValue = 1000, step = 1, isRange = false, isVertical = false, showLabel = false, isFloat = false) {
     this.scale = new Scale();
-    this.button1 = new Button();
-    this.button2 = new Button();
-    this.label1 = new Label();
-    this.label2 = new Label();
+    this.button1 = new Button(isVertical);
+    this.button2 = new Button(isVertical);
+    this.label1 = new Label(isVertical);
+    this.label2 = new Label(isVertical);
     this.scaleFilling = new ScaleFilling();
     this.graduation = new Graduation();
     this.minValue = minValue;
@@ -49,22 +49,14 @@ class View {
 
   getStart = (): number => {
     if (this.isRange) {
-      if (this.isVertical) {
-        return this.button1.getTop() - this.scale.getTop() + this.button1.getWidth()/2;
-      } 
-          
-      return this.button1.getLeft() - this.scale.getLeft() + this.button1.getWidth()/2;
-    } 
-        
+      return this.button1.getPosition() - this.scale.getPosition(this.isVertical) + this.button1.getWidth()/2;
+    }
+
     return 0;
   }
 
   getEnd = (): number => {
-    if (this.isVertical) {
-      return this.button2.getTop() - this.scale.getTop() + this.button2.getWidth()/2;
-    }
-
-    return this.button2.getLeft() - this.scale.getLeft() + this.button2.getWidth()/2;
+    return this.button2.getPosition() - this.scale.getPosition(this.isVertical) + this.button2.getWidth()/2;
   }
 
   updateElems = (): void => {
@@ -94,57 +86,47 @@ class View {
     if (val < 0) {
       return Math.abs(reminder) > step/2 ? whole*step : (whole + 1)*step;
     }
+
     return reminder < step/2 ? whole*step : (whole + 1)*step;
   }
 
   roundOffsetButt = (currOffset: number): Array<number> => {
-    let scaleMessure;
-    if(this.isVertical) {
-      scaleMessure = this.scale.getHeight();
-    } else {
-      scaleMessure = this.scale.getWidth();
-    }
+    const scaleMeasure = this.scale.getDimension(this.isVertical);
 
-    const currValue = this.minValue + (currOffset + this.button2.getWidth()/2)*(this.maxValue - this.minValue)/scaleMessure;
+    const currValue = this.minValue + (currOffset + this.button2.getWidth()/2)*(this.maxValue - this.minValue)/scaleMeasure;
     let roundValue = this.round(currValue, this.step);
 
     if (this.isFloat) {
       roundValue = parseFloat(roundValue.toFixed(2));
     }
-    
+
     if (roundValue < this.minValue) {
       roundValue = this.minValue;
     } else if (roundValue > this.maxValue) {
       roundValue = this.maxValue;
     }
-    
-    const roundOffset = (roundValue - this.minValue)*scaleMessure/(this.maxValue - this.minValue) - this.button2.getWidth()/2;
+
+    const roundOffset = (roundValue - this.minValue)*scaleMeasure/(this.maxValue - this.minValue) - this.button2.getWidth()/2;
     return [roundOffset, roundValue];
   }
 
   offsetValueConv = (value: number): number => {
     if (this.isVertical) {
       return ((value - this.minValue)/(this.maxValue - this.minValue)*this.scale.getHeight() - this.button2.getWidth()/2);
-    } 
-        
+    }
+
     return ((value - this.minValue)/(this.maxValue - this.minValue)*this.scale.getWidth() - this.button2.getWidth()/2);
   }
 
   //Button1  Handlers-------------------------------------------------------------------------------
   butt1Move = (roundOffset: number, roundValue: number): void => {
-    if (this.isVertical) {
-      this.button1.elem.style.top = roundOffset + "px";
-      this.label1.elem.style.top = roundOffset - this.label1.getHeight()/2 + this.button1.getWidth()/2 + "px";
-    } else {
-      this.button1.elem.style.left = roundOffset + "px";
-      this.label1.elem.style.left = roundOffset - this.label1.getWidth()/2 + this.button1.getWidth()/2 + "px";
-    }
+    this.button1.setPosition(roundOffset);
+    this.label1.setPosition(roundOffset + this.button1.getWidth()/2, roundValue);
 
     if (roundValue < this.minValue) {
       roundValue = this.minValue;
     }
 
-    this.label1.elem.innerHTML = roundValue + "";
     this.curMinValue = roundValue;
     this.updateElems();
   }
@@ -152,54 +134,34 @@ class View {
   butt1OffsetCheck = (newOffset: number): Array<number> => {
     let roundValue;
 
-    if (this.isVertical) {
-      const stepWidth = this.step*this.scale.getHeight()/(this.maxValue - this.minValue);
-      if (newOffset < -this.button2.getWidth()/2) {
-        newOffset = -this.button2.getWidth()/2;
-        roundValue = this.minValue;
-      }
+    if (newOffset < -this.button1.getWidth()/2) {
+      newOffset = -this.button1.getWidth()/2;
+      roundValue = this.minValue;
+    }
 
-      if (stepWidth/1.5 > this.button2.getWidth()) {
-        if (newOffset > this.button2.getTop() - this.scale.getTop() - stepWidth/1.5) {
-          newOffset = this.button2.getTop() - this.scale.getTop() - stepWidth/1.5;
-        }
-      } else {
-        if (newOffset > this.button2.getTop() - this.scale.getTop() - this.button2.getWidth()) {
-          newOffset = this.button2.getTop() - this.scale.getTop() - this.button2.getWidth();
-        }
-      }
-    } else {
-      const stepWidth = this.step*this.scale.getWidth()/(this.maxValue - this.minValue);
-      if (newOffset < -this.button1.getWidth()/2) {
-        newOffset = -this.button1.getWidth()/2;
-        roundValue = this.minValue;
-      }
+    const stepWidth = this.step*this.scale.getDimension(this.isVertical)/(this.maxValue - this.minValue);
+    const minOffset = stepWidth/1.5 > this.button1.getWidth() ? stepWidth/1.5 : this.button1.getWidth();
 
-      if (stepWidth/1.5 > this.button1.getWidth()) {
-        if (newOffset > this.button2.getLeft() - this.scale.getLeft() - stepWidth/1.5) {
-          newOffset = this.button2.getLeft() - this.scale.getLeft() - stepWidth/1.5;
-        }
-      } else {
-        if (newOffset > this.button2.getLeft() - this.scale.getLeft() - this.button2.getWidth()) {
-          newOffset = this.button2.getLeft() - this.scale.getLeft() - this.button2.getWidth();
-        }
-      }
+    if (newOffset > this.button2.getPosition() - this.scale.getPosition(this.isVertical) - minOffset) {
+      newOffset = this.button2.getPosition() - this.scale.getPosition(this.isVertical) - minOffset;
     }
 
     return [newOffset, roundValue];
   }
-    
+
   onMouseMove1 = (eventMm: MouseEvent): void => {
     let newOffset;
     let roundValue;
     let roundOffset;
+
     if (this.isVertical) {
-      newOffset = eventMm.clientY - this.scale.getTop() - this.button1.getWidth()/2;
+      newOffset = eventMm.clientY - this.scale.getPosition(this.isVertical) - this.button2.getWidth()/2;
     } else {
-      newOffset = eventMm.clientX - this.scale.getLeft() - this.button1.getWidth()/2;
-    } 
+      newOffset = eventMm.clientX - this.scale.getPosition(this.isVertical) - this.button2.getWidth()/2;
+    }
 
     [roundOffset, roundValue] = this.butt1OffsetCheck(newOffset);
+
     if (!roundValue) {
         [roundOffset, roundValue] = this.roundOffsetButt(roundOffset);
     }
@@ -214,13 +176,8 @@ class View {
 
   //Button2  Handlers----------------------------------------------------------------
   butt2Move = (roundOffset: number, roundValue: number): void => {
-    if (this.isVertical) {
-      this.button2.elem.style.top = roundOffset + "px";
-      this.label2.elem.style.top = roundOffset - this.label2.getHeight()/2 + this.button2.getWidth()/2 + "px";
-    } else {
-      this.button2.elem.style.left = roundOffset + "px";
-      this.label2.elem.style.left = roundOffset - this.label2.getWidth()/2 + this.button2.getWidth()/2 + "px";
-    }
+    this.button2.setPosition(roundOffset);
+    this.label2.setPosition(roundOffset + this.button2.getWidth()/2, roundValue);
 
     if (roundValue < this.minValue) {
       roundValue = this.minValue;
@@ -228,13 +185,13 @@ class View {
       roundValue = this.maxValue;
     }
 
-    this.label2.elem.innerHTML = roundValue + "";
     this.curMaxValue = roundValue;
-    this.updateElems(); 
+    this.updateElems();
   }
 
   butt2OffsetCheck = (newOffset: number): Array<number> => {
     let roundValue;
+
     if (!this.isRange) {
       if (newOffset < -this.button2.getWidth()/2) {
         newOffset = -this.button2.getWidth()/2;
@@ -242,39 +199,16 @@ class View {
       }
     }
 
-    if (this.isVertical) {
-      const stepWidth = this.step*this.scale.getHeight()/(this.maxValue - this.minValue);
-      if (newOffset > this.scale.getHeight() - this.button2.getWidth()/2) {
-        newOffset = this.scale.getHeight() - this.button2.getWidth()/2;
-        roundValue = this.maxValue;
-      }
-      
-      if (stepWidth/1.5 > this.button2.getWidth()) {
-        if (newOffset < this.button1.getTop() - this.scale.getTop() + stepWidth/1.5) {
-          newOffset = this.button1.getTop() - this.scale.getTop() + stepWidth/1.5;
-        }
-      } else {
-        if (newOffset < this.button1.getTop() - this.scale.getTop() + this.button2.getWidth()) {
-          newOffset = this.button1.getTop() - this.scale.getTop() + this.button2.getWidth();
-        }
-      }
-    } else {
-      const stepWidth = this.step*this.scale.getWidth()/(this.maxValue - this.minValue);
+    if (newOffset > this.scale.getDimension(this.isVertical) - this.button2.getWidth()/2) {
+      newOffset = this.scale.getDimension(this.isVertical) - this.button2.getWidth()/2;
+      roundValue = this.maxValue;
+    }
 
-      if (newOffset > this.scale.getWidth() - this.button2.getWidth()/2) {
-        newOffset = this.scale.getWidth() - this.button2.getWidth()/2;
-        roundValue = this.maxValue;
-      }
+    const stepWidth = this.step*this.scale.getDimension(this.isVertical)/(this.maxValue - this.minValue);
+    const minOffset = stepWidth/1.5 > this.button1.getWidth() ? stepWidth/1.5 : this.button1.getWidth();
 
-      if (stepWidth/1.5 > this.button2.getWidth()) {
-        if (newOffset < this.button1.getLeft() - this.scale.getLeft() + stepWidth/1.5) {
-          newOffset = this.button1.getLeft() - this.scale.getLeft() + stepWidth/1.5;
-        }
-      } else {
-        if (newOffset < this.button1.getLeft() - this.scale.getLeft() + this.button2.getWidth()) {
-          newOffset = this.button1.getLeft() - this.scale.getLeft() + this.button2.getWidth();
-        }
-      }
+    if (newOffset < this.button1.getPosition() - this.scale.getPosition(this.isVertical) + minOffset) {
+      newOffset = this.button1.getPosition() - this.scale.getPosition(this.isVertical) + minOffset;
     }
 
     return [newOffset, roundValue];
@@ -284,36 +218,33 @@ class View {
     let newOffset;
     let roundValue;
     let roundOffset;
+
     if (this.isVertical) {
-      newOffset = eventMm.clientY - this.scale.getTop() - this.button2.getWidth()/2;
+      newOffset = eventMm.clientY - this.scale.getPosition(this.isVertical) - this.button2.getWidth()/2;
     } else {
-      newOffset = eventMm.clientX - this.scale.getLeft() - this.button2.getWidth()/2;
+      newOffset = eventMm.clientX - this.scale.getPosition(this.isVertical) - this.button2.getWidth()/2;
     }
 
     [roundOffset, roundValue] = this.butt2OffsetCheck(newOffset);
+
     if (!roundValue) {
-        [roundOffset, roundValue] = this.roundOffsetButt(roundOffset);
+      [roundOffset, roundValue] = this.roundOffsetButt(roundOffset);
     }
 
     this.butt2Move(roundOffset, roundValue);
   }
 
   onMouseUp2 = (eventMu: MouseEvent): void => {
-    document.removeEventListener("mouseup", this.onMouseUp2);
-    document.removeEventListener("mousemove", this.onMouseMove2);
+    document.removeEventListener('mouseup', this.onMouseUp2);
+    document.removeEventListener('mousemove', this.onMouseMove2);
   }
-    
+
   // Scale EventListeners------------------------------------------------------------------
   scaleOnclick = (event: MouseEvent): void => {
     if(this.isRange) {
-      let butt1Closer;
-      if (this.isVertical) {
-        butt1Closer = Math.abs(event.clientY - this.button1.getTop() - this.button1.getWidth()/2) 
-        < Math.abs(event.clientY - this.button2.getTop() - this.button2.getWidth()/2);
-      } else {
-        butt1Closer = Math.abs(event.clientX - this.button1.getLeft() - this.button1.getWidth()/2)
-        < Math.abs(event.clientX - this.button2.getLeft() - this.button2.getWidth()/2);
-      }
+      const coordinate = this.isVertical ? event.clientY : event.clientX
+      const butt1Closer = Math.abs(coordinate - this.button1.getPosition() - this.button1.getWidth()/2)
+        < Math.abs(coordinate - this.button2.getPosition() - this.button2.getWidth()/2)
 
       if (butt1Closer) {
         this.onMouseMove1(event);
@@ -330,32 +261,19 @@ class View {
   interMarkHandler = (currValue: number): void => {
     let roundOffset;
     let roundValue;
-    if (this.isVertical) {
-      const markX = (currValue - this.minValue)/(this.maxValue - this.minValue)*this.scale.getHeight();
-      [roundOffset, roundValue] = this.roundOffsetButt(markX - this.button2.getWidth()/2);
-      if (this.isRange) {
-        if (Math.abs(markX + this.scale.getTop() - this.button1.getTop() - this.button2.getWidth()/2)
-          < Math.abs(markX + this.scale.getTop() - this.button2.getTop() - this.button2.getWidth()/2)) {
-          this.butt1Move(roundOffset, roundValue);
-        } else {
-          this.butt2Move(roundOffset, roundValue);
-        }
+
+    const markOffset = (currValue - this.minValue)/(this.maxValue - this.minValue)*this.scale.getDimension(this.isVertical);
+    [roundOffset, roundValue] = this.roundOffsetButt(markOffset - this.button2.getWidth()/2);
+
+    if (this.isRange) {
+      if (Math.abs(markOffset + this.scale.getPosition(this.isVertical) - this.button1.getPosition() - this.button2.getWidth()/2)
+        < Math.abs(markOffset + this.scale.getPosition(this.isVertical) - this.button2.getPosition() - this.button2.getWidth()/2)) {
+        this.butt1Move(roundOffset, roundValue);
       } else {
         this.butt2Move(roundOffset, roundValue);
       }
     } else {
-      const markX = (currValue - this.minValue)/(this.maxValue - this.minValue)*this.scale.getWidth();
-      [roundOffset, roundValue] = this.roundOffsetButt(markX - this.button2.getWidth()/2);
-      if (this.isRange) {
-        if (Math.abs(markX + this.scale.getLeft() - this.button1.getLeft() - this.button2.getWidth()/2)
-          < Math.abs(markX + this.scale.getLeft() - this.button2.getLeft() - this.button2.getWidth()/2)) {
-          this.butt1Move(roundOffset, roundValue);
-        } else {
-          this.butt2Move(roundOffset, roundValue);
-        }
-      } else {
-        this.butt2Move(roundOffset, roundValue);
-      }
+      this.butt2Move(roundOffset, roundValue);
     }
   }
 
@@ -370,15 +288,8 @@ class View {
   }
 
   mark4Onclick = (event: MouseEvent): void => {
-    if (this.isVertical) {
-      const roundOffset = this.scale.getHeight() - this.button2.getWidth()/2;
-      const roundValue = this.maxValue;
-      this.butt2Move(roundOffset, roundValue);
-    } else {
-      const roundOffset = this.scale.getWidth() - this.button2.getWidth()/2;
-      const roundValue = this.maxValue;
-      this.butt2Move(roundOffset, roundValue); 
-    }
+    const roundOffset = this.scale.getDimension(this.isVertical) - this.button2.getWidth()/2;
+    this.butt2Move(roundOffset, this.maxValue);
   }
 
   mark2Onclick = (event: MouseEvent): void => {
@@ -417,10 +328,18 @@ class View {
   }
 
   init = (): void => {
+    this.scale.init(this.isVertical);
+    this.scaleFilling.init(this.isVertical);
+    this.graduation.init(this.minValue, this.maxValue, this.isVertical, this.isFloat);
+    this.button1.init(this.isVertical);
+    this.button2.init(this.isVertical);
+    this.label1.init(this.isVertical);
+    this.label2.init(this.isVertical);
+
     this.button1.elem.style.display = "none";
     this.label1.elem.style.display = "none";
-    this.graduation.init(this.minValue, this.maxValue, this.isVertical, this.isFloat);
     this.checkValues();
+
     if (this.showLabel) {
       this.label1.elem.style.display = "block";
       this.label2.elem.style.display = "block";
@@ -436,46 +355,15 @@ class View {
       this.label1.elem.style.display = "none";
     }
 
+    this.button1.setPosition(-this.button1.getWidth()/2);
+    this.button2.setPosition(this.scale.getDimension(this.isVertical) - this.button2.getWidth()/2);
+    this.label1.setPosition(this.getStart(), this.minValue);
+    this.label2.setPosition(this.getEnd(), this.maxValue);
+
     if (this.isVertical) {
-      this.scale.elem.classList.add("slider__scale_vertical");
-      this.scaleFilling.elem.classList.add("slider__scale-filling_vertical");
-      this.graduation.gradElem.classList.add("slider__graduation_vertical");
-      this.graduation.gradElem.style.height = this.scale.getHeight() +"px";
-      this.button1.elem.classList.add("slider__button_vertical");
-      this.button2.elem.classList.add("slider__button_vertical");
-      this.label1.elem.classList.add("slider__button-label_vertical");
-      this.label2.elem.classList.add("slider__button-label_vertical");
-
-      this.button1.elem.style.top = -this.button1.getWidth()/2 + "px";
-      this.button1.elem.style.left = "50%";
-      this.button2.elem.style.top = this.scale.getHeight() - this.button2.getWidth()/2 + "px";
-      this.button2.elem.style.left = "50%";
-      this.label1.elem.innerHTML = this.minValue + "";
-      this.label2.elem.innerHTML = this.maxValue + "";
-      this.label1.elem.style.top = this.getStart() - this.label1.getHeight()/2 + "px";
-      this.label1.elem.style.left = "50%";
-      this.label2.elem.style.top = this.getEnd() - this.label2.getHeight()/2 + "px";
-      this.label2.elem.style.left = "50%";
+      this.graduation.gradElem.style.height = this.scale.getDimension(this.isVertical) +"px";
     } else {
-      this.scale.elem.classList.remove("slider__scale_vertical");
-      this.scaleFilling.elem.classList.remove("slider__scale-filling_vertical");
-      this.graduation.gradElem.classList.remove("slider__graduation_vertical");
       this.graduation.gradElem.style.height = 20 +"px";
-      this.button1.elem.classList.remove("slider__button_vertical");
-      this.button2.elem.classList.remove("slider__button_vertical");
-      this.label1.elem.classList.remove("slider__button-label_vertical");
-      this.label2.elem.classList.remove("slider__button-label_vertical");
-
-      this.button1.elem.style.left = -this.button1.getWidth()/2 + "px";
-      this.button1.elem.style.top = "50%";
-      this.button2.elem.style.left = this.scale.getWidth() - this.button2.getWidth()/2 + "px";
-      this.button2.elem.style.top = "50%"
-      this.label1.elem.innerHTML = this.minValue + "";
-      this.label2.elem.innerHTML = this.maxValue + "";
-      this.label1.elem.style.left = this.getStart() - this.label1.getWidth()/2 + "px";
-      this.label1.elem.style.top = "50%";
-      this.label2.elem.style.left = this.getEnd() - this.label2.getWidth()/2 + "px";
-      this.label2.elem.style.top = "50%";
     }
 
     this.updateElems();
@@ -494,6 +382,7 @@ class View {
     this.graduation.mark2.onclick = this.mark2Onclick;
     this.graduation.mark3.onclick = this.mark3Onclick;
     this.graduation.mark4.onclick = this.mark4Onclick;
+
     this.button1.elem.onmousedown = (eventMd: MouseEvent) => {
       eventMd.preventDefault();
       document.addEventListener("mousemove", this.onMouseMove1);

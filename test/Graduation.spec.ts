@@ -61,7 +61,7 @@ describe("Graduation class", () => {
     newItem.init(1000, 10000, false);
     expect(newItem.mark3.innerHTML).toEqual('7000');
   });
-  
+
   it("init(), if .float = true innerHTML of mark3 should be float", () => {
     const newItem = new Graduation();
     newItem.init(1, 3, false, true);

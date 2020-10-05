@@ -1,24 +1,27 @@
-import "../src/style.scss";
-import Button from "../src/assets/Button";
+import '../src/style.scss';
+import Button from '../src/assets/Button';
 
-describe("Button class", () => {
-  it("should has elem with class 'slider__button'", () => {
-    const newItem = new Button();
+describe('Button class', () => {
+  let newItem: Button;
+  let isVertical: false;
+
+  beforeEach(() => {
+    newItem = new Button(false);
+  });
+
+  it('should has elem with class "slider__button"', () => {
     expect(newItem.elem.classList.contains('slider__button')).toEqual(true);
   });
 
-  it("getLeft() should return left offset of the elem", () => {
-    const newItem = new Button();
-    expect(newItem.getLeft()).toEqual(newItem.elem.getBoundingClientRect().left);
+  it('getPosition() should return left offset of the elem if isVertical = false', () => {
+    expect(newItem.getPosition()).toEqual(newItem.elem.getBoundingClientRect().left);
   });
 
-  it("getWidth() should return width of the elem", () => {
-    const newItem = new Button();
-    expect(newItem.getWidth()).toEqual(newItem.elem.getBoundingClientRect().width);
+  it('getPosition() should return top offset of the elem if isVertical = true', () => {
+    expect(newItem.getPosition()).toEqual(newItem.elem.getBoundingClientRect().top);
   });
-  
-  it("getTop() should return top offset of the elem", () => {
-    const newItem = new Button();
-    expect(newItem.getTop()).toEqual(newItem.elem.getBoundingClientRect().top);
+
+  it('getWidth() should return width of the elem', () => {
+    expect(newItem.getWidth()).toEqual(newItem.elem.getBoundingClientRect().width);
   });
 })

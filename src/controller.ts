@@ -65,7 +65,7 @@ class Controller {
     return {minValue: this.view.minValue, maxValue: this.view.maxValue, step: this.view.step,
       isRange: this.view.isRange, isVertical: this.view.isVertical, showLabel: this.view.showLabel, isFloat: this.view.isFloat}
   }
-  
+
   addObserver = (fn: Function): void => {
     this.observers.addObserver(fn);
   }

@@ -10,7 +10,7 @@ class Model {
     this.curMaxValue = curMaxValue;
     this.observers = new MakeObservableObject();
   }
-  
+
   setCurMinValue(data: number): void {
     if (this.curMinValue != data) {
       this.curMinValue = data;

@@ -24,8 +24,8 @@ module.exports = function(config) {
 
         // list of files / patterns to load in the browser
         files: [
-            'test/*.ts',
-            'test/*.js',
+            //'test/*.ts',
+            //'test/*.js',
         ],
 
         // list of files / patterns to exclude
@@ -37,7 +37,7 @@ module.exports = function(config) {
             'test/*.ts': ['webpack'],
             'test/*.js': ['webpack'],
         },
-        
+
         webpack: {
             module: webpackConfig.module,
             resolve: webpackConfig.resolve,
@@ -49,7 +49,7 @@ module.exports = function(config) {
         // test results reporter to use
         // possible values: 'dots', 'progress'
         // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-        
+
 
         // web server port
         port: 9876,
