@@ -1,48 +1,37 @@
-import createElem from "./createElem";
+import createElem from './createElem';
 
 class Scale {
   elem: HTMLElement;
+  isVertical: boolean;
 
-  constructor() {this.elem = createElem("slider__scale");
+  constructor(isVertical: boolean) {
+    this.elem = createElem('slider__scale');
+    this.isVertical = isVertical;
   }
 
-  getLeft(): number {
-    return this.elem.getBoundingClientRect().left;
-  }
-
-  getWidth(): number {
-    return this.elem.getBoundingClientRect().width;
-  }
-
-  getHeight(): number {
-    return this.elem.getBoundingClientRect().height;
-  }
-
-  getTop(): number {
-    return this.elem.getBoundingClientRect().top;
-  }
-
-  getPosition(isVertical: boolean): number {
-    if (isVertical) {
+  getPosition = (): number => {
+    if (this.isVertical) {
       return this.elem.getBoundingClientRect().top;
     }
 
     return this.elem.getBoundingClientRect().left;
   }
 
-  getDimension(isVertical: boolean): number {
-    if (isVertical) {
+  getDimension = (): number => {
+    if (this.isVertical) {
       return this.elem.getBoundingClientRect().height;
     }
 
     return this.elem.getBoundingClientRect().width;
   }
 
-  init(isVertical: boolean): void {
-    if (isVertical) {
-      this.elem.classList.add("slider__scale_vertical");
+  init = (isVertical: boolean): void => {
+    this.isVertical = isVertical;
+
+    if (this.isVertical) {
+      this.elem.classList.add('slider__scale_position_vertical');
     } else {
-      this.elem.classList.remove("slider__scale_vertical");
+      this.elem.classList.remove('slider__scale_position_vertical');
     }
   }
 }

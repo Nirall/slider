@@ -1,27 +1,19 @@
-import createElem from "./createElem";
+import createElem from './createElem';
 
 class Button {
   elem: HTMLElement;
   isVertical: boolean;
 
   constructor(isVertical: boolean) {
-    this.elem = createElem("slider__button");
+    this.elem = createElem('slider__button');
     this.isVertical = isVertical;
   }
 
-  getLeft(): number {
-    return this.elem.getBoundingClientRect().left;
-  }
-
-  getWidth(): number {
+  getWidth = (): number => {
     return this.elem.getBoundingClientRect().width;
   }
 
-  getTop(): number {
-    return this.elem.getBoundingClientRect().top;
-  }
-
-  getPosition(): number {
+  getPosition = (): number => {
     if (this.isVertical) {
       return this.elem.getBoundingClientRect().top;
     }
@@ -29,23 +21,23 @@ class Button {
     return this.elem.getBoundingClientRect().left;
   }
 
-  setPosition(offset: number): void {
+  setPosition = (offset: number): void => {
     if (this.isVertical) {
-      this.elem.style.left = "50%";
+      this.elem.style.left = '50%';
       this.elem.style.top = offset + 'px';
     } else {
-      this.elem.style.top = "50%";
+      this.elem.style.top = '50%';
       this.elem.style.left = offset + 'px';
     }
   }
 
-  init(isVertical: boolean): void {
+  init = (isVertical: boolean): void => {
     this.isVertical = isVertical;
 
     if (this.isVertical) {
-      this.elem.classList.add("slider__button_vertical");
+      this.elem.classList.add('slider__button_position_vertical');
     } else {
-      this.elem.classList.remove("slider__button_vertical");
+      this.elem.classList.remove('slider__button_position_vertical');
     }
   }
 }

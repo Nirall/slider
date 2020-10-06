@@ -3,66 +3,28 @@ $green: #6FCF97;
 $red: #990033;
 
 .slider {
-    width: 400px;
-    height: 400px;
-    margin: 60px;
-    position: relative;
-    font: 14px/18px "Montserrat";
-}
-.slider__scale {
-    width: 100%;
-    height: 4px;
-    background: $grey;
-    border: 1px solid $grey;
-    border-radius: 4px;
-    position: absolute;
-    top: 50%;
-    margin-top: -3px;
-    cursor: pointer;
-    z-index: 2;
-}
-.slider__scale_vertical {
-    height: 100%;
-    width: 4px;
-    top: 0;
-    left: 50%;
-    margin: 0 0 0 -3px;
-}
-.slider__graduation {
-    position: absolute;
-    top: 50%;
-    margin: 20px 0 0 0; 
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    z-index: 1;
-    text-align: center;
-}
-.slider__graduation_vertical {
-    flex-direction: column;
-    max-width: 250px;
-    top: 0;
-    left: 50%;
-    margin: 0 0 0 -60px;
-    height: 100%;
-    text-align: start;
-}
-.slider__graduation-mark {
-    min-width: 30px;
-    cursor: pointer;
-}
-.slider__scale-filling {
-    height: 100%;
-    width: 50%;
+  width: 400px;
+  height: 400px;
+  margin: 60px;
+  position: relative;
+  font: 14px/18px 'Montserrat';
+
+  &__button {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
     background: $green;
-    position: relative;
-    border-radius: 4px;
-}
-.slider__scale-filling_vertical {
-    width: 100%;
-    height: 50%;
-}
-.slider__button-label {
+    position: absolute;
+    margin: -6px 0 0 0;
+    cursor: pointer;
+    z-index: 3;
+
+    &_position_vertical {
+      margin: 0 0 0 -6px;
+    }
+  }
+
+  &__button-label {
     height: 15px;
     min-width: 30px;
     padding: 5px;
@@ -75,20 +37,69 @@ $red: #990033;
     align-items: center;
     display: none;
     text-align: center;
-}
-.slider__button-label_vertical {
-    margin: 0 0 0 10px;
-}
-.slider__button {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background: $green;
+
+    &_position_vertical {
+      margin: 0 0 0 10px;
+    }
+  }
+
+  &__scale {
+    width: 100%;
+    height: 4px;
+    background: $grey;
+    border: 1px solid $grey;
+    border-radius: 4px;
     position: absolute;
-    margin: -6px 0 0 0;
+    top: 50%;
+    margin-top: -3px;
     cursor: pointer;
-    z-index: 3;
-}
-.slider__button_vertical {
-    margin: 0 0 0 -6px;
+    z-index: 2;
+
+    &_position_vertical {
+      height: 100%;
+      width: 4px;
+      top: 0;
+      left: 50%;
+      margin: 0 0 0 -3px;
+    }
+  }
+
+  &__graduation {
+    position: absolute;
+    top: 50%;
+    margin: 20px 0 0 0;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    z-index: 1;
+    text-align: center;
+
+    &_position_vertical {
+      flex-direction: column;
+      max-width: 250px;
+      top: 0;
+      left: 50%;
+      margin: 0 0 0 -60px;
+      height: 100%;
+      text-align: start;
+    }
+  }
+
+  &__graduation-mark {
+    min-width: 30px;
+    cursor: pointer;
+  }
+
+  &__scale-filling {
+    height: 100%;
+    width: 50%;
+    background: $green;
+    position: relative;
+    border-radius: 4px;
+
+    &_position_vertical {
+      width: 100%;
+      height: 50%;
+    }
+  }
 }

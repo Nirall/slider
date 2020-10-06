@@ -1,16 +1,41 @@
-import createElem from "./createElem";
+import createElem from './createElem';
 
 class ScaleFilling {
   elem: HTMLElement;
-  constructor() {
-      this.elem = createElem("slider__scale-filling");
+  isVertical: boolean;
+
+  constructor(isVertical: boolean) {
+    this.elem = createElem('slider__scale-filling');
+    this.isVertical = isVertical;
   }
 
-  init(isVertical: boolean): void {
-    if (isVertical) {
-      this.elem.classList.add("slider__scale-filling_vertical");
+  setPosition = (offset: number): void => {
+    if (this.isVertical) {
+      this.elem.style.left = '0';
+      this.elem.style.width = '100%';
+      this.elem.style.top = offset + 'px';
     } else {
-      this.elem.classList.remove("slider__scale-filling_vertical");
+      this.elem.style.top = '0';
+      this.elem.style.height = '100%';
+      this.elem.style.left = offset + 'px';
+    }
+  }
+
+  setDimension = (dimension: number): void => {
+    if (this.isVertical) {
+      this.elem.style.height = dimension + 'px';
+    } else {
+      this.elem.style.width = dimension + 'px';
+    }
+  }
+
+  init = (isVertical: boolean): void => {
+    this.isVertical = isVertical;
+
+    if (this.isVertical) {
+      this.elem.classList.add('slider__scale-filling_position_vertical');
+    } else {
+      this.elem.classList.remove('slider__scale-filling_position_vertical');
     }
   }
 }

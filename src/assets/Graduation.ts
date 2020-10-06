@@ -36,13 +36,13 @@ class Graduation {
       this.mark1.style.marginTop = '0';
       this.mark4.style.marginRight = -15 + 'px';
       this.mark4.style.marginBottom = '0';
-      this.gradElem.classList.remove("slider__graduation_vertical");
+      this.gradElem.classList.remove("slider__graduation_position_vertical");
     } else {
       this.mark1.style.marginTop = -9  + 'px';
       this.mark1.style.marginLeft = '0';
       this.mark4.style.marginBottom = -9 + 'px';
       this.mark4.style.marginRight = '0';
-      this.gradElem.classList.add("slider__graduation_vertical");
+      this.gradElem.classList.add("slider__graduation_position_vertical");
     }
   }
 }

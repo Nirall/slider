@@ -1,9 +1,9 @@
-import "../src/style.scss";
-import ScaleFilling from "../src/assets/ScaleFilling";
+import '../src/style.scss';
+import ScaleFilling from '../src/assets/ScaleFilling';
 
-describe("ScaleFilling class", () => {
-  it("should has elem with class 'slider__scale-filling'", () => {
-    const newItem = new ScaleFilling();
+describe('ScaleFilling class', () => {
+  it('should has elem with class "slider__scale-filling"', () => {
+    const newItem = new ScaleFilling(false);
     expect(newItem.elem.classList.contains('slider__scale-filling')).toEqual(true);
   });
 })
