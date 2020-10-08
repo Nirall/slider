@@ -1,5 +1,5 @@
-import "../src/style.scss";
 import {createElem, Scale, Label, Button, ScaleFilling, View, Graduation} from "../src/view";
+import MakeObservableObject from "../src/assets/MakeObservableObject";
 
 describe("View class(constructor)", () => {
   const newItem = new View(1, 1000, 10, true, true, true);
@@ -55,6 +55,10 @@ describe("View class(constructor)", () => {
   it("should has .showlabel with the certain value", () => {
     expect(newItem.showLabel).toEqual(true);
   });
+
+  it("should has .observes with class MakeObservableObject", () => {
+    expect(newItem.observers).toBeInstanceOf(MakeObservableObject);
+  });
 });
 
 describe("View class", () => {
@@ -64,22 +68,20 @@ describe("View class", () => {
     newItem = new View(0, 1000, 100, true);
     newItem.init();
     const entry = createElem("slider");
-    entry.style.width = "400px";
-    entry.style.height = "400px";
     document.body.appendChild(entry);
     newItem.append(entry);
   });
 
   it("getStart() should return offset the middle of button1(horizontal) if .range = true", () => {
     newItem.button1.elem.style.left = "200px";
-    expect(newItem.getStart()).toEqual(206);
+    expect(newItem.getStart()).toEqual(207);
   });
 
   it("getStart() should return offset the middle of button1(vertical) if .range = true", () => {
     newItem.isVertical = true;
     newItem.init();
     newItem.button1.elem.style.top = "200px";
-    expect(newItem.getStart()).toEqual(206);
+    expect(newItem.getStart()).toEqual(207);
   });
 
   it("getStart() should return 0 if .range = false", () => {
@@ -91,17 +93,17 @@ describe("View class", () => {
 
   it("getEnd() should return offset the middle of button2(horizontal)", () => {
     newItem.button2.elem.style.left = "300px";
-    expect(newItem.getEnd()).toEqual(306);
+    expect(newItem.getEnd()).toEqual(307);
   });
 
   it("getEnd() should return offset the middle of button2(vertical)", () => {
     newItem.isVertical = true;
     newItem.init();
     newItem.button2.elem.style.top = "300px";
-    expect(newItem.getEnd()).toEqual(306);
+    expect(newItem.getEnd()).toEqual(307);
   });
 
-  it("updateElems() should set scaleFilling options according buttons(vertical)", () => {
+  it("updateElems() should set scaleFilling options according to the buttons(vertical)", () => {
     newItem.isVertical = true;
     newItem.init();
     newItem.button1.elem.style.top = "100px";
@@ -110,7 +112,7 @@ describe("View class", () => {
     expect(newItem.scaleFilling.elem.style.height).toEqual("200px");
   });
 
-  it("updateElems() should set scaleFilling options according buttons (horizontal)", () => {
+  it("updateElems() should set scaleFilling options according to the buttons(horizontal)", () => {
     newItem.button1.elem.style.left = "50px";
     newItem.button2.elem.style.left = "450px";
     newItem.updateElems();
@@ -133,11 +135,10 @@ describe("View class", () => {
   it("roundOffsetButt() should round offset according the step", () => {
     newItem.step = 250;
     const offset = newItem.roundOffsetButt(272)[0];
-    //expect(offset).toEqual(294);
-    expect(offset < 297 && offset > 291).toBeTrue();
+    expect(offset).toEqual(293);
   });
 
-  it("roundOffsetButt() should return roundvalue with float type", () => {
+  it("roundOffsetButt() should correct work with float type", () => {
     newItem = new View(0, 2, 0.1, false, false, false, true);
     const entry = createElem("slider");
     entry.style.width = "400px";
@@ -168,9 +169,8 @@ describe("View class", () => {
   });
 
   it("offsetValueConv(), should return offset for the value (horizontal)", () => {
-    newItem = new View(100, 500, 100, true, false);
-    const value = newItem.offsetValueConv(200);
-    expect(value > 97 && value < 103).toBeTrue;
+    const value = newItem.offsetValueConv(500);
+    expect(value).toEqual(193);
   });
 });
 
@@ -181,28 +181,27 @@ describe("View class(buttons moving)", () => {
     newItem = new View(0, 400, 1, true, false, true);
     newItem.init();
     const entry = createElem("slider");
-    entry.style.width = "400px";
-    entry.style.height = "400px";
     document.body.appendChild(entry);
     newItem.append(entry);
   })
 
   it("butt1Move() should move butt1 on the certain offset (horizontal)", () => {
     newItem.butt1Move(300, 300);
-    expect(newItem.getStart()).toEqual(306);
+    expect(newItem.getStart()).toEqual(307);
   });
 
   it("butt1Move() should move butt1 on the certain offset (vertical)", () => {
     newItem.isVertical = true;
+    newItem.init();
     newItem.butt1Move(300, 300);
-    expect(newItem.getStart()).toEqual(306);
+    expect(newItem.getStart()).toEqual(307);
   });
 
   it("butt1Move() should move label1 on the certain offset (horizontal)", () => {
     newItem.butt1Move(300, 300);
     const label1Offset = newItem.label1.elem.getBoundingClientRect().left - newItem.scale.elem.getBoundingClientRect().left;
     const label1Width = newItem.label1.elem.getBoundingClientRect().width;
-    expect(label1Offset).toEqual(300 - label1Width/2 + 6);
+    expect(label1Offset).toEqual(300 - label1Width/2 + 7);
   });
 
   it("butt1Move() should move label1 on the certain offset (vertical)", () => {
@@ -211,7 +210,7 @@ describe("View class(buttons moving)", () => {
     newItem.butt1Move(300, 300);
     const label1Offset = newItem.label1.elem.getBoundingClientRect().top - newItem.scale.elem.getBoundingClientRect().top;
     const label1Height = newItem.label1.elem.getBoundingClientRect().height;
-    expect(label1Offset).toEqual(300 - label1Height/2 + 6);
+    expect(label1Offset).toEqual(300 - label1Height/2 + 7);
   });
 
   it("butt1Move() should set label1 value", () => {
@@ -219,23 +218,33 @@ describe("View class(buttons moving)", () => {
     expect(newItem.label1.elem.innerHTML).toEqual("300");
   });
 
+  it("butt1Move() should set curMinValue according to roundvalue", () => {
+    newItem.butt1Move(300, 199);
+    expect(newItem.curMinValue).toEqual(199);
+  });
+
+  it("butt1Move() should set curMinValue to minvalue if roundvalue < minvalue", () => {
+    newItem.butt1Move(300, -999);
+    expect(newItem.curMinValue).toEqual(0);
+  });
+
   it("butt2Move() should move butt2 on the certain offset (horizontal)", () => {
     newItem.butt2Move(300, 300);
-    expect(newItem.getEnd()).toEqual(306);
+    expect(newItem.getEnd()).toEqual(307);
   });
 
   it("butt2Move() should move butt2 on the certain offset (vertical)", () => {
     newItem.isVertical = true;
     newItem.init();
     newItem.butt2Move(300, 300);
-    expect(newItem.getEnd()).toEqual(306);
+    expect(newItem.getEnd()).toEqual(307);
   });
 
   it("butt2Move() should move label2 on the certain offset (horizontal)", () => {
     newItem.butt2Move(300, 300);
     const label2Offset = newItem.label2.elem.getBoundingClientRect().left - newItem.scale.elem.getBoundingClientRect().left;
     const label2Width = newItem.label2.elem.getBoundingClientRect().width;
-    expect(label2Offset).toEqual(300 - label2Width/2 + 6);
+    expect(label2Offset).toEqual(300 - label2Width/2 + 7);
   });
 
   it("butt2Move() should move label2 on the certain offset (vertical)", () => {
@@ -244,12 +253,22 @@ describe("View class(buttons moving)", () => {
     newItem.butt2Move(300, 300);
     const label2Offset = newItem.label2.elem.getBoundingClientRect().top - newItem.scale.elem.getBoundingClientRect().top;
     const label2Height = newItem.label2.elem.getBoundingClientRect().height;
-    expect(label2Offset).toEqual(300 - label2Height/2 + 6);
+    expect(label2Offset).toEqual(300 - label2Height/2 + 7);
   });
 
   it("butt2Move() should set label2 value", () => {
     newItem.butt2Move(300, 300);
     expect(newItem.label2.elem.innerHTML).toEqual("300");
+  });
+
+  it("butt2Move() should set curMaxValue according to roundvalue", () => {
+    newItem.butt2Move(300, 399);
+    expect(newItem.curMaxValue).toEqual(399);
+  });
+
+  it("butt2Move() should set curMaxValue to maxvalue if roundvalue > maxvalue", () => {
+    newItem.butt2Move(150, 77777);
+    expect(newItem.curMaxValue).toEqual(400);
   });
 });
 
@@ -261,14 +280,12 @@ describe("View class(mouse moving handlers)", () => {
   beforeEach(() => {
     newItem = new View(0, 1000, 1, true);
     const entry = createElem("slider");
-    entry.style.width = "400px";
-    entry.style.height = "400px";
     document.body.appendChild(entry);
     newItem.append(entry);
     mDown = new MouseEvent("mousedown");
     mUp = new MouseEvent("mouseup");
     newItem.init();
-  })
+  });
 
   it("onMouseMove1() should move button1 according to the mouse (horizontal)", () => {
     const mMove1 = new MouseEvent("mousemove", {clientX: 100});
@@ -276,7 +293,7 @@ describe("View class(mouse moving handlers)", () => {
     document.dispatchEvent(mMove1);
     document.dispatchEvent(mUp);
     const butt1Offset = newItem.button1.elem.getBoundingClientRect().left;
-    expect(butt1Offset < 97 && butt1Offset > 91).toBeTrue();
+    expect(butt1Offset).toEqual(93);
   });
 
   it("onMouseMove1() should move button1 according to the mouse (vertical)", () => {
@@ -288,7 +305,7 @@ describe("View class(mouse moving handlers)", () => {
     document.dispatchEvent(mMove1);
     document.dispatchEvent(mUp);
     const butt1Offset = newItem.button1.elem.getBoundingClientRect().top;
-    expect(butt1Offset < butt1OffsetOld + 197 && butt1Offset > butt1OffsetOld + 191).toBeTrue();
+    expect(Math.floor(butt1Offset)).toEqual(butt1OffsetOld + 193);
   });
 
   it("onMouseMove1(), if offset < min, button1 offset should be 0 (horizontal)", () => {
@@ -297,7 +314,7 @@ describe("View class(mouse moving handlers)", () => {
     document.dispatchEvent(mMove1);
     document.dispatchEvent(mUp);
     const butt1Offset = newItem.button1.elem.getBoundingClientRect().left - newItem.scale.elem.getBoundingClientRect().left;
-    expect(butt1Offset).toEqual(-6);
+    expect(butt1Offset).toEqual(-7);
   });
 
   it("onMouseMove1(), if offset < min, button1 offset should be 0 (vertical)", () => {
@@ -310,10 +327,10 @@ describe("View class(mouse moving handlers)", () => {
     document.dispatchEvent(mMove1);
     document.dispatchEvent(mUp);
     const butt1Offset = newItem.button1.elem.getBoundingClientRect().top - newItem.scale.elem.getBoundingClientRect().top;
-    expect(butt1Offset).toEqual(-6);
+    expect(butt1Offset).toEqual(-7);
   });
 
-  it("onMouseMove1(), button1 offset shouldn't be more the button2 (horizontal)", () => {
+  it("onMouseMove1(), button1 offset shouldn't be more than button2 (horizontal)", () => {
     const mMove1 = new MouseEvent("mousemove", {clientX: 400});
     newItem.butt2Move(300, 300);
     newItem.button1.elem.dispatchEvent(mDown);
@@ -322,10 +339,10 @@ describe("View class(mouse moving handlers)", () => {
     const scaleOffset = newItem.scale.elem.getBoundingClientRect().left
     const butt1Offset = newItem.button1.elem.getBoundingClientRect().left - scaleOffset;
     const butt2Offset = newItem.button2.elem.getBoundingClientRect().left - scaleOffset;
-    expect(butt1Offset < butt2Offset).toBeTrue();
+    expect(butt1Offset < butt2Offset).toEqual(true);
   });
 
-  it("onMouseMove1(), button1 offset shouldn't be more the button2 (vertical)", () => {
+  it("onMouseMove1(), button1 offset shouldn't be more than button2 (vertical)", () => {
     newItem.isVertical = true;
     newItem.init();
     const butt1OffsetOld = newItem.button1.elem.getBoundingClientRect().top;
@@ -338,7 +355,7 @@ describe("View class(mouse moving handlers)", () => {
     const butt1Offset = newItem.button1.elem.getBoundingClientRect().top - scaleOffset;
     const butt2Offset = newItem.button2.elem.getBoundingClientRect().top - scaleOffset;
     //expect(butt1Offset).toEqual(butt2Offset);
-    expect(butt1Offset < butt2Offset).toBeTrue();
+    expect(butt1Offset < butt2Offset).toEqual(true);
   });
 
   it("onMouseMove1(), with the small step butt1 shouldn't run over butt2 (horizontal)", () => {
@@ -351,7 +368,7 @@ describe("View class(mouse moving handlers)", () => {
     const scaleOffset = newItem.scale.elem.getBoundingClientRect().left;
     const butt1Offset = newItem.button1.elem.getBoundingClientRect().left - scaleOffset;
     const butt2Offset = newItem.button2.elem.getBoundingClientRect().left - scaleOffset;
-    expect(butt2Offset - butt1Offset > newItem.button1.getWidth() - 1).toBeTrue();
+    expect(butt2Offset - butt1Offset > newItem.button1.getWidth() - 1).toEqual(true);
   });
 
   it("onMouseMove1(), with the small step butt1 shouldn't run over butt2 (vertical)", () => {
@@ -366,7 +383,7 @@ describe("View class(mouse moving handlers)", () => {
     const scaleOffset = newItem.scale.elem.getBoundingClientRect().top;
     const butt1Offset = newItem.button1.elem.getBoundingClientRect().top - scaleOffset;
     const butt2Offset = newItem.button2.elem.getBoundingClientRect().top - scaleOffset;
-    expect(butt2Offset - butt1Offset > newItem.button1.getWidth() - 1).toBeTrue();
+    expect(butt2Offset - butt1Offset > newItem.button1.getWidth() - 1).toEqual(true);
   });
 
   it("onMouseMove2() should move button2 according to the mouse (horizontal)", () => {
@@ -375,7 +392,7 @@ describe("View class(mouse moving handlers)", () => {
     document.dispatchEvent(mMove1);
     document.dispatchEvent(mUp);
     const butt2Offset = newItem.button2.elem.getBoundingClientRect().left;
-    expect(butt2Offset < 97 && butt2Offset > 91).toBeTrue();
+    expect(butt2Offset).toEqual(93);
   });
 
   it("onMouseMove2() should move button2 according to the mouse (vertical)", () => {
@@ -387,7 +404,7 @@ describe("View class(mouse moving handlers)", () => {
     document.dispatchEvent(mMove1);
     document.dispatchEvent(mUp);
     const butt2Offset = newItem.button2.elem.getBoundingClientRect().top;
-    expect(butt2Offset < butt2OffsetOld - 203 && butt2Offset > butt2OffsetOld - 209).toBeTrue();
+    expect(Math.floor(butt2Offset)).toEqual(butt2OffsetOld - 207);
   });
 
   it("onMouseMove2(), if offset > max, button2 offset should be max (horizontal)", () => {
@@ -422,7 +439,7 @@ describe("View class(mouse moving handlers)", () => {
     document.dispatchEvent(mUp);
     console.log(newItem.scale.elem.getBoundingClientRect().left);
     const butt2Offset = newItem.button2.elem.getBoundingClientRect().left - newItem.scale.elem.getBoundingClientRect().left;
-    expect(butt2Offset).toEqual(-newItem.button2.getWidth()/2);
+    expect(butt2Offset).toEqual(-7);
   });
 
   it("onMouseMove2(), if offset < min, button2 offset should be 0 (range = false, vertical)", () => {
@@ -434,7 +451,7 @@ describe("View class(mouse moving handlers)", () => {
     document.dispatchEvent(mMove1);
     document.dispatchEvent(mUp);
     const butt2Offset = newItem.button2.elem.getBoundingClientRect().top - newItem.scale.elem.getBoundingClientRect().top;
-    expect(butt2Offset).toEqual(-newItem.button2.getWidth()/2);
+    expect(butt2Offset).toEqual(-7);
   });
 
   it("onMouseMove2(), button2 offset shouldn't be less then button1 (horizontal)", () => {
@@ -448,7 +465,7 @@ describe("View class(mouse moving handlers)", () => {
     const scaleOffset = newItem.scale.elem.getBoundingClientRect().left;
     const butt1Offset = newItem.button1.elem.getBoundingClientRect().left - scaleOffset;
     const butt2Offset = newItem.button2.elem.getBoundingClientRect().left - scaleOffset;
-    expect(butt1Offset < butt2Offset).toBeTrue();
+    expect(butt1Offset < butt2Offset).toEqual(true);
   });
 
   it("onMouseMove2(), button2 offset shouldn't be less then button1 (vertical)", () => {
@@ -463,7 +480,7 @@ describe("View class(mouse moving handlers)", () => {
     const scaleOffset = newItem.scale.elem.getBoundingClientRect().top;
     const butt1Offset = newItem.button1.elem.getBoundingClientRect().top - scaleOffset;
     const butt2Offset = newItem.button2.elem.getBoundingClientRect().top - scaleOffset;
-    expect(butt1Offset < butt2Offset).toBeTrue();
+    expect(butt1Offset < butt2Offset).toEqual(true);
   });
 
   it("onMouseMove2(), with the small step butt2 shouldn't run over butt1 (horizontal)", () => {
@@ -476,7 +493,7 @@ describe("View class(mouse moving handlers)", () => {
     const scaleOffset = newItem.scale.elem.getBoundingClientRect().left;
     const butt1Offset = newItem.button1.elem.getBoundingClientRect().left - scaleOffset;
     const butt2Offset = newItem.button2.elem.getBoundingClientRect().left - scaleOffset;
-    expect(butt2Offset - butt1Offset > newItem.button1.getWidth() - 1).toBeTrue();
+    expect(butt2Offset - butt1Offset > newItem.button1.getWidth() - 1).toEqual(true);
   });
 
   it("onMouseMove2(), with the small step butt2 shouldn't run over butt1 (vertical)", () => {
@@ -491,16 +508,28 @@ describe("View class(mouse moving handlers)", () => {
     const scaleOffset = newItem.scale.elem.getBoundingClientRect().top;
     const butt1Offset = newItem.button1.elem.getBoundingClientRect().top - scaleOffset;
     const butt2Offset = newItem.button2.elem.getBoundingClientRect().top - scaleOffset;
-    expect(butt2Offset - butt1Offset > newItem.button1.getWidth() - 1).toBeTrue();
+    expect(butt2Offset - butt1Offset > newItem.button1.getWidth() - 1).toEqual(true);
+  });
+});
+
+describe("View class(on scale and graduation clicks)", () => {
+  let newItem: View;
+  let mDown: MouseEvent;
+  let mUp: MouseEvent;
+
+  beforeEach(() => {
+    newItem = new View(0, 1000, 1, true);
+    const entry = createElem("slider");
+    document.body.appendChild(entry);
+    newItem.append(entry);
+    newItem.init();
   });
 
   it("scaleOnclick() should move button1 according to the mouse (horizontal)", () => {
     const mClick = new MouseEvent("mouseclick", {clientX: 150});
     newItem.scaleOnclick(mClick);
     const butt1Offset = newItem.button1.elem.getBoundingClientRect().left;
-    //const butt2Offset = newItem.button2.elem.getBoundingClientRect().left;
-    //expect(butt1Offset).toEqual(144);
-    expect(butt1Offset < 147 && butt1Offset > 141).toBeTrue();
+    expect(butt1Offset).toEqual(143);
   });
 
   it("scaleOnclick() should move button2 according to the mouse (horizontal, not range)", () => {
@@ -509,7 +538,7 @@ describe("View class(mouse moving handlers)", () => {
     const mClick = new MouseEvent("mouseclick", {clientX: 150});
     newItem.scaleOnclick(mClick);
     const butt2Offset = newItem.button2.elem.getBoundingClientRect().left;
-    expect(butt2Offset < 147 && butt2Offset > 141).toBeTrue();
+    expect(butt2Offset).toEqual(143);
   });
 
   it("scaleOnclick() should move button1 according to the mouse (vertical)", () => {
@@ -519,7 +548,7 @@ describe("View class(mouse moving handlers)", () => {
     const mClick = new MouseEvent("mouseclick", {clientY: butt1OffsetOld + 100});
     newItem.scaleOnclick(mClick);
     const butt1Offset = newItem.button1.elem.getBoundingClientRect().top;
-    expect(butt1Offset < butt1OffsetOld + 97 && butt1Offset > butt1OffsetOld + 91).toBeTrue();
+    expect(Math.floor(butt1Offset)).toEqual(butt1OffsetOld + 93);
   });
 
   it("scaleOnclick() should move button2 according to the mouse (vertical, not range)", () => {
@@ -530,24 +559,7 @@ describe("View class(mouse moving handlers)", () => {
     const mClick = new MouseEvent("mouseclick", {clientY: butt2OffsetOld - 100});
     newItem.scaleOnclick(mClick);
     const butt2Offset = newItem.button2.elem.getBoundingClientRect().top;
-    expect(butt2Offset < butt2OffsetOld - 103 && butt2Offset > butt2OffsetOld - 109).toBeTrue();
-  });
-
-  it("scaleOnclick() should move button2 according to the mouse (horizontal)", () => {
-    const mClick = new MouseEvent("mouseclick", {clientX: 350});
-    newItem.scaleOnclick(mClick);
-    const butt2Offset = newItem.button2.elem.getBoundingClientRect().left;
-    expect(butt2Offset < 347 && butt2Offset > 341).toBeTrue();
-  });
-
-  it("scaleOnclick() should move button2 according to the mouse (vertical)", () => {
-    newItem.isVertical = true;
-    newItem.init();
-    const butt2OffsetOld = newItem.button2.elem.getBoundingClientRect().top;
-    const mClick = new MouseEvent("mouseclick", {clientY: butt2OffsetOld - 50});
-    newItem.scaleOnclick(mClick);
-    const butt2Offset = newItem.button2.elem.getBoundingClientRect().top;
-    expect(butt2Offset < butt2OffsetOld - 53 && butt2Offset > butt2OffsetOld - 59).toBeTrue();
+    expect(Math.floor(butt2Offset)).toEqual(butt2OffsetOld - 107);
   });
 
   it("interMarkHandler() should move button1 according to the value (horizontal)", () => {

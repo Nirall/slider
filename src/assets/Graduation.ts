@@ -32,17 +32,17 @@ class Graduation {
     }
 
     if (!isVertical) {
-      this.mark1.style.marginLeft = -15 + 'px';
-      this.mark1.style.marginTop = '0';
-      this.mark4.style.marginRight = -15 + 'px';
-      this.mark4.style.marginBottom = '0';
-      this.gradElem.classList.remove("slider__graduation_position_vertical");
+      this.mark1.classList.add('slider__graduation-mark_offset_left');
+      this.mark1.classList.remove('slider__graduation-mark_offset_top');
+      this.mark4.classList.add('slider__graduation-mark_offset_right');
+      this.mark4.classList.remove('slider__graduation-mark_offset_bottom');
+      this.gradElem.classList.remove('slider__graduation_position_vertical');
     } else {
-      this.mark1.style.marginTop = -9  + 'px';
-      this.mark1.style.marginLeft = '0';
-      this.mark4.style.marginBottom = -9 + 'px';
-      this.mark4.style.marginRight = '0';
-      this.gradElem.classList.add("slider__graduation_position_vertical");
+      this.mark1.classList.remove('slider__graduation-mark_offset_left');
+      this.mark1.classList.add('slider__graduation-mark_offset_top');
+      this.mark4.classList.remove('slider__graduation-mark_offset_right');
+      this.mark4.classList.add('slider__graduation-mark_offset_bottom');
+      this.gradElem.classList.add('slider__graduation_position_vertical');
     }
   }
 }

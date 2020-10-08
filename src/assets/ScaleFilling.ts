@@ -31,12 +31,6 @@ class ScaleFilling {
 
   init = (isVertical: boolean): void => {
     this.isVertical = isVertical;
-
-    if (this.isVertical) {
-      this.elem.classList.add('slider__scale-filling_position_vertical');
-    } else {
-      this.elem.classList.remove('slider__scale-filling_position_vertical');
-    }
   }
 }
 
