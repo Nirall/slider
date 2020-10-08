@@ -565,8 +565,7 @@ describe("View class(on scale and graduation clicks)", () => {
   it("interMarkHandler() should move button1 according to the value (horizontal)", () => {
     newItem.interMarkHandler(250);
     const butt1Offset = newItem.button1.elem.getBoundingClientRect().left - newItem.scale.elem.getBoundingClientRect().left;
-    //expect(butt1Offset).toEqual(100);
-    expect(butt1Offset < 97 && butt1Offset > 91).toBeTrue();
+    expect(butt1Offset).toEqual(93);
   });
 
   it("interMarkHandler() should move button2 according to the value (horizontal, not range)", () => {
@@ -574,7 +573,7 @@ describe("View class(on scale and graduation clicks)", () => {
     newItem.init();
     newItem.interMarkHandler(250);
     const butt2Offset = newItem.button2.elem.getBoundingClientRect().left - newItem.scale.elem.getBoundingClientRect().left;
-    expect(butt2Offset < 97 && butt2Offset > 91).toBeTrue();
+    expect(butt2Offset).toEqual(93);
   });
 
   it("interMarkHandler() should move button1 according to the value (vertical)", () => {
@@ -582,7 +581,7 @@ describe("View class(on scale and graduation clicks)", () => {
     newItem.init();
     newItem.interMarkHandler(250);
     const butt1Offset = newItem.button1.elem.getBoundingClientRect().top - newItem.scale.elem.getBoundingClientRect().top;
-    expect(butt1Offset < 97 && butt1Offset > 91).toBeTrue();
+    expect(butt1Offset).toEqual(93);
   });
 
   it("interMarkHandler() should move button2 according to the value (vertical, not range)", () => {
@@ -591,13 +590,13 @@ describe("View class(on scale and graduation clicks)", () => {
     newItem.init();
     newItem.interMarkHandler(250);
     const butt2Offset = newItem.button2.elem.getBoundingClientRect().top - newItem.scale.elem.getBoundingClientRect().top;
-    expect(butt2Offset < 97 && butt2Offset > 91).toBeTrue();
+    expect(butt2Offset).toEqual(93);
   });
 
   it("interMarkHandler() should move button2 according to the value (horizontal)", () => {
     newItem.interMarkHandler(750);
     const butt2Offset = newItem.button2.elem.getBoundingClientRect().left - newItem.scale.elem.getBoundingClientRect().left;
-    expect(butt2Offset < 297 && butt2Offset > 291).toBeTrue();
+    expect(butt2Offset).toEqual(293);
   });
 
   it("interMarkHandler() should move button2 according to the value (vertical)", () => {
@@ -605,16 +604,16 @@ describe("View class(on scale and graduation clicks)", () => {
     newItem.init();
     newItem.interMarkHandler(750);
     const butt2Offset = newItem.button2.elem.getBoundingClientRect().top - newItem.scale.elem.getBoundingClientRect().top;
-    expect(butt2Offset < 297 && butt2Offset > 291).toBeTrue();
+    expect(butt2Offset).toEqual(293);
   });
 
-  it("mark1Handler should move button1 to the beginning", ()=> {
+  it("mark1Handler should move button1 to the beginning", () => {
     newItem.butt1Move(200, 200);
     const offsetBefore = newItem.getStart();
     const mClick = new MouseEvent("click");
     newItem.mark1Onclick(mClick);
     //expect(newItem.getStart()).toEqual(offsetBefore);
-    expect(newItem.getStart() === 0 && newItem.getStart() !== offsetBefore).toBeTrue();
+    expect(newItem.getStart() === 0 && newItem.getStart() !== offsetBefore).toEqual(true);
   });
 
   it("mark4Handler should move button2 to the end (horizontal)", () => {
@@ -623,10 +622,10 @@ describe("View class(on scale and graduation clicks)", () => {
     const mClick = new MouseEvent("click");
     newItem.mark4Onclick(mClick);
     const offset = newItem.getEnd();
-    expect(offset < 403 && offset > 397 && offset != offsetBefore).toBeTrue();
+    expect(offset === 400 && offset !== offsetBefore).toEqual(true);
   });
 
-  it("mark4Handler should move button2 to the end (vertical)", ()=> {
+  it("mark4Handler should move button2 to the end (vertical)", () => {
     newItem.isVertical = true;
     newItem.init();
     newItem.butt2Move(200, 200);
@@ -634,21 +633,35 @@ describe("View class(on scale and graduation clicks)", () => {
     const mClick = new MouseEvent("click");
     newItem.mark4Onclick(mClick);
     const offset = newItem.getEnd();
-    expect(offset < 403 && offset > 397 && offset != offsetBefore).toBeTrue();
+    expect(offset === 400 && offset !== offsetBefore).toEqual(true);
   });
 
   it("mark2Onclick() should move buttons using mark2.innerHTML", () => {
     newItem.graduation.mark2.innerHTML = "250";
     const mClick = new MouseEvent("click");
     newItem.mark2Onclick(mClick);
-    expect(newItem.getStart() > 97 && newItem.getStart() < 103).toBeTrue();
+    expect(newItem.getStart()).toEqual(100);
   });
 
   it("mark3Onclick() should move buttons using mark3.innerHTML", () => {
     newItem.graduation.mark3.innerHTML = "750";
     const mClick = new MouseEvent("click");
     newItem.mark3Onclick(mClick);
-    expect(newItem.getEnd() > 297 && newItem.getEnd() < 303).toBeTrue();
+    expect(newItem.getEnd()).toEqual(300);
+  });
+});
+
+describe("View class(init() and append())", () => {
+  let newItem: View;
+  let mDown: MouseEvent;
+  let mUp: MouseEvent;
+
+  beforeEach(() => {
+    newItem = new View(0, 1000, 1, true);
+    const entry = createElem("slider");
+    document.body.appendChild(entry);
+    newItem.append(entry);
+    newItem.init();
   });
 
   it("init() should set display = 'none' of the button1 if range = false showLabel = true", () => {
