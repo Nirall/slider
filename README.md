@@ -3,11 +3,17 @@
 
 ### Установка
 В репозитарии имеется собранная тестовая страница с подключенными слайдерами "dist/test.html".
+
 Клонирование репозитория "git clone https://github.com/Nirall/slider".
+
 Установка зависимостей "npm install".
+
 Запуск dev-mode "npm start", хостит "index.html" с тестовым примером.
+
 Прогон тестов "npm run test".
+
 Сборка билда "npm run build".
+
 Для публикации на GitHub Pages добавьте путь до папки 'dist'. Пример - "https://nirall.github.io/slider/dist/".
 
 Инициализация плагина с подключением методов для тестирования выполнена внутри "index.html".
