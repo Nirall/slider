@@ -1,14 +1,14 @@
-const path = require("path");
-const CleanWebpackPlugin = require("clean-webpack-plugin").CleanWebpackPlugin;
-const cssExtract = require("mini-css-extract-plugin");
+const path = require('path');
+const CleanWebpackPlugin = require('clean-webpack-plugin').CleanWebpackPlugin;
+const cssExtract = require('mini-css-extract-plugin');
 
 module.exports = {
-    entry: "./src/index.ts",
+    entry: './src/index.ts',
     output: {
-        filename: "bundle.js",
-        path: path.resolve(__dirname, "dist"),
+        filename: 'bundle.js',
+        path: path.resolve(__dirname, 'dist'),
     },
-    devtool: "inline-source-map",
+    devtool: 'inline-source-map',
     devServer: {
         contentBase: path.join(__dirname, 'dist'),
         port: 3000,
@@ -16,40 +16,40 @@ module.exports = {
     plugins: [
         new CleanWebpackPlugin(),
         new cssExtract({
-            filename: "style.css",
+            filename: 'style.css',
         }),
     ],
     module: {
         rules: [
             {
                 test: /\.tsx?$/,
-                use: "ts-loader",
+                use: 'ts-loader',
                 exclude: /node_modules/,
             },
             {
                 test: /\.s?css$/,
                 use: [
                     cssExtract.loader,
-                    "css-loader",
-                    "sass-loader",
+                    'css-loader',
+                    'sass-loader',
                 ],
                 exclude: /node_modules/,
             },
             {
                 test: /\.html$/,
                 use: {
-                    loader: "file-loader",
+                    loader: 'file-loader',
                     options: {
-                        name: "[name].[ext]",
+                        name: '[name].[ext]',
                     }
                 }
             },
             {
                 test: /(?=init.*)\.js$/,
                 use: {
-                    loader: "file-loader",
+                    loader: 'file-loader',
                     options: {
-                        name: "[name].[ext]",
+                        name: '[name].[ext]',
                     }
                 }
             },
@@ -59,7 +59,7 @@ module.exports = {
         extensions: [ '.ts', '.tsx', '.js' ]
     },
     devServer: {
-        contentBase: path.resolve(__dirname, "dist"),
+        contentBase: path.resolve(__dirname, 'dist'),
         hot: true,
     }
 }

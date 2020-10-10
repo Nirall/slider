@@ -1,6 +1,6 @@
-import { View } from "./view";
-import Model from "./model";
-import MakeObservableObject from "./assets/MakeObservableObject";
+import { View } from '../View/View';
+import Model from '../Model/Model';
+import MakeObservableObject from '../View/assets/MakeObservableObject';
 
 interface configType {
   [index: string]: number | boolean;
@@ -10,6 +10,7 @@ class Controller {
   view: View;
   model: Model;
   observers: MakeObservableObject;
+
   constructor(minValue = 0, maxValue = 1000, step = 1, isRange = false, isVertical = false, showLabel = false, isFloat = false) {
     this.view = new View(minValue, maxValue, step, isRange, isVertical, showLabel, isFloat);
     this.model = new Model(minValue, maxValue);

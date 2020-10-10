@@ -1,6 +1,6 @@
 class MakeObservableObject {
   observers: Array<Function>;
-  
+
   constructor() {
     this.observers = [];
   }
@@ -27,7 +27,7 @@ class MakeObservableObject {
     }
     throw new Error('could not find observer in list of observers');
   }
-  
+
   notifyObservers (): void {
     const observersSnapshot = [...this.observers];
     observersSnapshot.map((observer) => observer());

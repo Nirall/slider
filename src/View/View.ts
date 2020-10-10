@@ -149,7 +149,7 @@ class View {
     this.butt1Move(roundOffset, roundValue);
   }
 
-  onMouseUp1 = (eventMu: MouseEvent): void => {
+  onMouseUp1 = (): void => {
     document.removeEventListener("mouseup", this.onMouseUp1);
     document.removeEventListener("mousemove", this.onMouseMove1);
   }
@@ -209,13 +209,14 @@ class View {
     this.butt2Move(roundOffset, roundValue);
   }
 
-  onMouseUp2 = (eventMu: MouseEvent): void => {
+  onMouseUp2 = (): void => {
     document.removeEventListener('mouseup', this.onMouseUp2);
     document.removeEventListener('mousemove', this.onMouseMove2);
   }
 
   butt1CloserCheck = (coordinate: number): boolean => {
-    return Math.abs(coordinate - this.button1.getPosition()) < Math.abs(coordinate - this.button2.getPosition());
+    return (Math.abs(coordinate - this.button1.getPosition() - this.button1.getWidth()/2)
+      < Math.abs(coordinate - this.button2.getPosition() - this.button2.getWidth()/2));
   }
 
   // Scale EventListeners------------------------------------------------------------------
@@ -254,7 +255,7 @@ class View {
     }
   }
 
-  mark1Onclick = (event: MouseEvent): void => {
+  mark1Onclick = (): void => {
     const roundOffset = -this.button2.getWidth()/2;
     const roundValue = this.minValue;
 
@@ -265,17 +266,17 @@ class View {
     }
   }
 
-  mark4Onclick = (event: MouseEvent): void => {
+  mark4Onclick = (): void => {
     const roundOffset = this.scale.getDimension() - this.button2.getWidth()/2;
     this.butt2Move(roundOffset, this.maxValue);
   }
 
-  mark2Onclick = (event: MouseEvent): void => {
+  mark2Onclick = (): void => {
     const val = this.isFloat ? parseFloat(this.graduation.mark2.innerHTML) : parseInt(this.graduation.mark2.innerHTML);
     this.interMarkHandler(val);
   }
 
-  mark3Onclick = (event: MouseEvent): void => {
+  mark3Onclick = (): void => {
     const val = this.isFloat ? parseFloat(this.graduation.mark3.innerHTML) : parseInt(this.graduation.mark3.innerHTML);
     this.interMarkHandler(val);
   }

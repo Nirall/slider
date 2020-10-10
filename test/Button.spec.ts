@@ -1,4 +1,4 @@
-import Button from '../src/assets/Button';
+import Button from '../src/View/assets/Button';
 
 describe('Button class(horizontal)', () => {
   let newItem: Button;

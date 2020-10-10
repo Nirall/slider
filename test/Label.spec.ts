@@ -1,4 +1,4 @@
-import Label from '../src/assets/Label';
+import Label from '../src/View/assets/Label';
 
 describe('Label class(horizontal)', () => {
   let newItem: Label;

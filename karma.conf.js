@@ -1,5 +1,5 @@
 const webpackConfig = require('./webpack.config.js');
-const path = require("path");
+const path = require('path');
 webpackConfig.module.rules.push(
     {
         test: /\.ts$/,
@@ -10,7 +10,7 @@ webpackConfig.module.rules.push(
             esModules: true,
         },
 },);
-webpackConfig.module.rules[1].use = ["style-loader", "css-loader", "sass-loader",];
+webpackConfig.module.rules[1].use = ['style-loader', 'css-loader', 'sass-loader',];
 
 
 module.exports = function(config) {
@@ -41,7 +41,7 @@ module.exports = function(config) {
         webpack: {
             module: webpackConfig.module,
             resolve: webpackConfig.resolve,
-            devtool: "inline-source-map",
+            devtool: 'inline-source-map',
             //mode: webpackConfig.mode,
             //devtool: 'inline-source-map',
         },
