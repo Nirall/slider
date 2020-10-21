@@ -1,6 +1,6 @@
-import { View } from '../View/View';
-import Model from '../Model/Model';
-import MakeObservableObject from '../View/assets/MakeObservableObject';
+import { View } from '../view/View';
+import Model from '../model/Model';
+import MakeObservableObject from '../makeObservableObject/MakeObservableObject';
 
 interface configType {
   [index: string]: number | boolean;

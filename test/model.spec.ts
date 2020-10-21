@@ -1,5 +1,5 @@
-import Model from '../src/Model/Model';
-import MakeObservableObject from '../src/View/assets/MakeObservableObject';
+import Model from '../src/slider/blocks/model/Model';
+import MakeObservableObject from '../src/slider/blocks/makeObservableObject/MakeObservableObject';
 
 describe('Class Model', () => {
 	it('constructor() should create .curMinValue', () => {

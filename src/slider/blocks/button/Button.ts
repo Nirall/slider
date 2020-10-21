@@ -1,4 +1,4 @@
-import createElem from './createElem';
+import createElem from '../createElem/createElem';
 
 class Button {
   elem: HTMLElement;

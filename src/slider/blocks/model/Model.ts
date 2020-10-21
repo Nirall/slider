@@ -1,4 +1,4 @@
-import MakeObservableObject from '../View/assets/MakeObservableObject';
+import MakeObservableObject from '../makeObservableObject/MakeObservableObject';
 
 class Model {
   curMinValue: number;

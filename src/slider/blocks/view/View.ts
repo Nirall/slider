@@ -1,10 +1,10 @@
-import MakeObservableObject from "./assets/MakeObservableObject";
-import createElem from "./assets/createElem";
-import Scale from "./assets/Scale";
-import Graduation from "./assets/Graduation";
-import Button from "./assets/Button";
-import Label from "./assets/Label";
-import ScaleFilling from "./assets/ScaleFilling";
+import MakeObservableObject from "../makeObservableObject/MakeObservableObject";
+import createElem from "../createElem/createElem";
+import Scale from "../scale/Scale";
+import Graduation from "../graduation/Graduation";
+import Button from "../button/Button";
+import Label from "../label/Label";
+import ScaleFilling from "../scaleFilling/ScaleFilling";
 
 class View {
   [index: string]: number|boolean|Scale|Graduation|ScaleFilling|Button|Label|MakeObservableObject|Function;

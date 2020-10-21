@@ -1,4 +1,4 @@
-import Controller from './Controller/Controller.ts';
+import Controller from './blocks/controller/Controller.ts';
 
 (function($) {
   const config = {

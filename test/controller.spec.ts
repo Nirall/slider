@@ -1,4 +1,4 @@
-import Controller from '../src/Controller/Controller';
+import Controller from '../src/slider/blocks/controller/Controller';
 
 describe('Class Controller', () => {
   it('constructor() should create .view prop with the certain values', () => {

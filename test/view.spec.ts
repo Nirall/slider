@@ -1,7 +1,7 @@
-import {createElem, Scale, Label, Button, ScaleFilling, View, Graduation} from '../src/View/View';
-import MakeObservableObject from '../src/View/assets/MakeObservableObject';
+import {createElem, Scale, Label, Button, ScaleFilling, View, Graduation} from '../src/slider/blocks/view/View';
+import MakeObservableObject from '../src/slider/blocks/makeObservableObject/MakeObservableObject';
 
-import '../src/styles/style.scss';
+import '../src/slider/styles/style.scss';
 
 describe('View class(constructor)', () => {
   const newItem = new View(1, 1000, 10, true, true, true);

@@ -1,3 +1,7 @@
-import "./page/index.html";
-import "./styles/style.scss";
-import "./main.js";
+import './page/index.html';
+
+function importAll(r:  __WebpackModuleApi.RequireContext) {
+    r.keys().forEach(r);
+}
+  
+importAll(require.context('./slider', true, /\.(js|ts|scss)$/i));

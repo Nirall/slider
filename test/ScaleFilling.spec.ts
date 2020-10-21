@@ -1,4 +1,4 @@
-import ScaleFilling from '../src/View/assets/ScaleFilling';
+import ScaleFilling from '../src/slider/blocks/scaleFilling/ScaleFilling';
 
 describe('ScaleFilling class(horizontal)', () => {
   let newItem: ScaleFilling;

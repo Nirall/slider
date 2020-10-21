@@ -1,4 +1,4 @@
-import Label from '../src/View/assets/Label';
+import Label from '../src/slider/blocks/label/Label';
 
 describe('Label class(horizontal)', () => {
   let newItem: Label;
