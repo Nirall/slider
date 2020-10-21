@@ -5,6 +5,7 @@ import Graduation from "../graduation/Graduation";
 import Button from "../button/Button";
 import Label from "../label/Label";
 import ScaleFilling from "../scaleFilling/ScaleFilling";
+import ParsingDigits from "../parsingDigits/ParsingDigits";
 
 class View {
   [index: string]: number|boolean|Scale|Graduation|ScaleFilling|Button|Label|MakeObservableObject|Function;
@@ -44,6 +45,7 @@ class View {
     this.showLabel = showLabel;
     this.isFloat = isFloat;
     this.observers = new MakeObservableObject()
+    this.checkStep();
     this.checkValues();
   }
 
@@ -74,8 +76,16 @@ class View {
   round = (val: number, step: number): number => {
     const whole = Math.floor(val/step);
     const reminder = val % step;
+    console.log('round', whole, reminder);
+
     if (val < 0) {
-      return Math.abs(reminder) > step/2 ? whole*step : (whole + 1)*step;
+      return Math.abs(reminder) > step/2 ? (whole - 1)*step : whole*step;
+    }
+
+    if (val <= this.minValue) {
+      return this.minValue;
+    } else if (val >= this.maxValue) {      
+      return this.maxValue;
     }
 
     return reminder < step/2 ? whole*step : (whole + 1)*step;
@@ -87,13 +97,7 @@ class View {
 
     if (this.isFloat) {
       roundValue = parseFloat(roundValue.toFixed(2));
-    }
-
-    if (roundValue < this.minValue) {
-      roundValue = this.minValue;
-    } else if (roundValue > this.maxValue) {
-      roundValue = this.maxValue;
-    }
+    }   
 
     const roundOffset = this.offsetValueConv(roundValue);
     return [roundOffset, roundValue];
@@ -142,7 +146,7 @@ class View {
 
     [roundOffset, roundValue] = this.butt1OffsetCheck(newOffset);
 
-    if (!roundValue) {
+    if (typeof roundValue === 'undefined') {
         [roundOffset, roundValue] = this.roundOffsetButt(roundOffset);
     }
 
@@ -202,7 +206,7 @@ class View {
 
     [roundOffset, roundValue] = this.butt2OffsetCheck(newOffset);
 
-    if (!roundValue) {
+    if (typeof roundValue === 'undefined') {
       [roundOffset, roundValue] = this.roundOffsetButt(roundOffset);
     }
 
@@ -281,6 +285,22 @@ class View {
     this.interMarkHandler(val);
   }
 
+  checkStep = (): void => {
+    let stepMod = Math.abs(ParsingDigits.parsing(this.step));
+    if (stepMod === null || stepMod === 0 || stepMod > this.maxValue - this.minValue) {
+      this.step = (this.maxValue - this.minValue)/2;
+      console.log("Wrong value of the step. It's setted to the half of (maxValue - minValue)");
+    } else {
+      if (stepMod % 1 !== 0) {
+        this.isFloat = true;
+      } else {
+        this.isFloat = false;
+      }
+  
+      this.step = stepMod;
+    }
+  }
+
   checkValues = (): void => {
     if (typeof this.maxValue !== "number") {
       console.error("Maxvalue should be a number");
@@ -306,7 +326,36 @@ class View {
     }
   }
 
+  renew() {
+    let roundValue;
+    let roundOffset;    
+    const newOffset = this.offsetValueConv(this.curMaxValue);
+    [roundOffset, roundValue] = this.butt2OffsetCheck(newOffset);
+
+    if (typeof roundValue === 'undefined') {
+      [roundOffset, roundValue] = this.roundOffsetButt(roundOffset);
+    }
+
+    this.butt2Move(roundOffset, roundValue);
+    
+    if (this.isRange) {
+      let roundValue;
+      let roundOffset;; 
+      const newOffset = this.offsetValueConv(this.curMinValue);
+      [roundOffset, roundValue] = this.butt1OffsetCheck(newOffset);
+
+      if (typeof roundValue === 'undefined') {
+        [roundOffset, roundValue] = this.roundOffsetButt(roundOffset);
+      }
+
+      this.butt1Move(roundOffset, roundValue);
+    }
+  }
+
   init = (): void => {
+    this.checkStep();
+    this.checkValues();
+    this.renew();   
     this.scale.init(this.isVertical);
     this.scaleFilling.init(this.isVertical);
     this.graduation.init(this.minValue, this.maxValue, this.isVertical, this.isFloat);
@@ -317,7 +366,6 @@ class View {
 
     this.button1.elem.style.display = "none";
     this.label1.elem.style.display = "none";
-    this.checkValues();
 
     if (this.showLabel) {
       this.label1.elem.style.display = "block";

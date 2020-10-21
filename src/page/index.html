@@ -337,11 +337,7 @@
             });
 
             $(`${i} + .input-wrapper .step`).focusout(() => {
-                if ($(`${i}`).omfgslider("getConfig").isFloat) {
-                    $(`${i}`).omfgslider("update", {step: parseFloat($(`${i} + .input-wrapper .step`).val())});
-                } else {
-                    $(`${i}`).omfgslider("update", {step: parseInt($(`${i} + .input-wrapper .step`).val())});
-                }
+                $(`${i}`).omfgslider("update", {step: $(`${i} + .input-wrapper .step`).val()})
             });
 
             $(`${i} + .input-wrapper input[name = "range"]`).change(() => {
