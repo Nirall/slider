@@ -8,10 +8,13 @@ interface configType {
 
 class Controller {
   view: View;
+
   model: Model;
+
   observers: MakeObservableObject;
 
-  constructor(minValue = 0, maxValue = 1000, step = 1, isRange = false, isVertical = false, showLabel = false, isFloat = false) {
+  constructor(minValue = 0, maxValue = 1000, step = 1, isRange = false,
+    isVertical = false, showLabel = false, isFloat = false) {
     this.view = new View(minValue, maxValue, step, isRange, isVertical, showLabel, isFloat);
     this.model = new Model(minValue, maxValue);
     this.observers = new MakeObservableObject();
@@ -37,7 +40,7 @@ class Controller {
   }
 
   update = (args: configType): void => {
-    Object.keys(args).map((item)  => {
+    Object.keys(args).map((item) => {
       if (this.view[item] !== undefined) {
         this.view[item] = args[item];
       }

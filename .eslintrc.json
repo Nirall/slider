@@ -6,7 +6,8 @@
     "extends": [
         "eslint:recommended",
         "plugin:@typescript-eslint/recommended",
-        "plugin:fsd/all"
+        "plugin:fsd/all",
+        "airbnb-base/legacy"
     ],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {

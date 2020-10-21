@@ -1,4 +1,4 @@
-import Controller from './blocks/controller/Controller.ts';
+import Controller from './blocks/controller/Controller';
 
 (function($) {
   const config = {
@@ -11,17 +11,18 @@ import Controller from './blocks/controller/Controller.ts';
     isFloat: false,
   };
 
-  const methods = {
-    init: function(opt) {
+  const methods: Methods = {
+    init: function(opt: Config) {
       if (!$(this).data('slider')) {
-        const newConfig = JSON.parse(JSON.stringify(config));
+        const newConfig = { ...config };
         const slider = new Controller(...Object.values($.extend(newConfig, opt)));
         $(this).data('slider', slider);
+
         slider.append($(this));
       }
     },
 
-    update: function(opt) {
+    update: function(opt: Config) {
       const slider = $(this).data('slider');
       slider.update(opt);
     },
@@ -31,12 +32,12 @@ import Controller from './blocks/controller/Controller.ts';
       return slider.getConfig();
     },
 
-    setValues: function(opt) {
+    setValues: function(opt: Config) {
       const slider = $(this).data('slider');
       slider.setValues(opt.curMinValue, opt.curMaxValue);
     },
 
-    inputsAttach: function(opt) {
+    inputsAttach: function(opt: InputsObject) {
       const slider = $(this).data('slider');
       slider.addObserver(() => {
         opt.minValueIn.val(slider.getValues()[0]);
@@ -45,7 +46,7 @@ import Controller from './blocks/controller/Controller.ts';
     },
   }
 
-  $.fn.omfgslider = function(method) {
+  $.fn.omfgslider = function(method: string) {
     if (methods[method]) {
       return methods[method].apply(this, Array.prototype.slice.call(arguments, 1));
     } else if (typeof method === 'object' || !method) {
