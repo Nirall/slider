@@ -74,17 +74,16 @@ class View {
   }
 
   round = (val: number, step: number): number => {
-    const whole = Math.floor(val/step);
+    const whole = Math.trunc(val/step);
     const reminder = val % step;
-    console.log('round', whole, reminder);
 
     if (val < 0) {
-      return Math.abs(reminder) > step/2 ? (whole - 1)*step : whole*step;
+      return Math.abs(reminder) < step/2 ? whole*step : (whole - 1)*step;
     }
 
     if (val <= this.minValue) {
       return this.minValue;
-    } else if (val >= this.maxValue) {      
+    } else if (val >= this.maxValue) {
       return this.maxValue;
     }
 
@@ -97,7 +96,7 @@ class View {
 
     if (this.isFloat) {
       roundValue = parseFloat(roundValue.toFixed(2));
-    }   
+    }
 
     const roundOffset = this.offsetValueConv(roundValue);
     return [roundOffset, roundValue];
@@ -296,7 +295,7 @@ class View {
       } else {
         this.isFloat = false;
       }
-  
+
       this.step = stepMod;
     }
   }
@@ -328,7 +327,7 @@ class View {
 
   renew() {
     let roundValue;
-    let roundOffset;    
+    let roundOffset;
     const newOffset = this.offsetValueConv(this.curMaxValue);
     [roundOffset, roundValue] = this.butt2OffsetCheck(newOffset);
 
@@ -337,10 +336,10 @@ class View {
     }
 
     this.butt2Move(roundOffset, roundValue);
-    
+
     if (this.isRange) {
       let roundValue;
-      let roundOffset;; 
+      let roundOffset;;
       const newOffset = this.offsetValueConv(this.curMinValue);
       [roundOffset, roundValue] = this.butt1OffsetCheck(newOffset);
 
@@ -355,7 +354,7 @@ class View {
   init = (): void => {
     this.checkStep();
     this.checkValues();
-    this.renew();   
+    this.renew();
     this.scale.init(this.isVertical);
     this.scaleFilling.init(this.isVertical);
     this.graduation.init(this.minValue, this.maxValue, this.isVertical, this.isFloat);
