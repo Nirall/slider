@@ -63,11 +63,6 @@ class View {
     this.scaleFilling.init(this.isVertical);
     this.scaleFilling.setPosition(this.getStart());
     this.scaleFilling.setDimension(this.getEnd() - this.getStart());
-
-    if (!this.isRange) {
-      this.curMinValue = this.minValue;
-    }
-
     this.observers.notifyObservers();
   }
 
@@ -411,8 +406,7 @@ class View {
     }
     
     this.renew();
-    this.updateElems();
-    
+    this.updateElems();    
   }
 
   append = (entry: HTMLElement): void => {
