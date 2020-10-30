@@ -743,11 +743,4 @@ describe('View class(init() and append())', () => {
   it('init(), label2 should not has class "slider__button-label_position_vertical" if vertical=false', () => {
     expect(newItem.label2.elem.classList.contains('slider__button-label_position_vertical')).toEqual(false);
   });
-
-  it('checkValues(), if step > maxvalue - minvalue, step should be set to the maxvalue - minvalue', () => {
-    //spyOn(console, 'error');
-    newItem.step = 1200;
-    newItem.init();
-    expect(newItem.step).toEqual(1000);
-  });
 });

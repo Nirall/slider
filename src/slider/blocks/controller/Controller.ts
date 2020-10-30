@@ -62,10 +62,50 @@ class Controller {
     if (stepMod % 1 !== 0) {
       this.view.isFloat = true;
     } else {
-      this.view.isFloat = false;
+      if (this.view.maxValue % 1 === 0 && this.view.minValue % 1 === 0) {
+        this.view.isFloat = false;
+      }
     }
   
     return stepMod;   
+  }
+
+  checkMaxValue = (maxValue: string): number => {
+    let maxValueMod = ParsingDigits.parsing(maxValue);
+
+    if (maxValueMod === null || maxValueMod <= this.view.minValue) {
+      console.log('Wrong value of the maxValue');
+      return this.view.maxValue;
+    } 
+  
+    if (maxValueMod % 1 !== 0) {
+      this.view.isFloat = true;
+    } else {
+      if (this.view.step % 1 === 0 && this.view.minValue % 1 === 0) {
+        this.view.isFloat = false;
+      }
+    }
+  
+    return maxValueMod;   
+  }
+
+  checkMinValue = (minValue: string): number => {
+    let minValueMod = ParsingDigits.parsing(minValue);
+
+    if (minValueMod === null || minValueMod >= this.view.maxValue) {
+      console.log('Wrong value of the minValue');
+      return this.view.minValue;
+    } 
+  
+    if (minValueMod % 1 !== 0) {      
+      this.view.isFloat = true;
+    } else {
+      if (this.view.maxValue % 1 === 0 && this.view.step % 1 === 0) {
+        this.view.isFloat = false;
+      }
+    }
+  
+    return minValueMod;   
   }
 
   update = (args: configType): void => {
@@ -73,6 +113,10 @@ class Controller {
       if (this.view[item] !== undefined) {
         if (item === 'step') {          
           this.view.step = this.checkStep(args[item]);
+        } else if (item === 'maxValue') {
+          this.view.maxValue = this.checkMaxValue(args[item]);
+        } else if (item === 'minValue') {
+          this.view.minValue = this.checkMinValue(args[item]);
         } else {
           this.view[item] = args[item];
         }

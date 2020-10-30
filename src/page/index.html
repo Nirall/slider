@@ -321,19 +321,11 @@
             });
 
             $(`${i} + .input-wrapper .minValue`).focusout(() => {
-                if ($(`${i}`).omfgslider("getConfig").isFloat) {
-                    $(`${i}`).omfgslider("update", {minValue: parseFloat($(`${i} + .input-wrapper .minValue`).val())});
-                } else {
-                    $(`${i}`).omfgslider("update", {minValue: parseInt($(`${i} + .input-wrapper .minValue`).val())});
-                }
+                $(`${i}`).omfgslider("update", {minValue: $(`${i} + .input-wrapper .minValue`).val()})               
             });
 
             $(`${i} + .input-wrapper .maxValue`).focusout(() => {
-                if ($(`${i}`).omfgslider("getConfig").isFloat) {
-                    $(`${i}`).omfgslider("update", {maxValue: parseFloat($(`${i} + .input-wrapper .maxValue`).val())});
-                } else {
-                    $(`${i}`).omfgslider("update", {maxValue: parseInt($(`${i} + .input-wrapper .maxValue`).val())});
-                }
+                $(`${i}`).omfgslider("update", {maxValue: $(`${i} + .input-wrapper .maxValue`).val()})  
             });
 
             $(`${i} + .input-wrapper .step`).focusout(() => {
