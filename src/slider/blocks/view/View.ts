@@ -139,7 +139,7 @@ class View {
     [roundOffset, roundValue] = this.butt1OffsetCheck(newOffset);
 
     if (typeof roundValue === 'undefined') {
-        [roundOffset, roundValue] = this.roundOffsetButt(roundOffset);
+      [roundOffset, roundValue] = this.roundOffsetButt(roundOffset);
     }
 
     this.butt1Move(roundOffset, roundValue);
@@ -277,44 +277,6 @@ class View {
     this.interMarkHandler(val);
   }
 
-  /*
-  checkStep = (): void => {
-    let stepMod = Math.abs(ParsingDigits.parsing(this.step));
-    if (stepMod === null || stepMod === 0 || stepMod >= this.maxValue - this.minValue) {
-      this.step = (this.maxValue - this.minValue)/2;
-      console.log("Wrong value of the step. It's setted to the half of (maxValue - minValue)");
-    } else {
-      if (stepMod % 1 !== 0) {
-        this.isFloat = true;
-      } else {
-        this.isFloat = false;
-      }
-
-      this.step = stepMod;
-    }
-  }
-  
-
-  checkMaxValue = (): void => {
-    let maxMod = Math.abs(ParsingDigits.parsing(this.maxValue));
-    if (maxMod === null) {
-
-    }
-    if (maxMod  < this.minValue) {
-      this.step = (this.maxValue - this.minValue)/2;
-      console.log("Wrong value of the step. It's setted to the half of (maxValue - minValue)");
-    } else {
-      if (stepMod % 1 !== 0) {
-        this.isFloat = true;
-      } else {
-        this.isFloat = false;
-      }
-
-      this.step = stepMod;
-    }
-  }
-  */
-
   checkValues = (): void => {
     if (typeof this.maxValue !== "number") {
       console.error("Maxvalue should be a number");
@@ -429,7 +391,20 @@ class View {
       document.addEventListener("mouseup", this.onMouseUp1);
     }
 
+    this.label1.elem.onmousedown = (eventMd: MouseEvent) => {
+      eventMd.preventDefault();
+      document.addEventListener("mousemove", this.onMouseMove1);
+      document.addEventListener("mouseup", this.onMouseUp1);
+    }
+
     this.button2.elem.onmousedown = (eventMd: MouseEvent) => {
+      eventMd.preventDefault();
+      document.addEventListener("mousemove", this.onMouseMove2);
+      document.addEventListener("mouseup", this.onMouseUp2);
+    }
+
+    this.label2.elem.onmousedown = (eventMd: MouseEvent) => {
+      console.log('yes');
       eventMd.preventDefault();
       document.addEventListener("mousemove", this.onMouseMove2);
       document.addEventListener("mouseup", this.onMouseUp2);

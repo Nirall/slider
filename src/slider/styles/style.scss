@@ -38,6 +38,8 @@ $red: #990033;
     align-items: center;
     display: none;
     text-align: center;
+    cursor: pointer;
+    z-index: 3;
 
     &_position_vertical {
       margin: 0 0 0 10px;
