@@ -8,4 +8,7 @@
         "allowJs": true,
         "sourceMap": true,
     },
+    "exclude": [
+        "test/*spec.ts",
+    ],
 }

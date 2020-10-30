@@ -1,9 +1,21 @@
 import { View } from '../view/View';
 import Model from '../model/Model';
 import MakeObservableObject from '../makeObservableObject/MakeObservableObject';
+import ParsingDigits from "../parsingDigits/ParsingDigits";
 
 interface configType {
-  [index: string]: number | boolean;
+  //[index: string]:
+    [index: string]: any,
+    /*
+    step: string,
+    minValue: number,
+    maxValue: number,
+    step: string,
+    isRange: boolean,
+    isVertical: boolean,
+    showLabel: boolean,
+    isFloat: boolean,
+    */
 }
 
 class Controller {
@@ -39,16 +51,37 @@ class Controller {
     this.view.init();
   }
 
+  checkStep = (step: string): number => {
+    let stepMod = Math.abs(ParsingDigits.parsing(step));
+
+    if (stepMod === null || stepMod === 0 || stepMod >= this.view.maxValue - this.view.minValue) {
+      console.log('Wrong value of the step');
+      return this.view.step;
+    } 
+  
+    if (stepMod % 1 !== 0) {
+      this.view.isFloat = true;
+    } else {
+      this.view.isFloat = false;
+    }
+  
+    return stepMod;   
+  }
+
   update = (args: configType): void => {
     Object.keys(args).map((item) => {
       if (this.view[item] !== undefined) {
-        this.view[item] = args[item];
+        if (item === 'step') {          
+          this.view.step = this.checkStep(args[item]);
+        } else {
+          this.view[item] = args[item];
+        }
       }
     });
 
     this.view.init();
-    this.view.butt1Move(this.view.butt1OffsetCheck(this.view.offsetValueConv(this.model.curMinValue))[0], this.model.curMinValue);
-    this.view.butt2Move(this.view.butt2OffsetCheck(this.view.offsetValueConv(this.model.curMaxValue))[0], this.model.curMaxValue);
+    //this.view.butt1Move(this.view.butt1OffsetCheck(this.view.offsetValueConv(this.model.curMinValue))[0], this.model.curMinValue);
+    //this.view.butt2Move(this.view.butt2OffsetCheck(this.view.offsetValueConv(this.model.curMaxValue))[0], this.model.curMaxValue);
   }
 
   getValues = (): Array<number> => {

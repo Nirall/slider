@@ -5,10 +5,9 @@ import Graduation from "../graduation/Graduation";
 import Button from "../button/Button";
 import Label from "../label/Label";
 import ScaleFilling from "../scaleFilling/ScaleFilling";
-import ParsingDigits from "../parsingDigits/ParsingDigits";
 
 class View {
-  [index: string]: number|boolean|Scale|Graduation|ScaleFilling|Button|Label|MakeObservableObject|Function;
+  [index: string]: any;
   scale: Scale;
   graduation: Graduation;
   scaleFilling: ScaleFilling;
@@ -45,8 +44,7 @@ class View {
     this.showLabel = showLabel;
     this.isFloat = isFloat;
     this.observers = new MakeObservableObject()
-    this.checkStep();
-    this.checkValues();
+    //this.checkValues();
   }
 
   getStart = (): number => {
@@ -75,7 +73,7 @@ class View {
 
   round = (val: number, step: number): number => {
     const whole = Math.trunc(val/step);
-    const reminder = val % step;
+    const reminder = +(val - whole*step).toFixed(2);
 
     if (val < 0) {
       return Math.abs(reminder) < step/2 ? whole*step : (whole - 1)*step;
@@ -284,9 +282,10 @@ class View {
     this.interMarkHandler(val);
   }
 
+  /*
   checkStep = (): void => {
     let stepMod = Math.abs(ParsingDigits.parsing(this.step));
-    if (stepMod === null || stepMod === 0 || stepMod > this.maxValue - this.minValue) {
+    if (stepMod === null || stepMod === 0 || stepMod >= this.maxValue - this.minValue) {
       this.step = (this.maxValue - this.minValue)/2;
       console.log("Wrong value of the step. It's setted to the half of (maxValue - minValue)");
     } else {
@@ -299,6 +298,27 @@ class View {
       this.step = stepMod;
     }
   }
+  
+
+  checkMaxValue = (): void => {
+    let maxMod = Math.abs(ParsingDigits.parsing(this.maxValue));
+    if (maxMod === null) {
+
+    }
+    if (maxMod  < this.minValue) {
+      this.step = (this.maxValue - this.minValue)/2;
+      console.log("Wrong value of the step. It's setted to the half of (maxValue - minValue)");
+    } else {
+      if (stepMod % 1 !== 0) {
+        this.isFloat = true;
+      } else {
+        this.isFloat = false;
+      }
+
+      this.step = stepMod;
+    }
+  }
+  */
 
   checkValues = (): void => {
     if (typeof this.maxValue !== "number") {
@@ -327,7 +347,7 @@ class View {
 
   renew() {
     let roundValue;
-    let roundOffset;
+    let roundOffset;    
     const newOffset = this.offsetValueConv(this.curMaxValue);
     [roundOffset, roundValue] = this.butt2OffsetCheck(newOffset);
 
@@ -352,9 +372,7 @@ class View {
   }
 
   init = (): void => {
-    this.checkStep();
-    this.checkValues();
-    this.renew();
+    //this.checkValues();    
     this.scale.init(this.isVertical);
     this.scaleFilling.init(this.isVertical);
     this.graduation.init(this.minValue, this.maxValue, this.isVertical, this.isFloat);
@@ -380,7 +398,7 @@ class View {
       this.button1.elem.style.display = "none";
       this.label1.elem.style.display = "none";
     }
-
+    
     this.button1.setPosition(-this.button1.getWidth()/2);
     this.button2.setPosition(this.scale.getDimension() - this.button2.getWidth()/2);
     this.label1.setPosition(this.getStart(), this.minValue);
@@ -391,8 +409,10 @@ class View {
     } else {
       this.graduation.gradElem.style.height = 20 +"px";
     }
-
+    
+    this.renew();
     this.updateElems();
+    
   }
 
   append = (entry: HTMLElement): void => {
