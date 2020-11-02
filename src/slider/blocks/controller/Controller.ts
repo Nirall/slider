@@ -54,11 +54,11 @@ class Controller {
   checkStep = (step: string): number => {
     let stepMod = Math.abs(ParsingDigits.parsing(step));
 
-    if (stepMod === null || stepMod === 0 || stepMod >= this.view.maxValue - this.view.minValue) {
+    if (stepMod === null || stepMod === 0 || stepMod > (this.view.maxValue - this.view.minValue)/2) {
       console.log('Wrong value of the step');
       return this.view.step;
-    } 
-  
+    }
+
     if (stepMod % 1 !== 0) {
       this.view.isFloat = true;
     } else {
@@ -66,8 +66,8 @@ class Controller {
         this.view.isFloat = false;
       }
     }
-  
-    return stepMod;   
+
+    return stepMod;
   }
 
   checkMaxValue = (maxValue: string): number => {
@@ -76,8 +76,8 @@ class Controller {
     if (maxValueMod === null || maxValueMod <= this.view.minValue) {
       console.log('Wrong value of the maxValue');
       return this.view.maxValue;
-    } 
-  
+    }
+
     if (maxValueMod % 1 !== 0) {
       this.view.isFloat = true;
     } else {
@@ -85,8 +85,8 @@ class Controller {
         this.view.isFloat = false;
       }
     }
-  
-    return maxValueMod;   
+
+    return maxValueMod;
   }
 
   checkMinValue = (minValue: string): number => {
@@ -95,23 +95,23 @@ class Controller {
     if (minValueMod === null || minValueMod >= this.view.maxValue) {
       console.log('Wrong value of the minValue');
       return this.view.minValue;
-    } 
-  
-    if (minValueMod % 1 !== 0) {      
+    }
+
+    if (minValueMod % 1 !== 0) {
       this.view.isFloat = true;
     } else {
       if (this.view.maxValue % 1 === 0 && this.view.step % 1 === 0) {
         this.view.isFloat = false;
       }
     }
-  
-    return minValueMod;   
+
+    return minValueMod;
   }
 
   update = (args: configType): void => {
     Object.keys(args).map((item) => {
       if (this.view[item] !== undefined) {
-        if (item === 'step') {          
+        if (item === 'step') {
           this.view.step = this.checkStep(args[item]);
         } else if (item === 'maxValue') {
           this.view.maxValue = this.checkMaxValue(args[item]);

@@ -46,6 +46,28 @@ $red: #990033;
     }
   }
 
+  &__mark {
+    height: 15px;
+    min-width: 30px;
+    padding: 5px;
+    border-radius: 4px;
+    margin: 15px 0 0 0;
+    //background: $green;
+    //color: white;
+    position: absolute;
+    top: 50%;
+    justify-content: center;
+    align-items: center;
+    //display: none;
+    text-align: center;
+    cursor: pointer;
+    z-index: 3;
+
+    &_position_vertical {
+      margin: 0 0 0 -50px;
+    }
+  }
+
   &__scale {
     box-sizing: border-box;
     width: 100%;
@@ -66,7 +88,7 @@ $red: #990033;
       margin: 0 0 0 -3px;
     }
   }
-
+  /*
   &__graduation {
     position: absolute;
     top: 50%;
@@ -108,7 +130,7 @@ $red: #990033;
       margin: 0 0 -9px 0;
     }
   }
-
+  */
   &__scale-filling {
     background: $green;
     position: relative;
