@@ -184,16 +184,17 @@ class View {
       }
     }
 
-    if (newOffset > this.scale.getDimension() - this.button2.getWidth()/2) {
-      newOffset = this.scale.getDimension() - this.button2.getWidth()/2;
-      roundValue = this.maxValue;
-    }
-
     const stepWidth = this.step*this.scale.getDimension()/(this.maxValue - this.minValue);
     const minOffset = stepWidth/1.5 > this.button1.getWidth() ? stepWidth/1.5 : this.button1.getWidth();
 
     if (newOffset < this.button1.getPosition() - this.scale.getPosition() + minOffset) {
       newOffset = this.button1.getPosition() - this.scale.getPosition() + minOffset;
+    }
+
+    if (newOffset > this.scale.getDimension() - this.button2.getWidth()/2) {
+      newOffset = this.scale.getDimension() - this.button2.getWidth()/2;
+      roundValue = this.maxValue;
+      console.log(newOffset);
     }
 
     return [newOffset, roundValue];
@@ -445,7 +446,6 @@ class View {
     }
 
     this.label2.elem.onmousedown = (eventMd: MouseEvent) => {
-      console.log('yes');
       eventMd.preventDefault();
       document.addEventListener("mousemove", this.onMouseMove2);
       document.addEventListener("mouseup", this.onMouseUp2);
