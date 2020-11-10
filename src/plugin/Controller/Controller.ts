@@ -1,7 +1,7 @@
-import { View } from '../view/View';
-import Model from '../model/Model';
+import { View } from '../View/View';
+import Model from '../Model/Model';
 import MakeObservableObject from '../makeObservableObject/MakeObservableObject';
-import ParsingDigits from "../parsingDigits/ParsingDigits";
+import ParsingDigits from "./blocks/parsingDigits/ParsingDigits";
 
 interface configType {
   //[index: string]:

@@ -1,4 +1,4 @@
-import Scale from '../src/slider/blocks/scale/Scale';
+import Scale from '../src/plugin/View/blocks/scale/Scale';
 
 describe('Scale class(horizontal)', () => {
   let newItem: Scale;

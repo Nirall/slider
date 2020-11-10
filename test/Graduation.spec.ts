@@ -1,4 +1,4 @@
-import Graduation from '../src/slider/blocks/graduation/Graduation';
+import Graduation from '../src/plugin/View/blocks/graduation/Graduation';
 
 describe('Graduation class(horizontal)', () => {
   let newItem: Graduation;

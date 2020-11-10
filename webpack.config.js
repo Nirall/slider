@@ -3,9 +3,12 @@ const CleanWebpackPlugin = require('clean-webpack-plugin').CleanWebpackPlugin;
 const cssExtract = require('mini-css-extract-plugin');
 
 module.exports = {
-    entry: './src/index.ts',
+    entry: {
+        bundle: './src/index.ts',
+        init: './src/demo-page/init.js',
+    },
     output: {
-        filename: 'bundle.js',
+        filename: '[name].js',
         path: path.resolve(__dirname, 'dist'),
     },
     devtool: 'inline-source-map',

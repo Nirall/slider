@@ -1,4 +1,4 @@
-import Button from '../src/slider/blocks/button/Button';
+import Button from '../src/plugin/View/blocks/button/Button';
 
 describe('Button class(horizontal)', () => {
   let newItem: Button;

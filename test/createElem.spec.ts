@@ -1,4 +1,4 @@
-import createElem from '../src/slider/blocks/createElem/createElem';
+import createElem from '../src/plugin/View/blocks/createElem/createElem';
 
 describe('function createElem', () => {
   it('should have the certain class', () => {

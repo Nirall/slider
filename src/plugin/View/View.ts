@@ -1,11 +1,11 @@
 import MakeObservableObject from "../makeObservableObject/MakeObservableObject";
-import createElem from "../createElem/createElem";
-import Scale from "../scale/Scale";
-import Graduation from "../graduation/Graduation";
-import Mark from "../mark/Mark";
-import Button from "../button/Button";
-import Label from "../label/Label";
-import ScaleFilling from "../scaleFilling/ScaleFilling";
+import createElem from "./blocks/createElem/createElem";
+import Scale from "./blocks/scale/Scale";
+import Graduation from "./blocks/graduation/Graduation";
+import Mark from "./blocks/mark/Mark";
+import Button from "./blocks/button/Button";
+import Label from "./blocks/label/Label";
+import ScaleFilling from "./blocks/scaleFilling/ScaleFilling";
 
 class View {
   [index: string]: any;

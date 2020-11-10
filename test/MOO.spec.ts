@@ -1,4 +1,4 @@
-import MakeObservableObject from '../src/slider/blocks/makeObservableObject/MakeObservableObject';
+import MakeObservableObject from '../src/plugin/makeObservableObject/MakeObservableObject';
 
 describe('MakeObservableObject', () => {
   it('constructor() should make .observers = []', () => {
