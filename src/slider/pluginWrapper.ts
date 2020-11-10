@@ -42,6 +42,9 @@ import Controller from './blocks/controller/Controller';
       slider.addObserver(() => {
         opt.minValueIn.val(slider.getValues()[0]);
         opt.maxValueIn.val(slider.getValues()[1]);
+        opt.max.val(slider.getConfig().maxValue);
+        opt.min.val(slider.getConfig().minValue);
+        opt.step.val(slider.getConfig().step);
       })
     },
   }

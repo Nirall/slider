@@ -194,7 +194,6 @@ class View {
     if (newOffset > this.scale.getDimension() - this.button2.getWidth()/2) {
       newOffset = this.scale.getDimension() - this.button2.getWidth()/2;
       roundValue = this.maxValue;
-      console.log(newOffset);
     }
 
     return [newOffset, roundValue];
