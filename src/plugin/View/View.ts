@@ -2,7 +2,6 @@ import MakeObservableObject from "../makeObservableObject/MakeObservableObject";
 import createElem from "./blocks/createElem/createElem";
 import Scale from "./blocks/scale/Scale";
 import Graduation from "./blocks/graduation/Graduation";
-import Mark from "./blocks/mark/Mark";
 import Button from "./blocks/button/Button";
 import Label from "./blocks/label/Label";
 import ScaleFilling from "./blocks/scaleFilling/ScaleFilling";
@@ -10,11 +9,6 @@ import ScaleFilling from "./blocks/scaleFilling/ScaleFilling";
 class View {
   [index: string]: any;
   scale: Scale;
-  //graduation: Graduation;
-  mark1: Mark;
-  mark2: Mark;
-  mark3: Mark;
-  mark4: Mark;
   scaleFilling: ScaleFilling;
   button1: Button;
   button2: Button;
@@ -30,6 +24,7 @@ class View {
   step: number;
   isFloat: boolean;
   observers: MakeObservableObject;
+  graduation: Graduation;
 
   constructor(minValue = 0, maxValue = 1000, step = 1, isRange = false, isVertical = false, showLabel = false, isFloat = false) {
     this.scale = new Scale(isVertical);
@@ -38,11 +33,6 @@ class View {
     this.label1 = new Label(isVertical);
     this.label2 = new Label(isVertical);
     this.scaleFilling = new ScaleFilling(isVertical);
-    //this.graduation = new Graduation();
-    this.mark1 = new Mark(isVertical);
-    this.mark2 = new Mark(isVertical);
-    this.mark3 = new Mark(isVertical);
-    this.mark4 = new Mark(isVertical);
     this.minValue = minValue;
     this.maxValue = maxValue;
     this.curMinValue = minValue;
@@ -54,6 +44,18 @@ class View {
     this.isFloat = isFloat;
     this.observers = new MakeObservableObject()
     //this.checkValues();
+
+    const params = {
+      minValue: this.minValue,
+      maxValue: this.maxValue,
+      step: this.step,
+      isRange: this.isRange,
+      isVertical: this.isVertical,
+      showLabel: this.showLabel,
+      isFloat: this.isFloat
+    }
+
+    this.graduation = new Graduation(params);
   }
 
   getStart = (): number => {
@@ -260,6 +262,7 @@ class View {
     }
   }
 
+  /*
   mark1Onclick = (): void => {
     const roundOffset = -this.button2.getWidth()/2;
     const roundValue = this.minValue;
@@ -285,7 +288,7 @@ class View {
     const val = this.isFloat ? parseFloat(this.mark3.elem.innerHTML) : parseInt(this.mark3.elem.innerHTML);
     this.interMarkHandler(val);
   }
-
+  */
   checkValues = (): void => {
     if (typeof this.maxValue !== "number") {
       console.error("Maxvalue should be a number");
@@ -354,20 +357,24 @@ class View {
   }
 
   init = (): void => {
-    //this.checkValues();
     this.scale.init(this.isVertical);
     this.scaleFilling.init(this.isVertical);
-    //this.graduation.init(this.minValue, this.maxValue, this.isVertical, this.isFloat);
     this.button1.init(this.isVertical);
-    this.mark1.init(this.isVertical);
-    this.mark2.init(this.isVertical);
-    this.mark2init();
-    this.mark3.init(this.isVertical);
-    this.mark3init();
-    this.mark4.init(this.isVertical);
     this.button2.init(this.isVertical);
     this.label1.init(this.isVertical);
     this.label2.init(this.isVertical);
+
+    const params = {
+      minValue: this.minValue,
+      maxValue: this.maxValue,
+      step: this.step,
+      isRange: this.isRange,
+      isVertical: this.isVertical,
+      showLabel: this.showLabel,
+      isFloat: this.isFloat
+    }
+
+    this.graduation.init(params);
 
     this.button1.elem.style.display = "none";
     this.label1.elem.style.display = "none";
@@ -390,9 +397,7 @@ class View {
     this.button1.setPosition(-this.button1.getWidth()/2);
     this.button2.setPosition(this.scale.getDimension() - this.button2.getWidth()/2);
     this.label1.setPosition(this.getStart(), this.minValue);
-    this.mark1.setPosition(this.getStart(), this.minValue);
     this.label2.setPosition(this.getEnd(), this.maxValue);
-    this.mark4.setPosition(this.getEnd(), this.maxValue);
 
     /*
     if (this.isVertical) {
@@ -409,22 +414,16 @@ class View {
     entry.appendChild(this.scale.elem).appendChild(this.scaleFilling.elem);
     entry.appendChild(this.button1.elem);
     entry.appendChild(this.label1.elem);
-    entry.appendChild(this.mark1.elem);
-    entry.appendChild(this.mark2.elem);
-    entry.appendChild(this.mark3.elem);
-    entry.appendChild(this.mark4.elem);
-    //entry.appendChild(this.graduation.gradElem);
     entry.appendChild(this.button2.elem);
     entry.appendChild(this.label2.elem);
 
+    this.graduation.marks.map((mark) => {
+      entry.appendChild(mark.elem);
+    });
+
+    this.graduation.moveMarks();
+
     this.scale.elem.onclick = this.scaleOnclick;
-    this.mark1.elem.onclick = this.mark1Onclick;
-    this.mark2.elem.onclick = this.mark2Onclick;
-    this.mark3.elem.onclick = this.mark3Onclick;
-    this.mark4.elem.onclick = this.mark4Onclick;
-    //this.graduation.mark2.onclick = this.mark2Onclick;
-    //this.graduation.mark3.onclick = this.mark3Onclick;
-    //this.graduation.mark4.onclick = this.mark4Onclick;
 
     this.button1.elem.onmousedown = (eventMd: MouseEvent) => {
       eventMd.preventDefault();

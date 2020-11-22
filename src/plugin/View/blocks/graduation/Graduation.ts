@@ -1,49 +1,56 @@
-import createElem from '../createElem/createElem';
+import Mark from "../mark/Mark";
 
 class Graduation {
-  gradElem: HTMLElement;
-  mark1: HTMLElement;
-  mark2: HTMLElement;
-  mark3: HTMLElement;
-  mark4: HTMLElement;
+  params: {
+    minValue: number;
+    maxValue: number;
+    step: number;
+    isRange: boolean;
+    isVertical: boolean;
+    showLabel: boolean;
+    isFloat: boolean;
+  };
 
-  constructor() {
-    this.gradElem = createElem('slider__graduation');
-    this.mark1 = createElem('slider__graduation-mark');
-    this.mark2 = createElem('slider__graduation-mark');
-    this.mark3 = createElem('slider__graduation-mark');
-    this.mark4 = createElem('slider__graduation-mark');
-    this.gradElem.appendChild(this.mark1);
-    this.gradElem.appendChild(this.mark2);
-    this.gradElem.appendChild(this.mark3);
-    this.gradElem.appendChild(this.mark4);
+  marks: Array<Mark>;
+
+  constructor(options: any) {
+    this.marks = [];
+    this.params = options;
+    this.createMarks();
+    this.init(options);
   }
 
-  init = (minValue: number, maxValue: number, isVertical: boolean, isFloat = false): void => {
-    this.mark1.innerHTML = minValue + '';
-    this.mark4.innerHTML = maxValue + '';
+  init = (options: any): void => {
+    this.params = options;
+    this.moveMarks();
+  }
 
-    if (isFloat) {
-      this.mark2.innerHTML = (minValue + (maxValue - minValue)/3).toFixed(2);
-      this.mark3.innerHTML = (minValue + (maxValue - minValue)*2/3).toFixed(2);
-    } else {
-      this.mark2.innerHTML = minValue + Math.round((maxValue - minValue)/3) + '';
-      this.mark3.innerHTML = minValue + Math.round((maxValue - minValue)*2/3) + '';
+  createMarks = (): void => {
+    for (let i = 0; i < 5; i++) {
+      const mark = new Mark(this.params.isVertical);
+      this.marks.push(mark);
+    }
+  }
+
+  moveMarks = (): void => {
+    this.marks.map((mark, index) => {
+      mark.init(this.params.isVertical);
+      let roundValue = this.round((this.params.maxValue - this.params.minValue)/(this.marks.length - 1)*index)
+      const value = this.params.minValue + roundValue;
+      const offset = roundValue/(this.params.maxValue - this.params.minValue);
+      mark.setPosition(offset*100, value);
+    })
+  }
+
+  round = (val: number): number => {
+    const whole = Math.trunc(val/this.params.step);
+
+    const reminder = +(val - whole*this.params.step).toFixed(2);
+    if (val < 0) {
+      return Math.abs(reminder) < this.params.step/2 ? whole*this.params.step : (whole - 1)*this.params.step;
     }
 
-    if (!isVertical) {
-      this.mark1.classList.add('slider__graduation-mark_offset_left');
-      this.mark1.classList.remove('slider__graduation-mark_offset_top');
-      this.mark4.classList.add('slider__graduation-mark_offset_right');
-      this.mark4.classList.remove('slider__graduation-mark_offset_bottom');
-      this.gradElem.classList.remove('slider__graduation_position_vertical');
-    } else {
-      this.mark1.classList.remove('slider__graduation-mark_offset_left');
-      this.mark1.classList.add('slider__graduation-mark_offset_top');
-      this.mark4.classList.remove('slider__graduation-mark_offset_right');
-      this.mark4.classList.add('slider__graduation-mark_offset_bottom');
-      this.gradElem.classList.add('slider__graduation_position_vertical');
-    }
+    return reminder < this.params.step/2 ? whole*this.params.step : (whole + 1)*this.params.step;
   }
 }
 
