@@ -2,18 +2,23 @@ import MakeObservableObject from "../makeObservableObject/MakeObservableObject";
 import createElem from "./blocks/createElem/createElem";
 import Scale from "./blocks/scale/Scale";
 import Graduation from "./blocks/graduation/Graduation";
+import Runner from "./blocks/runner/Runner";
 import Button from "./blocks/button/Button";
 import Label from "./blocks/label/Label";
 import ScaleFilling from "./blocks/scaleFilling/ScaleFilling";
+
+interface runnerMoveData {
+  runner: Runner,
+  offset: number,
+  value: number,
+}
 
 class View {
   [index: string]: any;
   scale: Scale;
   scaleFilling: ScaleFilling;
-  button1: Button;
-  button2: Button;
-  label1: Label;
-  label2: Label;
+  runner1: Runner;
+  runner2: Runner;
   isRange: boolean;
   isVertical: boolean;
   showLabel: boolean;
@@ -28,10 +33,8 @@ class View {
 
   constructor(minValue = 0, maxValue = 1000, step = 1, isRange = false, isVertical = false, showLabel = false, isFloat = false) {
     this.scale = new Scale(isVertical);
-    this.button1 = new Button(isVertical);
-    this.button2 = new Button(isVertical);
-    this.label1 = new Label(isVertical);
-    this.label2 = new Label(isVertical);
+    this.runner1 = new Runner(isVertical);
+    this.runner2 = new Runner(isVertical);
     this.scaleFilling = new ScaleFilling(isVertical);
     this.minValue = minValue;
     this.maxValue = maxValue;
@@ -60,24 +63,29 @@ class View {
   }
 
   graduationObserver = (value: number) => {
-    
+    if (this.isRange) {
       let offset = this.offsetValueConv(value);
       let roundOffset, roundValue;
       [roundOffset, roundValue] = this.roundOffsetButt(offset);
-      this.butt2Move(roundOffset, roundValue);
-    
+
+      this.runnerMove({
+        runner: this.runnerCheck(offset),
+        offset: roundOffset,
+        value: roundValue
+      });
+    }
   }
 
   getStart = (): number => {
     if (this.isRange) {
-      return this.button1.getPosition() - this.scale.getPosition() + this.button1.getWidth()/2;
+      return this.runner1.getPosition() - this.scale.getPosition() + this.runner1.getWidth()/2;
     }
 
     return 0;
   }
 
   getEnd = (): number => {
-    return this.button2.getPosition() - this.scale.getPosition() + this.button2.getWidth()/2;
+    return this.runner2.getPosition() - this.scale.getPosition() + this.runner2.getWidth()/2;
   }
 
   updateElems = (): void => {
@@ -105,7 +113,7 @@ class View {
   }
 
   roundOffsetButt = (currOffset: number): Array<number> => {
-    const currValue = this.minValue + (currOffset + this.button2.getWidth()/2)*(this.maxValue - this.minValue)/this.scale.getDimension();
+    const currValue = this.minValue + (currOffset + this.runner2.getWidth()/2)*(this.maxValue - this.minValue)/this.scale.getDimension();
     let roundValue = this.round(currValue, this.step);
 
     if (this.isFloat) {
@@ -117,35 +125,36 @@ class View {
   }
 
   offsetValueConv = (value: number): number => {
-    return ((value - this.minValue)/(this.maxValue - this.minValue)*this.scale.getDimension() - this.button2.getWidth()/2);
+    return ((value - this.minValue)/(this.maxValue - this.minValue)*this.scale.getDimension() - this.runner2.getWidth()/2);
   }
 
-  //Button1  Handlers-------------------------------------------------------------------------------
-  butt1Move = (roundOffset: number, roundValue: number): void => {
-    this.button1.setPosition(roundOffset);
-    this.label1.setPosition(roundOffset + this.button1.getWidth()/2, roundValue);
+  runnerMove = (obj: runnerMoveData): void => {
+    obj.runner.setPosition(obj.offset, obj.value);
 
-    if (roundValue < this.minValue) {
-      roundValue = this.minValue;
+    if (obj.runner === this.runner1) {
+      this.curMinValue = obj.value;
     }
 
-    this.curMinValue = roundValue;
+    if (obj.runner === this.runner2) {
+      this.curMaxValue = obj.value;
+    }
+
     this.updateElems();
   }
 
-  butt1OffsetCheck = (newOffset: number): Array<number> => {
+  runner1OffsetCheck = (newOffset: number): Array<number> => {
     let roundValue;
 
-    if (newOffset < -this.button1.getWidth()/2) {
-      newOffset = -this.button1.getWidth()/2;
+    if (newOffset < -this.runner1.getWidth()/2) {
+      newOffset = -this.runner1.getWidth()/2;
       roundValue = this.minValue;
     }
 
     const stepWidth = this.step*this.scale.getDimension()/(this.maxValue - this.minValue);
-    const minOffset = stepWidth/1.5 > this.button1.getWidth() ? stepWidth/1.5 : this.button1.getWidth();
+    const minOffset = stepWidth/1.5 > this.runner1.getWidth() ? stepWidth/1.5 : this.runner1.getWidth();
 
-    if (newOffset > this.button2.getPosition() - this.scale.getPosition() - minOffset) {
-      newOffset = this.button2.getPosition() - this.scale.getPosition() - minOffset;
+    if (newOffset > this.runner2.getPosition() - this.scale.getPosition() - minOffset) {
+      newOffset = this.runner2.getPosition() - this.scale.getPosition() - minOffset;
     }
 
     return [newOffset, roundValue];
@@ -155,15 +164,19 @@ class View {
     let roundValue;
     let roundOffset;
     const coordinate = this.isVertical ? eventMm.clientY : eventMm.clientX;
-    const newOffset = coordinate - this.scale.getPosition() - this.button2.getWidth()/2;
+    const newOffset = coordinate - this.scale.getPosition() - this.runner1.getWidth()/2;
 
-    [roundOffset, roundValue] = this.butt1OffsetCheck(newOffset);
+    [roundOffset, roundValue] = this.runner1OffsetCheck(newOffset);
 
     if (typeof roundValue === 'undefined') {
       [roundOffset, roundValue] = this.roundOffsetButt(roundOffset);
     }
 
-    this.butt1Move(roundOffset, roundValue);
+    this.runnerMove({
+      runner: this.runner1,
+      offset: roundOffset,
+      value: roundValue
+    });
   }
 
   onMouseUp1 = (): void => {
@@ -171,40 +184,25 @@ class View {
     document.removeEventListener("mousemove", this.onMouseMove1);
   }
 
-  //Button2  Handlers----------------------------------------------------------------
-  butt2Move = (roundOffset: number, roundValue: number): void => {
-    this.button2.setPosition(roundOffset);
-    this.label2.setPosition(roundOffset + this.button2.getWidth()/2, roundValue);
-
-    if (roundValue < this.minValue) {
-      roundValue = this.minValue;
-    } else if (roundValue > this.maxValue) {
-      roundValue = this.maxValue;
-    }
-
-    this.curMaxValue = roundValue;
-    this.updateElems();
-  }
-
-  butt2OffsetCheck = (newOffset: number): Array<number> => {
+  runner2OffsetCheck = (newOffset: number): Array<number> => {
     let roundValue;
 
     if (!this.isRange) {
-      if (newOffset < -this.button2.getWidth()/2) {
-        newOffset = -this.button2.getWidth()/2;
+      if (newOffset < -this.runner2.getWidth()/2) {
+        newOffset = -this.runner2.getWidth()/2;
         roundValue = this.minValue;
       }
     }
 
     const stepWidth = this.step*this.scale.getDimension()/(this.maxValue - this.minValue);
-    const minOffset = stepWidth/1.5 > this.button1.getWidth() ? stepWidth/1.5 : this.button1.getWidth();
+    const minOffset = stepWidth/1.5 > this.runner1.getWidth() ? stepWidth/1.5 : this.runner1.getWidth();
 
-    if (newOffset < this.button1.getPosition() - this.scale.getPosition() + minOffset) {
-      newOffset = this.button1.getPosition() - this.scale.getPosition() + minOffset;
+    if (newOffset < this.runner1.getPosition() - this.scale.getPosition() + minOffset) {
+      newOffset = this.runner1.getPosition() - this.scale.getPosition() + minOffset;
     }
 
-    if (newOffset > this.scale.getDimension() - this.button2.getWidth()/2) {
-      newOffset = this.scale.getDimension() - this.button2.getWidth()/2;
+    if (newOffset > this.scale.getDimension() - this.runner2.getWidth()/2) {
+      newOffset = this.scale.getDimension() - this.runner2.getWidth()/2;
       roundValue = this.maxValue;
     }
 
@@ -215,15 +213,19 @@ class View {
     let roundValue;
     let roundOffset;
     const coordinate = this.isVertical ? eventMm.clientY : eventMm.clientX;
-    const newOffset = coordinate - this.scale.getPosition() - this.button2.getWidth()/2;
+    const newOffset = coordinate - this.scale.getPosition() - this.runner2.getWidth()/2;
 
-    [roundOffset, roundValue] = this.butt2OffsetCheck(newOffset);
+    [roundOffset, roundValue] = this.runner2OffsetCheck(newOffset);
 
     if (typeof roundValue === 'undefined') {
       [roundOffset, roundValue] = this.roundOffsetButt(roundOffset);
     }
 
-    this.butt2Move(roundOffset, roundValue);
+    this.runnerMove({
+      runner: this.runner2,
+      offset: roundOffset,
+      value: roundValue
+    });
   }
 
   onMouseUp2 = (): void => {
@@ -234,6 +236,14 @@ class View {
   butt1CloserCheck = (coordinate: number): boolean => {
     return (Math.abs(coordinate - this.button1.getPosition() - this.button1.getWidth()/2)
       < Math.abs(coordinate - this.button2.getPosition() - this.button2.getWidth()/2));
+  }
+
+  runnerCheck = (offset: number): Runner => {
+    if (Math.abs(offset - this.getStart()) < Math.abs(offset - this.getEnd())) {
+      return this.runner1;
+    }
+
+    return this.runner2;
   }
 
   // Scale EventListeners------------------------------------------------------------------
@@ -251,54 +261,6 @@ class View {
     }
   }
 
-  // Graduation EventListeners-------------------------------------------------------------------
-  interMarkHandler = (currValue: number): void => {
-    let roundOffset;
-    let roundValue;
-
-    const markOffset = (currValue - this.minValue)/(this.maxValue - this.minValue)*this.scale.getDimension();
-    [roundOffset, roundValue] = this.roundOffsetButt(markOffset - this.button2.getWidth()/2);
-
-    if(this.isRange) {
-      const coordinate = markOffset + this.scale.getPosition();
-
-      if (this.butt1CloserCheck(coordinate)) {
-        this.butt1Move(roundOffset, roundValue);
-      } else {
-        this.butt2Move(roundOffset, roundValue);
-      }
-    } else {
-      this.butt2Move(roundOffset, roundValue);
-    }
-  }
-
-  /*
-  mark1Onclick = (): void => {
-    const roundOffset = -this.button2.getWidth()/2;
-    const roundValue = this.minValue;
-
-    if (!this.isRange) {
-      this.butt2Move(roundOffset, roundValue);
-    } else {
-      this.butt1Move(roundOffset, roundValue);
-    }
-  }
-
-  mark4Onclick = (): void => {
-    const roundOffset = this.scale.getDimension() - this.button2.getWidth()/2;
-    this.butt2Move(roundOffset, this.maxValue);
-  }
-
-  mark2Onclick = (): void => {
-    const val = this.isFloat ? parseFloat(this.mark2.elem.innerHTML) : parseInt(this.mark2.elem.innerHTML);
-    this.interMarkHandler(val);
-  }
-
-  mark3Onclick = (): void => {
-    const val = this.isFloat ? parseFloat(this.mark3.elem.innerHTML) : parseInt(this.mark3.elem.innerHTML);
-    this.interMarkHandler(val);
-  }
-  */
   checkValues = (): void => {
     if (typeof this.maxValue !== "number") {
       console.error("Maxvalue should be a number");
@@ -328,51 +290,42 @@ class View {
     let roundValue;
     let roundOffset;
     const newOffset = this.offsetValueConv(this.curMaxValue);
-    [roundOffset, roundValue] = this.butt2OffsetCheck(newOffset);
-
+    [roundOffset, roundValue] = this.runner2OffsetCheck(newOffset);
     if (typeof roundValue === 'undefined') {
       [roundOffset, roundValue] = this.roundOffsetButt(roundOffset);
     }
 
-    this.butt2Move(roundOffset, roundValue);
+    this.runnerMove({
+      runner: this.runner2,
+      offset: roundOffset,
+      value: roundValue
+    });
+
+
 
     if (this.isRange) {
       let roundValue;
-      let roundOffset;;
+      let roundOffset;
       const newOffset = this.offsetValueConv(this.curMinValue);
-      [roundOffset, roundValue] = this.butt1OffsetCheck(newOffset);
+      [roundOffset, roundValue] = this.runner1OffsetCheck(newOffset);
 
       if (typeof roundValue === 'undefined') {
         [roundOffset, roundValue] = this.roundOffsetButt(roundOffset);
       }
 
-      this.butt1Move(roundOffset, roundValue);
+      this.runnerMove({
+        runner: this.runner1,
+        offset: roundOffset,
+        value: roundValue
+      });
     }
-  }
-
-  mark2init = (): void => {
-    let roundValue;
-    let roundOffset;
-    const newOffset = this.offsetValueConv(this.minValue + (this.maxValue - this.minValue)/3);
-    [roundOffset, roundValue] = this.roundOffsetButt(newOffset);
-    this.mark2.setPosition(roundOffset, roundValue);
-  }
-
-  mark3init = (): void => {
-    let roundValue;
-    let roundOffset;
-    const newOffset = this.offsetValueConv(this.minValue + (this.maxValue - this.minValue)*2/3);
-    [roundOffset, roundValue] = this.roundOffsetButt(newOffset);
-    this.mark3.setPosition(roundOffset, roundValue);
   }
 
   init = (): void => {
     this.scale.init(this.isVertical);
     this.scaleFilling.init(this.isVertical);
-    this.button1.init(this.isVertical);
-    this.button2.init(this.isVertical);
-    this.label1.init(this.isVertical);
-    this.label2.init(this.isVertical);
+    this.runner1.init(this.isVertical);
+    this.runner2.init(this.isVertical);
 
     const params = {
       minValue: this.minValue,
@@ -386,46 +339,35 @@ class View {
 
     this.graduation.init(params);
 
-    this.button1.elem.style.display = "none";
-    this.label1.elem.style.display = "none";
+    this.runner1.hide();
 
     if (this.showLabel) {
-      this.label1.elem.style.display = "block";
-      this.label2.elem.style.display = "block";
+      this.runner1.showLabel();
+      this.runner2.showLabel();
     } else {
-      this.label1.elem.style.display = "none";
-      this.label2.elem.style.display = "none";
+      this.runner1.hideLabel();
+      this.runner2.hideLabel();
     }
 
     if (this.isRange) {
-      this.button1.elem.style.display = "block";
+      this.runner1.show();
     } else {
-      this.button1.elem.style.display = "none";
-      this.label1.elem.style.display = "none";
+      this.runner1.hide();
     }
 
-    this.button1.setPosition(-this.button1.getWidth()/2);
-    this.button2.setPosition(this.scale.getDimension() - this.button2.getWidth()/2);
-    this.label1.setPosition(this.getStart(), this.minValue);
-    this.label2.setPosition(this.getEnd(), this.maxValue);
+    this.runner1.setPosition(-this.runner1.getWidth()/2, this.minValue);
+    this.runner2.setPosition(this.scale.getDimension() - this.runner2.getWidth()/2, this.maxValue);
 
-    /*
-    if (this.isVertical) {
-      this.graduation.gradElem.style.height = this.scale.getDimension() +"px";
-    } else {
-      this.graduation.gradElem.style.height = 20 +"px";
-    }
-    */
     this.renew();
     this.updateElems();
   }
 
   append = (entry: HTMLElement): void => {
     entry.appendChild(this.scale.elem).appendChild(this.scaleFilling.elem);
-    entry.appendChild(this.button1.elem);
-    entry.appendChild(this.label1.elem);
-    entry.appendChild(this.button2.elem);
-    entry.appendChild(this.label2.elem);
+    entry.appendChild(this.runner1.button.elem);
+    entry.appendChild(this.runner1.label.elem);
+    entry.appendChild(this.runner2.button.elem);
+    entry.appendChild(this.runner2.label.elem);
 
     this.graduation.marks.map((mark) => {
       entry.appendChild(mark.elem);
@@ -435,25 +377,25 @@ class View {
 
     this.scale.elem.onclick = this.scaleOnclick;
 
-    this.button1.elem.onmousedown = (eventMd: MouseEvent) => {
+    this.runner1.button.elem.onmousedown = (eventMd: MouseEvent) => {
       eventMd.preventDefault();
       document.addEventListener("mousemove", this.onMouseMove1);
       document.addEventListener("mouseup", this.onMouseUp1);
     }
 
-    this.label1.elem.onmousedown = (eventMd: MouseEvent) => {
+    this.runner1.label.elem.onmousedown = (eventMd: MouseEvent) => {
       eventMd.preventDefault();
       document.addEventListener("mousemove", this.onMouseMove1);
       document.addEventListener("mouseup", this.onMouseUp1);
     }
 
-    this.button2.elem.onmousedown = (eventMd: MouseEvent) => {
+    this.runner2.button.elem.onmousedown = (eventMd: MouseEvent) => {
       eventMd.preventDefault();
       document.addEventListener("mousemove", this.onMouseMove2);
       document.addEventListener("mouseup", this.onMouseUp2);
     }
 
-    this.label2.elem.onmousedown = (eventMd: MouseEvent) => {
+    this.runner2.label.elem.onmousedown = (eventMd: MouseEvent) => {
       eventMd.preventDefault();
       document.addEventListener("mousemove", this.onMouseMove2);
       document.addEventListener("mouseup", this.onMouseUp2);
