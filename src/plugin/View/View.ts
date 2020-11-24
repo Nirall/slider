@@ -56,6 +56,16 @@ class View {
     }
 
     this.graduation = new Graduation(params);
+    this.graduation.observers.addObserver(this.graduationObserver);
+  }
+
+  graduationObserver = (value: number) => {
+    
+      let offset = this.offsetValueConv(value);
+      let roundOffset, roundValue;
+      [roundOffset, roundValue] = this.roundOffsetButt(offset);
+      this.butt2Move(roundOffset, roundValue);
+    
   }
 
   getStart = (): number => {

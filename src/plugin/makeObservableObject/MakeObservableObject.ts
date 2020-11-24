@@ -32,6 +32,11 @@ class MakeObservableObject {
     const observersSnapshot = [...this.observers];
     observersSnapshot.map((observer) => observer());
   }
+
+  notifyObserversData (data: any): void {
+    const observersSnapshot = [...this.observers];
+    observersSnapshot.map((observer) => observer(data));
+  }
 }
 
 export default MakeObservableObject;

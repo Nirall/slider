@@ -1,12 +1,21 @@
 import createElem from '../createElem/createElem';
+import MakeObservableObject from '../../../makeObservableObject/MakeObservableObject';
 
 class Mark {
   elem: HTMLElement;
   isVertical: boolean;
+  value: number;
+  observers: MakeObservableObject;
 
   constructor(isVertical: boolean) {
     this.elem = createElem('slider__mark');
     this.isVertical = isVertical;
+    this.observers = new MakeObservableObject();
+    this.elem.onclick = this.onClickHandler;
+  }
+
+  onClickHandler = (): void => {
+    this.observers.notifyObservers();
   }
 
   getPosition = (): number => {
@@ -19,6 +28,7 @@ class Mark {
 
   setPosition = (offset: number, value: number): void => {
     this.elem.innerHTML = value + '';
+    this.value = value;
 
     if (this.isVertical) {
       this.elem.style.left = '50%';
