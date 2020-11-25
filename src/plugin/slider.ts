@@ -15,7 +15,7 @@ import Controller from './Controller/Controller';
     init: function(opt: Config) {
       if (!$(this).data('slider')) {
         const newConfig = { ...config };
-        const slider = new Controller(...Object.values($.extend(newConfig, opt)));
+        const slider = new Controller($.extend(newConfig, opt));
         $(this).data('slider', slider);
 
         slider.append($(this));

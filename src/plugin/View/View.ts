@@ -11,53 +11,49 @@ interface runnerMoveData {
   value: number,
 }
 
+interface Parameters {
+  minValue: number,
+  maxValue: number,
+  step: number,
+  isRange: boolean,
+  isVertical: boolean,
+  showLabel: boolean,
+  isFloat: boolean
+}
+
+const defaultParameters = {
+  minValue: 0,
+  maxValue: 1000,
+  step: 1,
+  isRange: false,
+  isVertical: false,
+  showLabel: false,
+  isFloat: false
+}
+
 class View {
-  [index: string]: any;
   scale: Scale;
   scaleFilling: ScaleFilling;
   runner1: Runner;
   runner2: Runner;
-  isRange: boolean;
-  isVertical: boolean;
-  showLabel: boolean;
-  minValue: number;
-  maxValue: number;
+  parameters: Parameters;
   curMinValue: number;
   curMaxValue: number;
-  step: number;
-  isFloat: boolean;
   observers: MakeObservableObject;
   graduation: Graduation;
 
-  constructor(minValue = 0, maxValue = 1000, step = 1, isRange = false, isVertical = false, showLabel = false, isFloat = false) {
-    this.scale = new Scale(isVertical);
-    this.runner1 = new Runner(isVertical);
-    this.runner2 = new Runner(isVertical);
-    this.scaleFilling = new ScaleFilling(isVertical);
-    this.minValue = minValue;
-    this.maxValue = maxValue;
-    this.curMinValue = minValue;
-    this.curMaxValue = maxValue;
-    this.step = step;
-    this.isRange = isRange;
-    this.isVertical = isVertical;
-    this.showLabel = showLabel;
-    this.isFloat = isFloat;
-    this.observers = new MakeObservableObject()
-    //this.checkValues();
-
-    const parameters = {
-      minValue: this.minValue,
-      maxValue: this.maxValue,
-      step: this.step,
-      isRange: this.isRange,
-      isVertical: this.isVertical,
-      showLabel: this.showLabel,
-      isFloat: this.isFloat
-    }
+  constructor(parameters = defaultParameters) {
+    this.scale = new Scale(parameters.isVertical);
+    this.runner1 = new Runner(parameters.isVertical);
+    this.runner2 = new Runner(parameters.isVertical);
+    this.scaleFilling = new ScaleFilling(parameters.isVertical);
+    this.curMinValue = parameters.minValue;
+    this.curMaxValue = parameters.maxValue;
+    this.observers = new MakeObservableObject() 
 
     this.graduation = new Graduation(parameters);
     this.graduation.observers.addObserver(this.graduationObserver);
+    this.parameters = parameters;
   }
 
   graduationObserver = (value: number) => {
@@ -66,7 +62,7 @@ class View {
     let roundOffset, roundValue;
     [roundOffset, roundValue] = this.roundOffsetButt(offset);
 
-    if (this.isRange) {
+    if (this.parameters.isRange) {
       this.runnerMove({
         runner: this.runnerCheck(offset),
         offset: roundOffset,
@@ -82,7 +78,7 @@ class View {
   }
 
   getStart = (): number => {
-    if (this.isRange) {
+    if (this.parameters.isRange) {
       return this.runner1.getPosition() - this.scale.getPosition() + this.runner1.getWidth()/2;
     }
 
@@ -94,7 +90,7 @@ class View {
   }
 
   updateElems = (): void => {
-    this.scaleFilling.init(this.isVertical);
+    this.scaleFilling.init(this.parameters.isVertical);
     this.scaleFilling.setPosition(this.getStart());
     this.scaleFilling.setDimension(this.getEnd() - this.getStart());
     this.observers.notifyObservers();
@@ -108,20 +104,20 @@ class View {
       return Math.abs(reminder) < step/2 ? whole*step : (whole - 1)*step;
     }
 
-    if (val <= this.minValue) {
-      return this.minValue;
-    } else if (val >= this.maxValue) {
-      return this.maxValue;
+    if (val <= this.parameters.minValue) {
+      return this.parameters.minValue;
+    } else if (val >= this.parameters.maxValue) {
+      return this.parameters.maxValue;
     }
 
     return reminder < step/2 ? whole*step : (whole + 1)*step;
   }
 
   roundOffsetButt = (currOffset: number): Array<number> => {
-    const currValue = this.minValue + (currOffset + this.runner2.getWidth()/2)*(this.maxValue - this.minValue)/this.scale.getDimension();
-    let roundValue = this.round(currValue, this.step);
+    const currValue = this.parameters.minValue + (currOffset + this.runner2.getWidth()/2)*(this.parameters.maxValue - this.parameters.minValue)/this.scale.getDimension();
+    let roundValue = this.round(currValue, this.parameters.step);
 
-    if (this.isFloat) {
+    if (this.parameters.isFloat) {
       roundValue = parseFloat(roundValue.toFixed(2));
     }
 
@@ -130,7 +126,7 @@ class View {
   }
 
   offsetValueConv = (value: number): number => {
-    return ((value - this.minValue)/(this.maxValue - this.minValue)*this.scale.getDimension() - this.runner2.getWidth()/2);
+    return ((value - this.parameters.minValue)/(this.parameters.maxValue - this.parameters.minValue)*this.scale.getDimension() - this.runner2.getWidth()/2);
   }
 
   runnerMove = (obj: runnerMoveData): void => {
@@ -152,10 +148,10 @@ class View {
 
     if (newOffset < -this.runner1.getWidth()/2) {
       newOffset = -this.runner1.getWidth()/2;
-      roundValue = this.minValue;
+      roundValue = this.parameters.minValue;
     }
 
-    const stepWidth = this.step*this.scale.getDimension()/(this.maxValue - this.minValue);
+    const stepWidth = this.parameters.step*this.scale.getDimension()/(this.parameters.maxValue - this.parameters.minValue);
     const minOffset = stepWidth/1.5 > this.runner1.getWidth() ? stepWidth/1.5 : this.runner1.getWidth();
 
     if (newOffset > this.runner2.getPosition() - this.scale.getPosition() - minOffset) {
@@ -168,7 +164,7 @@ class View {
   onMouseMove1 = (eventMm: MouseEvent): void => {
     let roundValue;
     let roundOffset;
-    const coordinate = this.isVertical ? eventMm.clientY : eventMm.clientX;
+    const coordinate = this.parameters.isVertical ? eventMm.clientY : eventMm.clientX;
     const newOffset = coordinate - this.scale.getPosition() - this.runner1.getWidth()/2;
 
     [roundOffset, roundValue] = this.runner1OffsetCheck(newOffset);
@@ -192,14 +188,14 @@ class View {
   runner2OffsetCheck = (newOffset: number): Array<number> => {
     let roundValue;
 
-    if (!this.isRange) {
+    if (!this.parameters.isRange) {
       if (newOffset < -this.runner2.getWidth()/2) {
         newOffset = -this.runner2.getWidth()/2;
-        roundValue = this.minValue;
+        roundValue = this.parameters.minValue;
       }
     }
 
-    const stepWidth = this.step*this.scale.getDimension()/(this.maxValue - this.minValue);
+    const stepWidth = this.parameters.step*this.scale.getDimension()/(this.parameters.maxValue - this.parameters.minValue);
     const minOffset = stepWidth/1.5 > this.runner1.getWidth() ? stepWidth/1.5 : this.runner1.getWidth();
 
     if (newOffset < this.runner1.getPosition() - this.scale.getPosition() + minOffset) {
@@ -208,7 +204,7 @@ class View {
 
     if (newOffset > this.scale.getDimension() - this.runner2.getWidth()/2) {
       newOffset = this.scale.getDimension() - this.runner2.getWidth()/2;
-      roundValue = this.maxValue;
+      roundValue = this.parameters.maxValue;
     }
 
     return [newOffset, roundValue];
@@ -217,7 +213,7 @@ class View {
   onMouseMove2 = (eventMm: MouseEvent): void => {
     let roundValue;
     let roundOffset;
-    const coordinate = this.isVertical ? eventMm.clientY : eventMm.clientX;
+    const coordinate = this.parameters.isVertical ? eventMm.clientY : eventMm.clientX;
     const newOffset = coordinate - this.scale.getPosition() - this.runner2.getWidth()/2;
 
     [roundOffset, roundValue] = this.runner2OffsetCheck(newOffset);
@@ -238,11 +234,12 @@ class View {
     document.removeEventListener('mousemove', this.onMouseMove2);
   }
 
+  /*
   butt1CloserCheck = (coordinate: number): boolean => {
     return (Math.abs(coordinate - this.button1.getPosition() - this.button1.getWidth()/2)
       < Math.abs(coordinate - this.button2.getPosition() - this.button2.getWidth()/2));
   }
-
+  */
   runnerCheck = (offset: number): Runner => {
     if (Math.abs(offset - this.getStart()) < Math.abs(offset - this.getEnd())) {
       return this.runner1;
@@ -252,9 +249,10 @@ class View {
   }
 
   // Scale EventListeners------------------------------------------------------------------
+  /*
   scaleOnclick = (event: MouseEvent): void => {
-    if(this.isRange) {
-      const coordinate = this.isVertical ? event.clientY : event.clientX
+    if(this.parameters.isRange) {
+      const coordinate = this.parameters.isVertical ? event.clientY : event.clientX
 
       if (this.butt1CloserCheck(coordinate)) {
         this.onMouseMove1(event);
@@ -265,31 +263,7 @@ class View {
       this.onMouseMove2(event);
     }
   }
-
-  checkValues = (): void => {
-    if (typeof this.maxValue !== "number") {
-      console.error("Maxvalue should be a number");
-    }
-    if (typeof this.minValue !== "number") {
-      console.error("Maxvalue should be a number");
-    }
-    if (typeof this.step !== "number") {
-      console.error("Step should be a number");
-    }
-    if (typeof this.isRange !== "boolean") {
-      console.error("isRange should be a boolean");
-    }
-    if (typeof this.isVertical !== "boolean") {
-      console.error("isVertical should be a boolean");
-    }
-    if (typeof this.showLabel !== "boolean") {
-      console.error("ShowLabel should be a boolean");
-    }
-    if (this.step > this.maxValue - this.minValue) {
-      this.step = this.maxValue - this.minValue;
-      console.error("Step is set to the max");
-    }
-  }
+  */
 
   renew() {
     let roundValue;
@@ -308,7 +282,7 @@ class View {
 
 
 
-    if (this.isRange) {
+    if (this.parameters.isRange) {
       let roundValue;
       let roundOffset;
       const newOffset = this.offsetValueConv(this.curMinValue);
@@ -327,26 +301,16 @@ class View {
   }
 
   init = (): void => {
-    this.scale.init(this.isVertical);
-    this.scaleFilling.init(this.isVertical);
-    this.runner1.init(this.isVertical);
-    this.runner2.init(this.isVertical);
+    this.scale.init(this.parameters.isVertical);
+    this.scaleFilling.init(this.parameters.isVertical);
+    this.runner1.init(this.parameters.isVertical);
+    this.runner2.init(this.parameters.isVertical);    
 
-    const params = {
-      minValue: this.minValue,
-      maxValue: this.maxValue,
-      step: this.step,
-      isRange: this.isRange,
-      isVertical: this.isVertical,
-      showLabel: this.showLabel,
-      isFloat: this.isFloat
-    }
-
-    this.graduation.init(params);
+    this.graduation.init(this.parameters);
 
     this.runner1.hide();
 
-    if (this.showLabel) {
+    if (this.parameters.showLabel) {
       this.runner1.showLabel();
       this.runner2.showLabel();
     } else {
@@ -354,14 +318,14 @@ class View {
       this.runner2.hideLabel();
     }
 
-    if (this.isRange) {
+    if (this.parameters.isRange) {
       this.runner1.show();
     } else {
       this.runner1.hide();
     }
 
-    this.runner1.setPosition(-this.runner1.getWidth()/2, this.minValue);
-    this.runner2.setPosition(this.scale.getDimension() - this.runner2.getWidth()/2, this.maxValue);
+    this.runner1.setPosition(-this.runner1.getWidth()/2, this.parameters.minValue);
+    this.runner2.setPosition(this.scale.getDimension() - this.runner2.getWidth()/2, this.parameters.maxValue);
 
     this.renew();
     this.updateElems();
@@ -380,7 +344,7 @@ class View {
 
     this.graduation.moveMarks();
 
-    this.scale.elem.onclick = this.scaleOnclick;
+    //this.scale.elem.onclick = this.scaleOnclick;
 
     this.runner1.button.elem.onmousedown = (eventMd: MouseEvent) => {
       eventMd.preventDefault();
