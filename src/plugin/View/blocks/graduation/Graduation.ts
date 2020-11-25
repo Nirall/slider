@@ -2,7 +2,7 @@ import Mark from "../mark/Mark";
 import MakeObservableObject from '../../../makeObservableObject/MakeObservableObject';
 
 class Graduation {
-  params: {
+  parameters: {
     minValue: number;
     maxValue: number;
     step: number;
@@ -18,20 +18,20 @@ class Graduation {
 
   constructor(options: any) {
     this.marks = [];
-    this.params = options;
+    this.parameters = options;
     this.createMarks();
     this.init(options);
     this.observers = new MakeObservableObject();
   }
 
   init = (options: any): void => {
-    this.params = options;
+    this.parameters = options;
     this.moveMarks();
   }
 
   createMarks = (): void => {
     for (let i = 0; i < 5; i++) {
-      const mark = new Mark(this.params.isVertical);
+      const mark = new Mark(this.parameters.isVertical);
       this.marks.push(mark);
       mark.observers.addObserver(() => this.markObserver(mark));
     }
@@ -43,27 +43,32 @@ class Graduation {
 
   moveMarks = (): void => {
     this.marks.map((mark, index) => {
-      mark.init(this.params.isVertical);
+      mark.init(this.parameters.isVertical);
       if (index === this.marks.length - 1) {
-        mark.setPosition(100, this.params.maxValue);
+        mark.setPosition(100, this.parameters.maxValue);
       } else {
-        let roundValue = this.round((this.params.maxValue - this.params.minValue)/(this.marks.length - 1)*index)
-        const value = this.params.minValue + roundValue;
-        const offset = roundValue/(this.params.maxValue - this.params.minValue);
+        const roundValue = this.round((this.parameters.maxValue - this.parameters.minValue)/(this.marks.length - 1)*index);
+        let value = this.parameters.minValue + roundValue;
+
+        if (this.parameters.isFloat) {
+          value = parseFloat(value.toFixed(2));
+        }
+        
+        const offset = roundValue/(this.parameters.maxValue - this.parameters.minValue);
         mark.setPosition(offset*100, value);
       }
     })
   }
 
   round = (val: number): number => {
-    const whole = Math.trunc(val/this.params.step);
+    const whole = Math.trunc(val/this.parameters.step);
 
-    const reminder = +(val - whole*this.params.step).toFixed(2);
+    const reminder = +(val - whole*this.parameters.step).toFixed(2);
     if (val < 0) {
-      return Math.abs(reminder) < this.params.step/2 ? whole*this.params.step : (whole - 1)*this.params.step;
+      return Math.abs(reminder) < this.parameters.step/2 ? whole*this.parameters.step : (whole - 1)*this.parameters.step;
     }
 
-    return reminder < this.params.step/2 ? whole*this.params.step : (whole + 1)*this.params.step;
+    return reminder < this.parameters.step/2 ? whole*this.parameters.step : (whole + 1)*this.parameters.step;
   }
 }
 

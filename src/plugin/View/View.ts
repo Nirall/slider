@@ -3,8 +3,6 @@ import createElem from "./blocks/createElem/createElem";
 import Scale from "./blocks/scale/Scale";
 import Graduation from "./blocks/graduation/Graduation";
 import Runner from "./blocks/runner/Runner";
-import Button from "./blocks/button/Button";
-import Label from "./blocks/label/Label";
 import ScaleFilling from "./blocks/scaleFilling/ScaleFilling";
 
 interface runnerMoveData {
@@ -48,7 +46,7 @@ class View {
     this.observers = new MakeObservableObject()
     //this.checkValues();
 
-    const params = {
+    const parameters = {
       minValue: this.minValue,
       maxValue: this.maxValue,
       step: this.step,
@@ -58,18 +56,25 @@ class View {
       isFloat: this.isFloat
     }
 
-    this.graduation = new Graduation(params);
+    this.graduation = new Graduation(parameters);
     this.graduation.observers.addObserver(this.graduationObserver);
   }
 
   graduationObserver = (value: number) => {
-    if (this.isRange) {
-      let offset = this.offsetValueConv(value);
-      let roundOffset, roundValue;
-      [roundOffset, roundValue] = this.roundOffsetButt(offset);
+    
+    let offset = this.offsetValueConv(value);
+    let roundOffset, roundValue;
+    [roundOffset, roundValue] = this.roundOffsetButt(offset);
 
+    if (this.isRange) {
       this.runnerMove({
         runner: this.runnerCheck(offset),
+        offset: roundOffset,
+        value: roundValue
+      });
+    } else {
+      this.runnerMove({
+        runner: this.runner2,
         offset: roundOffset,
         value: roundValue
       });
@@ -403,4 +408,4 @@ class View {
   }
 }
 
-export {createElem, Scale, Label, Button, ScaleFilling, View, Graduation};
+export {createElem, Scale, ScaleFilling, View, Graduation};

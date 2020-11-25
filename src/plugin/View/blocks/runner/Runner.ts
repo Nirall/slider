@@ -18,7 +18,7 @@ class Runner {
   }
 
   setPosition = (offset: number, value: number): void => {
-    this.label.setPosition(offset, value);
+    this.label.setPosition(offset + this.button.getWidth()/2, value);
     this.button.setPosition(offset);
   }
 
