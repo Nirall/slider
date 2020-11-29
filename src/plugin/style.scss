@@ -52,13 +52,10 @@ $red: #990033;
     padding: 5px;
     border-radius: 4px;
     margin: 15px 0 0 0;
-    //background: $green;
-    //color: white;
     position: absolute;
     top: 50%;
     justify-content: center;
     align-items: center;
-    //display: none;
     text-align: center;
     cursor: pointer;
     z-index: 3;
@@ -88,49 +85,7 @@ $red: #990033;
       margin: 0 0 0 -3px;
     }
   }
-  /*
-  &__graduation {
-    position: absolute;
-    top: 50%;
-    margin: 20px 0 0 0;
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    z-index: 1;
-    text-align: center;
 
-    &_position_vertical {
-      flex-direction: column;
-      max-width: 250px;
-      top: 0;
-      left: 50%;
-      margin: 0 0 0 -60px;
-      height: 100%;
-      text-align: start;
-    }
-  }
-
-  &__graduation-mark {
-    min-width: 30px;
-    cursor: pointer;
-
-    &_offset_left {
-      margin: 0 0 0 -15px;
-    }
-
-    &_offset_right {
-      margin: 0 -15px 0 0;
-    }
-
-    &_offset_top {
-      margin: -9px 0 0 0;
-    }
-
-    &_offset_bottom {
-      margin: 0 0 -9px 0;
-    }
-  }
-  */
   &__scale-filling {
     background: $green;
     position: relative;

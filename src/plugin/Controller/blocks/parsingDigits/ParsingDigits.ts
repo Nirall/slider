@@ -1,6 +1,6 @@
 class ParsingDigits {
   static parsing = (item: string|number): number|null => {
-    if (typeof item === 'number') { 
+    if (typeof item === 'number') {
       return item;
     }
 
