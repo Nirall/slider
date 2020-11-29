@@ -28,11 +28,9 @@ class Track {
   offsetProcessing(offset: number, runner: Runner): types.RunnerMoveData {
     let roundValue;
     let roundOffset;
-    [roundOffset, roundValue] = this.runnerOffsetCheck(offset, runner);
+    roundOffset = this.runnerOffsetCheck(offset, runner);
 
-    if (typeof roundValue === 'undefined') {
-      [roundOffset, roundValue] = this.roundOffsetButt(roundOffset);
-    }
+    [roundOffset, roundValue] = this.roundOffsetButt(roundOffset);
 
     return {
       runner: runner,
@@ -41,19 +39,7 @@ class Track {
     }
   }
 
-  runnerOffsetCheck = (newOffset: number, runner: Runner): Array<number> => {
-    let roundValue;
-
-    if (newOffset < -this.runnerAdditional.getWidth()/2) {
-      newOffset = -this.runnerAdditional.getWidth()/2;
-      roundValue = this.parameters.minValue;
-    }
-
-    if (newOffset > this.scale.getDimension() - this.runnerMain.getWidth()/2) {
-      newOffset = this.scale.getDimension() - this.runnerMain.getWidth()/2;
-      roundValue = this.parameters.maxValue;
-    }
-
+  runnerOffsetCheck = (newOffset: number, runner: Runner): number => {
     const stepWidth = this.parameters.step*this.scale.getDimension()/(this.parameters.maxValue - this.parameters.minValue);
     const minOffset = stepWidth/1.5 > this.runnerMain.getWidth() ? stepWidth/1.5 : this.runnerMain.getWidth();
 
@@ -67,7 +53,7 @@ class Track {
       }
     }
 
-    return [newOffset, roundValue];
+    return newOffset;
   }
 
   roundOffsetButt = (currOffset: number): Array<number> => {
@@ -78,7 +64,18 @@ class Track {
       roundValue = parseFloat(roundValue.toFixed(2));
     }
 
-    const roundOffset = this.offsetValueConverter(roundValue);
+    let roundOffset = this.offsetValueConverter(roundValue);
+
+    if (roundOffset < -this.runnerMain.getWidth()/2) {
+      roundOffset = -this.runnerMain.getWidth()/2;
+      roundValue = this.parameters.minValue;
+    }
+
+    if (roundOffset > this.scale.getDimension() - this.runnerMain.getWidth()/2) {
+      roundOffset = this.scale.getDimension() - this.runnerMain.getWidth()/2;
+      roundValue = this.parameters.maxValue;
+    }
+
     return [roundOffset, roundValue];
   }
 
@@ -104,21 +101,22 @@ class Track {
   }
 
   getMainRunnerOffset = (): number => {
+    const offset = this.runnerMain.getPosition() - this.scale.getPosition() + this.runnerMain.getWidth()/2;
+    return offset < 0? 0 : offset;
+  }
+
+  getAdditionalRunnerOffset = (): number => {
     if (this.parameters.isRange) {
-      return this.runnerAdditional.getPosition() - this.scale.getPosition() + this.runnerAdditional.getWidth()/2;
+      return this.runnerAdditional.getPosition() - this.scale.getPosition() + this.runnerMain.getWidth()/2;
     }
 
     return 0;
   }
 
-  getAdditionalRunnerOffset = (): number => {
-    return this.runnerMain.getPosition() - this.scale.getPosition() + this.runnerMain.getWidth()/2;
-  }
-
   updateProgressBar = (): void => {
     this.progressBar.init(this.parameters.isVertical);
-    this.progressBar.setPosition(this.getMainRunnerOffset());
-    this.progressBar.setDimension(this.getAdditionalRunnerOffset() - this.getMainRunnerOffset());
+    this.progressBar.setPosition(this.getAdditionalRunnerOffset());
+    this.progressBar.setDimension(this.getMainRunnerOffset() - this.getAdditionalRunnerOffset());
   }
 
   init = (parameters: types.Parameters): void => {

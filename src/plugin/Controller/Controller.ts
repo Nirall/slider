@@ -96,7 +96,7 @@ class Controller {
       } else if (key === 'maxValue') {
         args.maxValue = this.checkMaxValue(args.maxValue);
       } else if (key === 'minValue') {
-        args.minValue = this.checkMaxValue(args.minValue);
+        args.minValue = this.checkMinValue(args.minValue);
       }
     })
 
@@ -110,11 +110,11 @@ class Controller {
   }
 
   setValues = (curMinValue: number, curMaxValue: number): void => {
-    if (curMinValue) {
+    if (curMinValue || curMinValue === 0) {
       this.model.setCurrentMinValue(curMinValue);
     }
 
-    if (curMaxValue) {
+    if (curMaxValue || curMaxValue === 0) {
       this.model.setCurrentMaxValue(curMaxValue);
     }
   }

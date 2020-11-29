@@ -38,18 +38,19 @@ class Graduation {
   moveMarks = (): void => {
     this.marks.map((mark, index) => {
       mark.init(this.parameters.isVertical);
-      if (index === this.marks.length - 1) {
+      if (index === 0) {
+        mark.setPosition(0, this.parameters.minValue);
+      } else if (index === this.marks.length - 1) {
         mark.setPosition(100, this.parameters.maxValue);
       } else {
-        const roundValue = this.round((this.parameters.maxValue - this.parameters.minValue)/(this.marks.length - 1)*index);
-        let value = this.parameters.minValue + roundValue;
+        let roundValue = this.round(this.parameters.minValue + (this.parameters.maxValue - this.parameters.minValue)/(this.marks.length - 1)*index);
 
         if (this.parameters.isFloat) {
-          value = parseFloat(value.toFixed(2));
+          roundValue = parseFloat(roundValue.toFixed(2));
         }
 
-        const offset = roundValue/(this.parameters.maxValue - this.parameters.minValue);
-        mark.setPosition(offset*100, value);
+        const offset = (roundValue - this.parameters.minValue)/(this.parameters.maxValue - this.parameters.minValue);
+        mark.setPosition(offset*100, roundValue);
       }
     })
   }

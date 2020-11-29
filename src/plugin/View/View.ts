@@ -43,22 +43,15 @@ class View {
 
   graduationObserver = (value: number) => {
     let offset = this.track.offsetValueConverter(value);
-    let roundOffset, roundValue;
-    [roundOffset, roundValue] = this.track.roundOffsetButt(offset);
+    let runner;
 
     if (this.parameters.isRange) {
-      this.runnerMove({
-        runner: this.runnerCheck(offset),
-        offset: roundOffset,
-        value: roundValue
-      });
+      runner = this.runnerCheck(offset);
     } else {
-      this.runnerMove({
-        runner: this.runnerMain,
-        offset: roundOffset,
-        value: roundValue
-      });
+      runner = this.runnerMain;
     }
+
+    this.runnerMove(this.track.offsetProcessing(offset, runner));
   }
 
   runnerObserver = ({ event, runner }: types.RunnerObserverData): void => {
@@ -82,10 +75,10 @@ class View {
 
   runnerCheck = (offset: number): Runner => {
     if (Math.abs(offset - this.track.getMainRunnerOffset()) < Math.abs(offset - this.track.getAdditionalRunnerOffset())) {
-      return this.runnerAdditional;
+      return this.runnerMain;
     }
 
-    return this.runnerMain;
+    return this.runnerAdditional;
   }
 
   onClickBar = (event: MouseEvent): void => {
