@@ -29,6 +29,16 @@ export type Parameters = {
   isFloat: boolean
 }
 
+export type RawParameters = {
+  minValue: string,
+  maxValue: string,
+  step: string,
+  isRange: boolean,
+  isVertical: boolean,
+  showLabel: boolean,
+  isFloat: boolean
+}
+
 export type TrackConstructorData = {
   runnerMain: Runner,
   runnerAdditional: Runner,

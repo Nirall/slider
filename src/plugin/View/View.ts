@@ -21,10 +21,12 @@ class View {
   constructor(parameters = types.defaultParameters) {
     this.bar = new Bar(parameters.isVertical);
     this.progressBar = new ProgressBar(parameters.isVertical);
+
     this.currentValues = {
       currentMinValue: parameters.minValue,
       currentMaxValue: parameters.maxValue,
     }
+
     this.observers = new MakeObservableObject();
     this.parameters = parameters;
 
@@ -139,4 +141,4 @@ class View {
   }
 }
 
-export {createElem, Bar, View, Scale as Graduation};
+export {createElem, Bar, View, Scale};

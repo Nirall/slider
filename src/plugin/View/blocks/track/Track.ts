@@ -39,24 +39,24 @@ class Track {
     }
   }
 
-  runnerOffsetCheck = (newOffset: number, runner: Runner): number => {
+  runnerOffsetCheck = (offset: number, runner: Runner): number => {
     const stepWidth = this.parameters.step*this.scale.getDimension()/(this.parameters.maxValue - this.parameters.minValue);
     const minOffset = stepWidth/1.5 > this.runnerMain.getWidth() ? stepWidth/1.5 : this.runnerMain.getWidth();
 
     if (runner === this.runnerAdditional) {
-      if (newOffset > this.runnerMain.getPosition() - this.scale.getPosition() - minOffset) {
-        newOffset = this.runnerMain.getPosition() - this.scale.getPosition() - minOffset;
+      if (offset > this.runnerMain.getPosition() - this.scale.getPosition() - minOffset) {
+        offset = this.runnerMain.getPosition() - this.scale.getPosition() - minOffset;
       }
     } else if (runner === this.runnerMain) {
-      if (newOffset < this.runnerAdditional.getPosition() - this.scale.getPosition() + minOffset) {
-        newOffset = this.runnerAdditional.getPosition() - this.scale.getPosition() + minOffset;
+      if (offset < this.runnerAdditional.getPosition() - this.scale.getPosition() + minOffset) {
+        offset = this.runnerAdditional.getPosition() - this.scale.getPosition() + minOffset;
       }
     }
 
-    return newOffset;
+    return offset;
   }
 
-  roundOffsetButt = (currentOffset: number): Array<number> => {
+  roundOffsetButt = (currentOffset: number): [number, number] => {
     const currentValue = this.parameters.minValue + (currentOffset + this.runnerMain.getWidth()/2)*(this.parameters.maxValue - this.parameters.minValue)/this.scale.getDimension();
     let roundValue = this.round(currentValue, this.parameters.step);
 

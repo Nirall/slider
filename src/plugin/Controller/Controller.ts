@@ -33,13 +33,13 @@ class Controller {
   }
 
   checkStep = (step: string): number => {
-    let stepMod = Math.abs(ParsingDigits.parsing(step));
+    let stepChecked = Math.abs(ParsingDigits.parsing(step));
 
-    if (stepMod === null || stepMod === 0 || stepMod > (this.view.parameters.maxValue - this.view.parameters.minValue)/2) {
+    if (stepChecked === null || stepChecked === 0 || stepChecked > (this.view.parameters.maxValue - this.view.parameters.minValue)/2) {
       return this.view.parameters.step;
     }
 
-    if (stepMod % 1 !== 0) {
+    if (stepChecked % 1 !== 0) {
       this.view.parameters.isFloat = true;
     } else {
       if (this.view.parameters.maxValue % 1 === 0 && this.view.parameters.minValue % 1 === 0) {
@@ -47,17 +47,17 @@ class Controller {
       }
     }
 
-    return stepMod;
+    return stepChecked;
   }
 
   checkMaxValue = (maxValue: string): number => {
-    let maxValueMod = ParsingDigits.parsing(maxValue);
+    let maxValueChecked = ParsingDigits.parsing(maxValue);
 
-    if (maxValueMod === null || maxValueMod <= this.view.parameters.minValue) {
+    if (maxValueChecked === null || maxValueChecked <= this.view.parameters.minValue) {
       return this.view.parameters.maxValue;
     }
 
-    if (maxValueMod % 1 !== 0) {
+    if (maxValueChecked % 1 !== 0) {
       this.view.parameters.isFloat = true;
     } else {
       if (this.view.parameters.step % 1 === 0 && this.view.parameters.minValue % 1 === 0) {
@@ -65,17 +65,17 @@ class Controller {
       }
     }
 
-    return maxValueMod;
+    return maxValueChecked;
   }
 
   checkMinValue = (minValue: string): number => {
-    let minValueMod = ParsingDigits.parsing(minValue);
+    let minValueChecked = ParsingDigits.parsing(minValue);
 
-    if (minValueMod === null || minValueMod >= this.view.parameters.maxValue) {
+    if (minValueChecked === null || minValueChecked >= this.view.parameters.maxValue) {
       return this.view.parameters.minValue;
     }
 
-    if (minValueMod % 1 !== 0) {
+    if (minValueChecked % 1 !== 0) {
       this.view.parameters.isFloat = true;
     } else {
       if (this.view.parameters.maxValue % 1 === 0 && this.view.parameters.step % 1 === 0) {
@@ -83,21 +83,23 @@ class Controller {
       }
     }
 
-    return minValueMod;
+    return minValueChecked;
   }
 
-  updateConfig = (args: any): void => {
-    Object.keys(args).map((key) => {
+  updateConfig = (parameters: any): void => {
+    Object.keys(parameters).map((key) => {
       if (key === 'step') {
-        args.step = this.checkStep(args.step);
+        parameters.step = this.checkStep(parameters.step);
       } else if (key === 'maxValue') {
-        args.maxValue = this.checkMaxValue(args.maxValue);
+        parameters.maxValue = this.checkMaxValue(parameters.maxValue);
       } else if (key === 'minValue') {
-        args.minValue = this.checkMinValue(args.minValue);
+        parameters.minValue = this.checkMinValue(parameters.minValue);
+      } else {
+        parameters[key] = parameters[key];
       }
     })
 
-    this.view.parameters = Object.assign(this.view.parameters, args);
+    this.view.parameters = Object.assign(this.view.parameters, parameters);
 
     this.view.init();
   }
