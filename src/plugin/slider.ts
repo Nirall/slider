@@ -40,8 +40,8 @@ import Controller from './Controller/Controller';
     inputsAttach: function(opt: InputsObject) {
       const slider = $(this).data('slider');
       slider.addObserver(() => {
-        opt.minValueIn.val(slider.getValues()[0]);
-        opt.maxValueIn.val(slider.getValues()[1]);
+        opt.minValueIn.val(slider.getValues().currentMinValue);
+        opt.maxValueIn.val(slider.getValues().currentMaxValue);
         opt.max.val(slider.getConfig().maxValue);
         opt.min.val(slider.getConfig().minValue);
         opt.step.val(slider.getConfig().step);

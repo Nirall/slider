@@ -1,39 +1,69 @@
-import createElem from '../createElem/createElem';
+import * as types from '../../../types';
+import Mark from "../mark/Mark";
+import MakeObservableObject from '../../../makeObservableObject/MakeObservableObject';
 
-class Scale {
-  elem: HTMLElement;
-  isVertical: boolean;
+class Graduation {
+  parameters: types.Parameters;
 
-  constructor(isVertical: boolean) {
-    this.elem = createElem('slider__scale');
-    this.isVertical = isVertical;
+  marks: Array<Mark>;
+
+  observers: MakeObservableObject;
+
+  constructor(parameters: types.Parameters, observer: Function) {
+    this.marks = [];
+    this.parameters = parameters;
+    this.createMarks();
+    this.init(parameters);
+    this.observers = new MakeObservableObject();
+    this.observers.addObserver(observer);
   }
 
-  getPosition = (): number => {
-    if (this.isVertical) {
-      return this.elem.getBoundingClientRect().top;
-    }
-
-    return this.elem.getBoundingClientRect().left;
+  init = (options: any): void => {
+    this.parameters = options;
+    this.moveMarks();
   }
 
-  getDimension = (): number => {
-    if (this.isVertical) {
-      return this.elem.getBoundingClientRect().height;
+  createMarks = (): void => {
+    for (let i = 0; i < 5; i++) {
+      const mark = new Mark(this.parameters.isVertical);
+      this.marks.push(mark);
+      mark.observers.addObserver(() => this.onClickMark(mark));
     }
-
-    return this.elem.getBoundingClientRect().width;
   }
 
-  init = (isVertical: boolean): void => {
-    this.isVertical = isVertical;
+  onClickMark = (mark: Mark): void => {
+    this.observers.notifyObserversData(mark.value);
+  }
 
-    if (this.isVertical) {
-      this.elem.classList.add('slider__scale_position_vertical');
-    } else {
-      this.elem.classList.remove('slider__scale_position_vertical');
+  moveMarks = (): void => {
+    this.marks.map((mark, index) => {
+      mark.init(this.parameters.isVertical);
+      if (index === this.marks.length - 1) {
+        mark.setPosition(100, this.parameters.maxValue);
+      } else {
+        const roundValue = this.round((this.parameters.maxValue - this.parameters.minValue)/(this.marks.length - 1)*index);
+        let value = this.parameters.minValue + roundValue;
+
+        if (this.parameters.isFloat) {
+          value = parseFloat(value.toFixed(2));
+        }
+
+        const offset = roundValue/(this.parameters.maxValue - this.parameters.minValue);
+        mark.setPosition(offset*100, value);
+      }
+    })
+  }
+
+  round = (val: number): number => {
+    const whole = Math.trunc(val/this.parameters.step);
+
+    const reminder = +(val - whole*this.parameters.step).toFixed(2);
+    if (val < 0) {
+      return Math.abs(reminder) < this.parameters.step/2 ? whole*this.parameters.step : (whole - 1)*this.parameters.step;
     }
+
+    return reminder < this.parameters.step/2 ? whole*this.parameters.step : (whole + 1)*this.parameters.step;
   }
 }
 
-export default Scale;
+export default Graduation;

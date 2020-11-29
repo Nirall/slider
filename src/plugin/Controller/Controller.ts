@@ -1,42 +1,8 @@
+import * as types from '../types';
 import { View } from '../View/View';
 import Model from '../Model/Model';
 import MakeObservableObject from '../makeObservableObject/MakeObservableObject';
 import ParsingDigits from "./blocks/parsingDigits/ParsingDigits";
-
-interface configType {
-  //[index: string]:
-    [index: string]: any,
-    /*
-    step: string,
-    minValue: number,
-    maxValue: number,
-    step: string,
-    isRange: boolean,
-    isVertical: boolean,
-    showLabel: boolean,
-    isFloat: boolean,
-    */
-}
-
-interface Parameters {
-  minValue: number,
-  maxValue: number,
-  step: number,
-  isRange: boolean,
-  isVertical: boolean,
-  showLabel: boolean,
-  isFloat: boolean
-}
-
-const defaultParameters = {
-  minValue: 0,
-  maxValue: 1000,
-  step: 1,
-  isRange: false,
-  isVertical: false,
-  showLabel: false,
-  isFloat: false
-}
 
 class Controller {
   view: View;
@@ -45,28 +11,24 @@ class Controller {
 
   observers: MakeObservableObject;
 
-  constructor(parameters = defaultParameters) {
+  constructor(parameters = types.defaultParameters) {
     this.view = new View(parameters);
-    this.model = new Model(parameters.minValue, parameters.maxValue);
+    this.model = new Model({ currentMinValue: parameters.minValue, currentMaxValue: parameters.maxValue });
     this.observers = new MakeObservableObject();
 
     this.view.observers.addObserver(() => {
-      this.model.curMinValue = this.view.curMinValue;
-      this.model.curMaxValue = this.view.curMaxValue;
+      this.model.currentValues = this.view.currentValues;
       this.observers.notifyObservers();
     });
 
     this.model.observers.addObserver(() => {
-      const curMinValue = this.model.curMinValue;
-      const curMaxValue = this.model.curMaxValue;
-      //this.view.butt1Move(this.view.offsetValueConv(curMinValue), curMinValue);
-      //this.view.butt2Move(this.view.offsetValueConv(curMaxValue), curMaxValue);
-      this.observers.notifyObservers();
-    });    
+      this.view.currentValues = this.model.currentValues;
+      this.view.renew();
+    });
   }
 
   append = (entry: JQuery): void => {
-    this.view.append(entry.get(0));    
+    this.view.append(entry.get(0));
     this.view.init();
   }
 
@@ -135,7 +97,7 @@ class Controller {
         args.maxValue = this.checkMaxValue(args.maxValue);
       } else if (key === 'minValue') {
         args.minValue = this.checkMaxValue(args.minValue);
-      }      
+      }
     })
 
     this.view.parameters = Object.assign(this.view.parameters, args);
@@ -143,21 +105,21 @@ class Controller {
     this.view.init();
   }
 
-  getValues = (): Array<number> => {
-    return [this.model.curMinValue, this.model.curMaxValue];
+  getValues = (): types.CurrentValues => {
+    return this.model.currentValues;
   }
 
   setValues = (curMinValue: number, curMaxValue: number): void => {
     if (curMinValue) {
-      this.model.setCurMinValue(curMinValue);
+      this.model.setCurrentMinValue(curMinValue);
     }
 
     if (curMaxValue) {
-      this.model.setCurMaxValue(curMaxValue);
+      this.model.setCurrentMaxValue(curMaxValue);
     }
   }
 
-  getConfig = (): configType => {
+  getConfig = (): types.Parameters => {
     return this.view.parameters;
   }
 

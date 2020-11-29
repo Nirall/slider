@@ -1,6 +1,6 @@
 import createElem from '../createElem/createElem';
 
-class ScaleFilling {
+class ProgressBar {
   elem: HTMLElement;
   isVertical: boolean;
 
@@ -34,4 +34,4 @@ class ScaleFilling {
   }
 }
 
-export default ScaleFilling;
+export default ProgressBar;

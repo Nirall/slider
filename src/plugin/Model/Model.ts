@@ -1,26 +1,25 @@
+import * as types from '../types';
 import MakeObservableObject from '../makeObservableObject/MakeObservableObject';
 
 class Model {
-  curMinValue: number;
-  curMaxValue: number;
+  currentValues: types.CurrentValues;
   observers: MakeObservableObject;
 
-  constructor(curMinValue = 0, curMaxValue = 1000) {
-    this.curMinValue = curMinValue;
-    this.curMaxValue = curMaxValue;
+  constructor(currentValues: types.CurrentValues) {
+    this.currentValues = currentValues;
     this.observers = new MakeObservableObject();
   }
 
-  setCurMinValue(data: number): void {
-    if (this.curMinValue != data) {
-      this.curMinValue = data;
+  setCurrentMinValue(data: number): void {
+    if (this.currentValues.currentMinValue !== data) {
+      this.currentValues.currentMinValue = data;
       this.observers.notifyObservers();
     }
   }
 
-  setCurMaxValue(data: number): void {
-    if (this.curMaxValue != data) {
-      this.curMaxValue = data;
+  setCurrentMaxValue(data: number): void {
+    if (this.currentValues.currentMaxValue !== data) {
+      this.currentValues.currentMaxValue = data;
       this.observers.notifyObservers();
     }
   }

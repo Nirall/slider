@@ -1,16 +1,19 @@
 import Button from "../../blocks/button/Button";
 import Label from "../../blocks/label/Label";
+import MakeObservableObject from '../../../makeObservableObject/MakeObservableObject';
 
 class Runner {
   button: Button;
   label: Label;
-
   isVertical: boolean;
+  observers: MakeObservableObject;
 
-  constructor(isVertical: boolean) {
+  constructor(isVertical: boolean, moveObserver: Function) {
     this.isVertical = isVertical;
     this.button = new Button(isVertical);
     this.label = new Label(isVertical);
+    this.observers = new MakeObservableObject();
+    this.observers.addObserver(moveObserver);
   }
 
   getPosition = (): number => {
@@ -46,6 +49,28 @@ class Runner {
 
   show = (): void => {
     this.button.elem.style.display = "block";
+  }
+
+  onMouseDown = (event: MouseEvent): void => {
+    event.preventDefault();
+    document.addEventListener("mousemove", this.onMouseMove);
+    document.addEventListener("mouseup", this.onMouseUp);
+  }
+
+  onMouseMove = (event: MouseEvent): void => {
+    this.observers.notifyObserversData({ event: event, runner: this });
+  }
+
+  onMouseUp = (event: MouseEvent): void => {
+    document.removeEventListener("mouseup", this.onMouseUp);
+    document.removeEventListener("mousemove", this.onMouseMove);
+  }
+
+  append = (entry: HTMLElement): void => {
+    [this.button.elem, this.label.elem].map((elem) => {
+      entry.appendChild(elem);
+      elem.onmousedown = this.onMouseDown;
+    })
   }
 }
 
