@@ -4,40 +4,40 @@ $("#s1").omfgslider({showLabel: true});
         $("#s4").omfgslider({minValue: -3, maxValue: 0, step: 0.1, isRange: true, isVertical: true, showLabel: true, isFloat: true});
         for (let i of ["#s1", "#s2", "#s3", "#s4"]) {
             $(`${i}`).omfgslider();
-            let conf = $(`${i}`).omfgslider("getConfig");
-            const minValueIn = $(`${i} + .input-wrapper .minValueIn`);
-            const maxValueIn = $(`${i} + .input-wrapper .maxValueIn`);
-            const min = $(`${i} + .input-wrapper .minValue`);
-            const max = $(`${i} + .input-wrapper .maxValue`);
+            let config = $(`${i}`).omfgslider("getConfig");
+            const minValueInput = $(`${i} + .input-wrapper .minValueIn`);
+            const maxValueInput = $(`${i} + .input-wrapper .maxValueIn`);
+            const minValue = $(`${i} + .input-wrapper .minValue`);
+            const maxValue = $(`${i} + .input-wrapper .maxValue`);
             const step = $(`${i} + .input-wrapper .step`);
-            minValueIn.val(conf.minValue);
-            maxValueIn.val(conf.maxValue);
-            $(`${i} + .input-wrapper .minValue`).val(conf.minValue);
-            $(`${i} + .input-wrapper .maxValue`).val(conf.maxValue);
-            $(`${i} + .input-wrapper .step`).val(conf.step);
-            $(`${i}`).omfgslider("inputsAttach", { minValueIn: minValueIn, maxValueIn: maxValueIn, max: max, min: min, step: step });
+            minValueInput.val(config.minValue);
+            maxValueInput.val(config.maxValue);
+            $(`${i} + .input-wrapper .minValue`).val(config.minValue);
+            $(`${i} + .input-wrapper .maxValue`).val(config.maxValue);
+            $(`${i} + .input-wrapper .step`).val(config.step);
+            $(`${i}`).omfgslider("inputsAttach", { minValueInput: minValueInput, maxValueInput: maxValueInput, maxValue: maxValue, minValue: minValue, step: step });
 
-            minValueIn.focusout(() => {
+            minValueInput.focusout(() => {
                 if ($(`${i}`).omfgslider("getConfig").isFloat) {
-                    $(`${i}`).omfgslider("setValues", {curMinValue: parseFloat(minValueIn.val())});
+                    $(`${i}`).omfgslider("setValues", {currentMinValue: parseFloat(minValueInput.val())});
                 } else {
-                    $(`${i}`).omfgslider("setValues", {curMinValue: parseInt(minValueIn.val())});
+                    $(`${i}`).omfgslider("setValues", {currentMinValue: parseInt(minValueInput.val())});
                 }
             });
 
-            maxValueIn.focusout(() => {
+            maxValueInput.focusout(() => {
                 if ($(`${i}`).omfgslider("getConfig").isFloat) {
-                    $(`${i}`).omfgslider("setValues", {curMaxValue: parseFloat(maxValueIn.val())});
+                    $(`${i}`).omfgslider("setValues", {currentMaxValue: parseFloat(maxValueInput.val())});
                 } else {
-                    $(`${i}`).omfgslider("setValues", {curMaxValue: parseInt(maxValueIn.val())});
+                    $(`${i}`).omfgslider("setValues", {currentMaxValue: parseInt(maxValueInput.val())});
                 }
             });
 
-            min.focusout(() => {
+            minValue.focusout(() => {
                 $(`${i}`).omfgslider("update", {minValue: $(`${i} + .input-wrapper .minValue`).val()})
             });
 
-            max.focusout(() => {
+            maxValue.focusout(() => {
                 $(`${i}`).omfgslider("update", {maxValue: $(`${i} + .input-wrapper .maxValue`).val()})
             });
 

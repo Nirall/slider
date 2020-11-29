@@ -27,11 +27,11 @@ class Graduation {
     for (let i = 0; i < 5; i++) {
       const mark = new Mark(this.parameters.isVertical);
       this.marks.push(mark);
-      mark.observers.addObserver(() => this.onClickMark(mark));
+      mark.observers.addObserver(() => this.onClickMarkHandler(mark));
     }
   }
 
-  onClickMark = (mark: Mark): void => {
+  onClickMarkHandler = (mark: Mark): void => {
     this.observers.notifyObserversData(mark.value);
   }
 
@@ -55,11 +55,11 @@ class Graduation {
     })
   }
 
-  round = (val: number): number => {
-    const whole = Math.trunc(val/this.parameters.step);
+  round = (value: number): number => {
+    const whole = Math.trunc(value/this.parameters.step);
 
-    const reminder = +(val - whole*this.parameters.step).toFixed(2);
-    if (val < 0) {
+    const reminder = +(value - whole*this.parameters.step).toFixed(2);
+    if (value < 0) {
       return Math.abs(reminder) < this.parameters.step/2 ? whole*this.parameters.step : (whole - 1)*this.parameters.step;
     }
 

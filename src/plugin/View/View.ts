@@ -46,19 +46,19 @@ class View {
     let runner;
 
     if (this.parameters.isRange) {
-      runner = this.runnerCheck(offset);
+      runner = this.checkRunnerCloser(offset);
     } else {
       runner = this.runnerMain;
     }
 
-    this.runnerMove(this.track.offsetProcessing(offset, runner));
+    this.moveRunner(this.track.offsetProcessing(offset, runner));
   }
 
   runnerObserver = ({ event, runner }: types.RunnerObserverData): void => {
-    this.runnerMove(this.track.onRunnerMove(event, runner));
+    this.moveRunner(this.track.onRunnerMove(event, runner));
   }
 
-  runnerMove = (obj: types.RunnerMoveData): void => {
+  moveRunner = (obj: types.RunnerMoveData): void => {
     obj.runner.setPosition(obj.offset, obj.value);
 
     if (obj.runner === this.runnerAdditional) {
@@ -73,7 +73,7 @@ class View {
     this.observers.notifyObservers();
   }
 
-  runnerCheck = (offset: number): Runner => {
+  checkRunnerCloser = (offset: number): Runner => {
     if (Math.abs(offset - this.track.getMainRunnerOffset()) < Math.abs(offset - this.track.getAdditionalRunnerOffset())) {
       return this.runnerMain;
     }
@@ -81,11 +81,11 @@ class View {
     return this.runnerAdditional;
   }
 
-  onClickBar = (event: MouseEvent): void => {
+  onClickBarHandler = (event: MouseEvent): void => {
     const coordinate = this.parameters.isVertical ? event.clientY : event.clientX;
     const offset = coordinate - this.bar.getPosition() - this.runnerMain.getWidth()/2;
 
-    this.runnerMove(this.track.offsetProcessing(offset, this.runnerCheck(offset)));
+    this.moveRunner(this.track.offsetProcessing(offset, this.checkRunnerCloser(offset)));
   }
 
   init = (): void => {
@@ -97,7 +97,7 @@ class View {
 
     this.scale.init(this.parameters);
 
-    this.runnerAdditional.hide();
+    this.runnerAdditional.hideRunner();
 
     if (this.parameters.showLabel) {
       this.runnerAdditional.showLabel();
@@ -108,26 +108,26 @@ class View {
     }
 
     if (this.parameters.isRange) {
-      this.runnerAdditional.show();
+      this.runnerAdditional.showRunner();
     } else {
-      this.runnerAdditional.hide();
+      this.runnerAdditional.hideRunner();
     }
 
     this.runnerAdditional.setPosition(-this.runnerAdditional.getWidth()/2, this.parameters.minValue);
     this.runnerMain.setPosition(this.bar.getDimension() - this.runnerMain.getWidth()/2, this.parameters.maxValue);
 
-    this.renew();
+    this.renewRunners();
   }
 
-  renew() {
-    this.runnerMove(this.track.offsetProcessing(this.track.offsetValueConverter(this.currentValues.currentMaxValue), this.runnerMain));
-    this.runnerMove(this.track.offsetProcessing(this.track.offsetValueConverter(this.currentValues.currentMinValue), this.runnerAdditional));
+  renewRunners() {
+    this.moveRunner(this.track.offsetProcessing(this.track.offsetValueConverter(this.currentValues.currentMaxValue), this.runnerMain));
+    this.moveRunner(this.track.offsetProcessing(this.track.offsetValueConverter(this.currentValues.currentMinValue), this.runnerAdditional));
   }
 
-  append = (entry: HTMLElement): void => {
+  appendToNode = (entry: HTMLElement): void => {
     entry.appendChild(this.bar.elem).appendChild(this.progressBar.elem);
-    this.runnerMain.append(entry);
-    this.runnerAdditional.append(entry);
+    this.runnerMain.appendToNode(entry);
+    this.runnerAdditional.appendToNode(entry);
 
     this.scale.marks.map((mark) => {
       entry.appendChild(mark.elem);
@@ -135,7 +135,7 @@ class View {
 
     this.scale.moveMarks();
 
-    this.bar.elem.onclick = this.onClickBar;
+    this.bar.elem.onclick = this.onClickBarHandler;
   }
 }
 

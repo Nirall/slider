@@ -18,13 +18,13 @@ import Controller from './Controller/Controller';
         const slider = new Controller($.extend(newConfig, opt));
         $(this).data('slider', slider);
 
-        slider.append($(this));
+        slider.appendToNode($(this));
       }
     },
 
     update: function(opt: Config) {
       const slider = $(this).data('slider');
-      slider.update(opt);
+      slider.updateConfig(opt);
     },
 
     getConfig: function() {
@@ -34,16 +34,16 @@ import Controller from './Controller/Controller';
 
     setValues: function(opt: Config) {
       const slider = $(this).data('slider');
-      slider.setValues(opt.curMinValue, opt.curMaxValue);
+      slider.setValues(opt.currentMinValue, opt.currentMaxValue);
     },
 
     inputsAttach: function(opt: InputsObject) {
       const slider = $(this).data('slider');
       slider.addObserver(() => {
-        opt.minValueIn.val(slider.getValues().currentMinValue);
-        opt.maxValueIn.val(slider.getValues().currentMaxValue);
-        opt.max.val(slider.getConfig().maxValue);
-        opt.min.val(slider.getConfig().minValue);
+        opt.minValueInput.val(slider.getValues().currentMinValue);
+        opt.maxValueInput.val(slider.getValues().currentMaxValue);
+        opt.maxValue.val(slider.getConfig().maxValue);
+        opt.minValue.val(slider.getConfig().minValue);
         opt.step.val(slider.getConfig().step);
       })
     },

@@ -34,7 +34,7 @@ class Runner {
     return this.button.getWidth();
   }
 
-  hide = (): void => {
+  hideRunner = (): void => {
     this.button.elem.style.display = "none";
     this.label.elem.style.display = "none";
   }
@@ -47,7 +47,7 @@ class Runner {
     this.label.elem.style.display = "block";
   }
 
-  show = (): void => {
+  showRunner = (): void => {
     this.button.elem.style.display = "block";
   }
 
@@ -66,7 +66,7 @@ class Runner {
     document.removeEventListener("mousemove", this.onMouseMove);
   }
 
-  append = (entry: HTMLElement): void => {
+  appendToNode = (entry: HTMLElement): void => {
     [this.button.elem, this.label.elem].map((elem) => {
       entry.appendChild(elem);
       elem.onmousedown = this.onMouseDown;

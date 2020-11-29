@@ -56,9 +56,9 @@ class Track {
     return newOffset;
   }
 
-  roundOffsetButt = (currOffset: number): Array<number> => {
-    const currValue = this.parameters.minValue + (currOffset + this.runnerMain.getWidth()/2)*(this.parameters.maxValue - this.parameters.minValue)/this.scale.getDimension();
-    let roundValue = this.round(currValue, this.parameters.step);
+  roundOffsetButt = (currentOffset: number): Array<number> => {
+    const currentValue = this.parameters.minValue + (currentOffset + this.runnerMain.getWidth()/2)*(this.parameters.maxValue - this.parameters.minValue)/this.scale.getDimension();
+    let roundValue = this.round(currentValue, this.parameters.step);
 
     if (this.parameters.isFloat) {
       roundValue = parseFloat(roundValue.toFixed(2));
@@ -83,17 +83,17 @@ class Track {
     return ((value - this.parameters.minValue)/(this.parameters.maxValue - this.parameters.minValue)*this.scale.getDimension() - this.runnerMain.getWidth()/2);
   }
 
-  round = (val: number, step: number): number => {
-    const whole = Math.trunc(val/step);
-    const reminder = +(val - whole*step).toFixed(2);
+  round = (value: number, step: number): number => {
+    const whole = Math.trunc(value/step);
+    const reminder = +(value - whole*step).toFixed(2);
 
-    if (val < 0) {
+    if (value < 0) {
       return Math.abs(reminder) < step/2 ? whole*step : (whole - 1)*step;
     }
 
-    if (val <= this.parameters.minValue) {
+    if (value <= this.parameters.minValue) {
       return this.parameters.minValue;
-    } else if (val >= this.parameters.maxValue) {
+    } else if (value >= this.parameters.maxValue) {
       return this.parameters.maxValue;
     }
 

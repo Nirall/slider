@@ -10,8 +10,8 @@ interface Config {
   isVertical: boolean,
   showLabel: boolean,
   isFloat: boolean,
-  curMinValue: number,
-  curMaxValue: number
+  currentMinValue: number,
+  currentMaxValue: number
 }
 
 interface InputsObject {

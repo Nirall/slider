@@ -23,12 +23,12 @@ class Controller {
 
     this.model.observers.addObserver(() => {
       this.view.currentValues = this.model.currentValues;
-      this.view.renew();
+      this.view.renewRunners();
     });
   }
 
-  append = (entry: JQuery): void => {
-    this.view.append(entry.get(0));
+  appendToNode = (entry: JQuery): void => {
+    this.view.appendToNode(entry.get(0));
     this.view.init();
   }
 
@@ -89,7 +89,7 @@ class Controller {
     return minValueMod;
   }
 
-  update = (args: any): void => {
+  updateConfig = (args: any): void => {
     Object.keys(args).map((key) => {
       if (key === 'step') {
         args.step = this.checkStep(args.step);
@@ -109,13 +109,13 @@ class Controller {
     return this.model.currentValues;
   }
 
-  setValues = (curMinValue: number, curMaxValue: number): void => {
-    if (curMinValue || curMinValue === 0) {
-      this.model.setCurrentMinValue(curMinValue);
+  setValues = (currentMinValue: number, currentMaxValue: number): void => {
+    if (currentMinValue || currentMinValue === 0) {
+      this.model.setCurrentMinValue(currentMinValue);
     }
 
-    if (curMaxValue || curMaxValue === 0) {
-      this.model.setCurrentMaxValue(curMaxValue);
+    if (currentMaxValue || currentMaxValue === 0) {
+      this.model.setCurrentMaxValue(currentMaxValue);
     }
   }
 
