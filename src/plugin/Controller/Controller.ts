@@ -36,7 +36,6 @@ class Controller {
     let stepMod = Math.abs(ParsingDigits.parsing(step));
 
     if (stepMod === null || stepMod === 0 || stepMod > (this.view.parameters.maxValue - this.view.parameters.minValue)/2) {
-      console.log('Wrong value of the step');
       return this.view.parameters.step;
     }
 
@@ -55,7 +54,6 @@ class Controller {
     let maxValueMod = ParsingDigits.parsing(maxValue);
 
     if (maxValueMod === null || maxValueMod <= this.view.parameters.minValue) {
-      console.log('Wrong value of the maxValue');
       return this.view.parameters.maxValue;
     }
 
@@ -74,7 +72,6 @@ class Controller {
     let minValueMod = ParsingDigits.parsing(minValue);
 
     if (minValueMod === null || minValueMod >= this.view.parameters.maxValue) {
-      console.log('Wrong value of the minValue');
       return this.view.parameters.minValue;
     }
 
