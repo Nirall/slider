@@ -18,7 +18,7 @@ class Track {
     this.parameters = data.parameters;
   }
 
-  onRunnerMove = (eventMm: MouseEvent, runner: Runner): types.RunnerMoveData => {
+  onMoveRunner = (eventMm: MouseEvent, runner: Runner): types.RunnerMoveData => {
     const coordinate = this.parameters.isVertical ? eventMm.clientY : eventMm.clientX;
     const offset = coordinate - this.scale.getPosition() - this.runnerAdditional.getWidth()/2;
 
@@ -28,7 +28,7 @@ class Track {
   offsetProcessing(offset: number, runner: Runner): types.RunnerMoveData {
     let roundValue;
     let roundOffset;
-    roundOffset = this.runnerOffsetCheck(offset, runner);
+    roundOffset = this.checkRunnerOffset(offset, runner);
 
     [roundOffset, roundValue] = this.roundOffsetButt(roundOffset);
 
@@ -39,7 +39,7 @@ class Track {
     }
   }
 
-  runnerOffsetCheck = (offset: number, runner: Runner): number => {
+  checkRunnerOffset = (offset: number, runner: Runner): number => {
     const stepWidth = this.parameters.step*this.scale.getDimension()/(this.parameters.maxValue - this.parameters.minValue);
     const minOffset = stepWidth/1.5 > this.runnerMain.getWidth() ? stepWidth/1.5 : this.runnerMain.getWidth();
 
@@ -64,7 +64,7 @@ class Track {
       roundValue = parseFloat(roundValue.toFixed(2));
     }
 
-    let roundOffset = this.offsetValueConverter(roundValue);
+    let roundOffset = this.convertOffsetToValue(roundValue);
 
     if (roundOffset < -this.runnerMain.getWidth()/2) {
       roundOffset = -this.runnerMain.getWidth()/2;
@@ -79,7 +79,7 @@ class Track {
     return [roundOffset, roundValue];
   }
 
-  offsetValueConverter = (value: number): number => {
+  convertOffsetToValue = (value: number): number => {
     return ((value - this.parameters.minValue)/(this.parameters.maxValue - this.parameters.minValue)*this.scale.getDimension() - this.runnerMain.getWidth()/2);
   }
 

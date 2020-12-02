@@ -51,25 +51,25 @@ class Runner {
     this.button.elem.style.display = "block";
   }
 
-  onMouseDown = (event: MouseEvent): void => {
+  handleRunnerMouseDown = (event: MouseEvent): void => {
     event.preventDefault();
-    document.addEventListener("mousemove", this.onMouseMove);
-    document.addEventListener("mouseup", this.onMouseUp);
+    document.addEventListener("mousemove", this.handleRunnerMouseMove);
+    document.addEventListener("mouseup", this.handleRunnerMouseUp);
   }
 
-  onMouseMove = (event: MouseEvent): void => {
+  handleRunnerMouseMove = (event: MouseEvent): void => {
     this.observers.notifyObserversData({ event: event, runner: this });
   }
 
-  onMouseUp = (event: MouseEvent): void => {
-    document.removeEventListener("mouseup", this.onMouseUp);
-    document.removeEventListener("mousemove", this.onMouseMove);
+  handleRunnerMouseUp = (event: MouseEvent): void => {
+    document.removeEventListener("mouseup", this.handleRunnerMouseUp);
+    document.removeEventListener("mousemove", this.handleRunnerMouseMove);
   }
 
   appendToNode = (entry: HTMLElement): void => {
     [this.button.elem, this.label.elem].map((elem) => {
       entry.appendChild(elem);
-      elem.onmousedown = this.onMouseDown;
+      elem.onmousedown = this.handleRunnerMouseDown;
     })
   }
 }

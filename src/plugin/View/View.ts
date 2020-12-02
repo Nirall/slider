@@ -30,9 +30,9 @@ class View {
     this.observers = new MakeObservableObject();
     this.parameters = parameters;
 
-    this.scale = new Scale(parameters, this.graduationObserver);
-    this.runnerAdditional = new Runner(parameters.isVertical, this.runnerObserver);
-    this.runnerMain = new Runner(parameters.isVertical, this.runnerObserver);
+    this.scale = new Scale(parameters, this.onClickScaleObserver);
+    this.runnerAdditional = new Runner(parameters.isVertical, this.onMoveRunnerObserver);
+    this.runnerMain = new Runner(parameters.isVertical, this.onMoveRunnerObserver);
 
     this.track = new Track({
       runnerMain: this.runnerMain,
@@ -43,8 +43,8 @@ class View {
     });
   }
 
-  graduationObserver = (value: number) => {
-    let offset = this.track.offsetValueConverter(value);
+  onClickScaleObserver = (value: number) => {
+    let offset = this.track.convertOffsetToValue(value);
     let runner;
 
     if (this.parameters.isRange) {
@@ -53,14 +53,14 @@ class View {
       runner = this.runnerMain;
     }
 
-    this.moveRunner(this.track.offsetProcessing(offset, runner));
+    this.handleRunnerMove(this.track.offsetProcessing(offset, runner));
   }
 
-  runnerObserver = ({ event, runner }: types.RunnerObserverData): void => {
-    this.moveRunner(this.track.onRunnerMove(event, runner));
+  onMoveRunnerObserver = ({ event, runner }: types.RunnerObserverData): void => {
+    this.handleRunnerMove(this.track.onMoveRunner(event, runner));
   }
 
-  moveRunner = (obj: types.RunnerMoveData): void => {
+  handleRunnerMove = (obj: types.RunnerMoveData): void => {
     obj.runner.setPosition(obj.offset, obj.value);
 
     if (obj.runner === this.runnerAdditional) {
@@ -83,11 +83,11 @@ class View {
     return this.runnerAdditional;
   }
 
-  onClickBarHandler = (event: MouseEvent): void => {
+  handleBarClick = (event: MouseEvent): void => {
     const coordinate = this.parameters.isVertical ? event.clientY : event.clientX;
     const offset = coordinate - this.bar.getPosition() - this.runnerMain.getWidth()/2;
 
-    this.moveRunner(this.track.offsetProcessing(offset, this.checkRunnerCloser(offset)));
+    this.handleRunnerMove(this.track.offsetProcessing(offset, this.checkRunnerCloser(offset)));
   }
 
   init = (): void => {
@@ -122,8 +122,8 @@ class View {
   }
 
   renewRunners() {
-    this.moveRunner(this.track.offsetProcessing(this.track.offsetValueConverter(this.currentValues.currentMaxValue), this.runnerMain));
-    this.moveRunner(this.track.offsetProcessing(this.track.offsetValueConverter(this.currentValues.currentMinValue), this.runnerAdditional));
+    this.handleRunnerMove(this.track.offsetProcessing(this.track.convertOffsetToValue(this.currentValues.currentMaxValue), this.runnerMain));
+    this.handleRunnerMove(this.track.offsetProcessing(this.track.convertOffsetToValue(this.currentValues.currentMinValue), this.runnerAdditional));
   }
 
   appendToNode = (entry: HTMLElement): void => {
@@ -137,7 +137,7 @@ class View {
 
     this.scale.moveMarks();
 
-    this.bar.elem.onclick = this.onClickBarHandler;
+    this.bar.elem.onclick = this.handleBarClick;
   }
 }
 

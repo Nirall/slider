@@ -7,15 +7,16 @@ class Mark {
   value: number;
   observers: MakeObservableObject;
 
-  constructor(isVertical: boolean) {
+  constructor(isVertical: boolean, observer: Function) {
     this.elem = createElem('slider__mark');
     this.isVertical = isVertical;
     this.observers = new MakeObservableObject();
-    this.elem.onclick = this.onClickHandler;
+    this.observers.addObserver(observer);
+    this.elem.onclick = this.handleMarkClick;
   }
 
-  onClickHandler = (): void => {
-    this.observers.notifyObservers();
+  handleMarkClick = (): void => {
+    this.observers.notifyObserversData(this.value);
   }
 
   getPosition = (): number => {

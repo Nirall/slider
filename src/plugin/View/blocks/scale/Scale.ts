@@ -25,14 +25,13 @@ class Graduation {
 
   createMarks = (): void => {
     for (let i = 0; i < 5; i++) {
-      const mark = new Mark(this.parameters.isVertical);
+      const mark = new Mark(this.parameters.isVertical, this.handleScaleClick);
       this.marks.push(mark);
-      mark.observers.addObserver(() => this.onClickMarkHandler(mark));
     }
   }
 
-  onClickMarkHandler = (mark: Mark): void => {
-    this.observers.notifyObserversData(mark.value);
+  handleScaleClick = (value: number): void => {
+    this.observers.notifyObserversData(value);
   }
 
   moveMarks = (): void => {
