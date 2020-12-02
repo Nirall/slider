@@ -20,6 +20,7 @@ export type RunnerObserverData = {
 }
 
 export type Parameters = {
+  [index: string]: string|number|boolean;
   minValue: number,
   maxValue: number,
   step: number,
@@ -30,6 +31,7 @@ export type Parameters = {
 }
 
 export type RawParameters = {
+  [index: string]: string|number|boolean;
   minValue: string,
   maxValue: string,
   step: string,

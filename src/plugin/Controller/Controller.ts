@@ -86,20 +86,21 @@ class Controller {
     return minValueChecked;
   }
 
-  updateConfig = (parameters: any): void => {
+  updateConfig = (parameters: types.RawParameters): void => {
+    const parametersSnapShot = this.view.parameters;
     Object.keys(parameters).map((key) => {
       if (key === 'step') {
-        parameters.step = this.checkStep(parameters.step);
+        parametersSnapShot.step = this.checkStep(parameters.step);
       } else if (key === 'maxValue') {
-        parameters.maxValue = this.checkMaxValue(parameters.maxValue);
+        parametersSnapShot.maxValue = this.checkMaxValue(parameters.maxValue);
       } else if (key === 'minValue') {
-        parameters.minValue = this.checkMinValue(parameters.minValue);
+        parametersSnapShot.minValue = this.checkMinValue(parameters.minValue);
       } else {
-        parameters[key] = parameters[key];
+        parametersSnapShot[key] = parameters[key];
       }
     })
 
-    this.view.parameters = Object.assign(this.view.parameters, parameters);
+    this.view.parameters = Object.assign(this.view.parameters, parametersSnapShot);
 
     this.view.init();
   }
