@@ -15,10 +15,6 @@ class Mark {
     this.elem.onclick = this.handleMarkClick;
   }
 
-  handleMarkClick = (): void => {
-    this.observers.notifyObserversData(this.value);
-  }
-
   getPosition = (): number => {
     if (this.isVertical) {
       return this.elem.getBoundingClientRect().top;
@@ -60,6 +56,10 @@ class Mark {
     } else {
       this.elem.classList.remove('slider__mark_position_vertical');
     }
+  }
+
+  private handleMarkClick = (): void => {
+    this.observers.notifyObserversData(this.value);
   }
 }
 

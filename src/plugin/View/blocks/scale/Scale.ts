@@ -23,17 +23,6 @@ class Graduation {
     this.moveMarks();
   }
 
-  createMarks = (): void => {
-    for (let i = 0; i < 5; i++) {
-      const mark = new Mark(this.parameters.isVertical, this.handleScaleClick);
-      this.marks.push(mark);
-    }
-  }
-
-  handleScaleClick = (value: number): void => {
-    this.observers.notifyObserversData(value);
-  }
-
   moveMarks = (): void => {
     this.marks.map((mark, index) => {
       mark.init(this.parameters.isVertical);
@@ -54,7 +43,18 @@ class Graduation {
     })
   }
 
-  round = (value: number): number => {
+  private handleScaleClick = (value: number): void => {
+    this.observers.notifyObserversData(value);
+  }
+
+  private createMarks = (): void => {
+    for (let i = 0; i < 5; i++) {
+      const mark = new Mark(this.parameters.isVertical, this.handleScaleClick);
+      this.marks.push(mark);
+    }
+  }
+
+  private round = (value: number): number => {
     const whole = Math.trunc(value/this.parameters.step);
 
     const reminder = +(value - whole*this.parameters.step).toFixed(2);

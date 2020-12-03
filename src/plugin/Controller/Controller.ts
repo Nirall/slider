@@ -32,60 +32,6 @@ class Controller {
     this.view.init();
   }
 
-  checkStep = (step: string): number => {
-    let stepChecked = Math.abs(ParsingDigits.parsing(step));
-
-    if (stepChecked === null || stepChecked === 0 || stepChecked > (this.view.parameters.maxValue - this.view.parameters.minValue)/2) {
-      return this.view.parameters.step;
-    }
-
-    if (stepChecked % 1 !== 0) {
-      this.view.parameters.isFloat = true;
-    } else {
-      if (this.view.parameters.maxValue % 1 === 0 && this.view.parameters.minValue % 1 === 0) {
-        this.view.parameters.isFloat = false;
-      }
-    }
-
-    return stepChecked;
-  }
-
-  checkMaxValue = (maxValue: string): number => {
-    let maxValueChecked = ParsingDigits.parsing(maxValue);
-
-    if (maxValueChecked === null || maxValueChecked <= this.view.parameters.minValue) {
-      return this.view.parameters.maxValue;
-    }
-
-    if (maxValueChecked % 1 !== 0) {
-      this.view.parameters.isFloat = true;
-    } else {
-      if (this.view.parameters.step % 1 === 0 && this.view.parameters.minValue % 1 === 0) {
-        this.view.parameters.isFloat = false;
-      }
-    }
-
-    return maxValueChecked;
-  }
-
-  checkMinValue = (minValue: string): number => {
-    let minValueChecked = ParsingDigits.parsing(minValue);
-
-    if (minValueChecked === null || minValueChecked >= this.view.parameters.maxValue) {
-      return this.view.parameters.minValue;
-    }
-
-    if (minValueChecked % 1 !== 0) {
-      this.view.parameters.isFloat = true;
-    } else {
-      if (this.view.parameters.maxValue % 1 === 0 && this.view.parameters.step % 1 === 0) {
-        this.view.parameters.isFloat = false;
-      }
-    }
-
-    return minValueChecked;
-  }
-
   updateConfig = (parameters: types.RawParameters): void => {
     const parametersSnapShot = this.view.parameters;
     Object.keys(parameters).map((key) => {
@@ -125,6 +71,60 @@ class Controller {
 
   addObserver = (fn: Function): void => {
     this.observers.addObserver(fn);
+  }
+
+  private checkStep = (step: string): number => {
+    let stepChecked = Math.abs(ParsingDigits.parsing(step));
+
+    if (stepChecked === null || stepChecked === 0 || stepChecked > (this.view.parameters.maxValue - this.view.parameters.minValue)/2) {
+      return this.view.parameters.step;
+    }
+
+    if (stepChecked % 1 !== 0) {
+      this.view.parameters.isFloat = true;
+    } else {
+      if (this.view.parameters.maxValue % 1 === 0 && this.view.parameters.minValue % 1 === 0) {
+        this.view.parameters.isFloat = false;
+      }
+    }
+
+    return stepChecked;
+  }
+
+  private checkMaxValue = (maxValue: string): number => {
+    let maxValueChecked = ParsingDigits.parsing(maxValue);
+
+    if (maxValueChecked === null || maxValueChecked <= this.view.parameters.minValue) {
+      return this.view.parameters.maxValue;
+    }
+
+    if (maxValueChecked % 1 !== 0) {
+      this.view.parameters.isFloat = true;
+    } else {
+      if (this.view.parameters.step % 1 === 0 && this.view.parameters.minValue % 1 === 0) {
+        this.view.parameters.isFloat = false;
+      }
+    }
+
+    return maxValueChecked;
+  }
+
+  private checkMinValue = (minValue: string): number => {
+    let minValueChecked = ParsingDigits.parsing(minValue);
+
+    if (minValueChecked === null || minValueChecked >= this.view.parameters.maxValue) {
+      return this.view.parameters.minValue;
+    }
+
+    if (minValueChecked % 1 !== 0) {
+      this.view.parameters.isFloat = true;
+    } else {
+      if (this.view.parameters.maxValue % 1 === 0 && this.view.parameters.step % 1 === 0) {
+        this.view.parameters.isFloat = false;
+      }
+    }
+
+    return minValueChecked;
   }
 }
 
