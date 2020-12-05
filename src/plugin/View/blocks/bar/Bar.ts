@@ -5,7 +5,7 @@ class Bar {
   isVertical: boolean;
 
   constructor(isVertical: boolean) {
-    this.elem = createElem('slider__scale');
+    this.elem = createElem('slider__bar');
     this.isVertical = isVertical;
   }
 
@@ -29,9 +29,9 @@ class Bar {
     this.isVertical = isVertical;
 
     if (this.isVertical) {
-      this.elem.classList.add('slider__scale_position_vertical');
+      this.elem.classList.add('slider__bar_position_vertical');
     } else {
-      this.elem.classList.remove('slider__scale_position_vertical');
+      this.elem.classList.remove('slider__bar_position_vertical');
     }
   }
 }

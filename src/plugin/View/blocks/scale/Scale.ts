@@ -1,8 +1,8 @@
 import * as types from '../../../types';
-import Mark from "../mark/Mark";
+import Mark from './mark/Mark';
 import MakeObservableObject from '../../../makeObservableObject/MakeObservableObject';
 
-class Graduation {
+class Scale {
   parameters: types.Parameters;
 
   marks: Array<Mark>;
@@ -66,4 +66,4 @@ class Graduation {
   }
 }
 
-export default Graduation;
+export default Scale;

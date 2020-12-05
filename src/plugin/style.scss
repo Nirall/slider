@@ -67,7 +67,7 @@ $red: #990033;
     }
   }
 
-  &__scale {
+  &__bar {
     box-sizing: border-box;
     width: 100%;
     height: 6px;
@@ -88,7 +88,7 @@ $red: #990033;
     }
   }
 
-  &__scale-filling {
+  &__progress-bar {
     background: $green;
     position: relative;
     border-radius: 4px;

@@ -1,5 +1,5 @@
-import Button from "../../blocks/button/Button";
-import Label from "../../blocks/label/Label";
+import Button from './button/Button';
+import Label from './label/Label';
 import MakeObservableObject from '../../../makeObservableObject/MakeObservableObject';
 
 class Runner {
@@ -68,7 +68,7 @@ class Runner {
     this.observers.notifyObserversData({ event: event, runner: this });
   }
 
-  private handleRunnerMouseUp = (event: MouseEvent): void => {
+  private handleRunnerMouseUp = (): void => {
     document.removeEventListener("mouseup", this.handleRunnerMouseUp);
     document.removeEventListener("mousemove", this.handleRunnerMouseMove);
   }

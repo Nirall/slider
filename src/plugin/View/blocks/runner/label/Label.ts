@@ -1,4 +1,4 @@
-import createElem from '../createElem/createElem';
+import createElem from '../../createElem/createElem';
 
 class Label {
   elem: HTMLElement;

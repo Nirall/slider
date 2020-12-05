@@ -96,9 +96,7 @@ class View {
     this.runnerAdditional.init(this.parameters.isVertical);
     this.runnerMain.init(this.parameters.isVertical);
     this.track.init(this.parameters);
-
     this.scale.init(this.parameters);
-
     this.runnerAdditional.hideRunner();
 
     if (this.parameters.showLabel) {
@@ -117,7 +115,6 @@ class View {
 
     this.runnerAdditional.setPosition(-this.runnerAdditional.getWidth()/2, this.parameters.minValue);
     this.runnerMain.setPosition(this.bar.getDimension() - this.runnerMain.getWidth()/2, this.parameters.maxValue);
-
     this.renewRunners();
   }
 
@@ -136,7 +133,6 @@ class View {
     });
 
     this.scale.moveMarks();
-
     this.bar.elem.onclick = this.handleBarClick;
   }
 }

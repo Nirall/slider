@@ -1,5 +1,5 @@
-import createElem from '../createElem/createElem';
-import MakeObservableObject from '../../../makeObservableObject/MakeObservableObject';
+import createElem from '../../createElem/createElem';
+import MakeObservableObject from '../../../../makeObservableObject/MakeObservableObject';
 
 class Mark {
   elem: HTMLElement;

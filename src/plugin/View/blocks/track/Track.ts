@@ -8,10 +8,10 @@ class Track {
   runnerMain: Runner;
   runnerAdditional: Runner;
   progressBar: ProgressBar;
-  scale: Bar;
+  bar: Bar;
 
   constructor(data: types.TrackConstructorData) {
-    this.scale = data.bar;
+    this.bar = data.bar;
     this.runnerMain = data.runnerMain;
     this.runnerAdditional = data.runnerAdditional;
     this.progressBar = data.progressBar;
@@ -20,16 +20,15 @@ class Track {
 
   onMoveRunner = (eventMm: MouseEvent, runner: Runner): types.RunnerMoveData => {
     const coordinate = this.parameters.isVertical ? eventMm.clientY : eventMm.clientX;
-    const offset = coordinate - this.scale.getPosition() - this.runnerAdditional.getWidth()/2;
+    const offset = coordinate - this.bar.getPosition() - this.runnerAdditional.getWidth()/2;
 
     return this.offsetProcessing(offset, runner);
   }
 
-  offsetProcessing(offset: number, runner: Runner): types.RunnerMoveData {
+  offsetProcessing = (offset: number, runner: Runner): types.RunnerMoveData => {
     let roundValue;
     let roundOffset;
     roundOffset = this.checkRunnerOffset(offset, runner);
-
     [roundOffset, roundValue] = this.roundOffsetButt(roundOffset);
 
     return {
@@ -40,17 +39,17 @@ class Track {
   }
 
   convertOffsetToValue = (value: number): number => {
-    return ((value - this.parameters.minValue)/(this.parameters.maxValue - this.parameters.minValue)*this.scale.getDimension() - this.runnerMain.getWidth()/2);
+    return ((value - this.parameters.minValue)/(this.parameters.maxValue - this.parameters.minValue)*this.bar.getDimension() - this.runnerMain.getWidth()/2);
   }
 
   getMainRunnerOffset = (): number => {
-    const offset = this.runnerMain.getPosition() - this.scale.getPosition() + this.runnerMain.getWidth()/2;
-    return offset < 0? 0 : offset;
+    const offset = this.runnerMain.getPosition() - this.bar.getPosition() + this.runnerMain.getWidth()/2;
+    return offset < 0 ? 0 : offset;
   }
 
   getAdditionalRunnerOffset = (): number => {
     if (this.parameters.isRange) {
-      return this.runnerAdditional.getPosition() - this.scale.getPosition() + this.runnerMain.getWidth()/2;
+      return this.runnerAdditional.getPosition() - this.bar.getPosition() + this.runnerMain.getWidth()/2;
     }
 
     return 0;
@@ -67,16 +66,16 @@ class Track {
   }
 
   private checkRunnerOffset = (offset: number, runner: Runner): number => {
-    const stepWidth = this.parameters.step*this.scale.getDimension()/(this.parameters.maxValue - this.parameters.minValue);
+    const stepWidth = this.parameters.step*this.bar.getDimension()/(this.parameters.maxValue - this.parameters.minValue);
     const minOffset = stepWidth/1.5 > this.runnerMain.getWidth() ? stepWidth/1.5 : this.runnerMain.getWidth();
 
     if (runner === this.runnerAdditional) {
-      if (offset > this.runnerMain.getPosition() - this.scale.getPosition() - minOffset) {
-        offset = this.runnerMain.getPosition() - this.scale.getPosition() - minOffset;
+      if (offset > this.runnerMain.getPosition() - this.bar.getPosition() - minOffset) {
+        offset = this.runnerMain.getPosition() - this.bar.getPosition() - minOffset;
       }
     } else if (runner === this.runnerMain) {
-      if (offset < this.runnerAdditional.getPosition() - this.scale.getPosition() + minOffset) {
-        offset = this.runnerAdditional.getPosition() - this.scale.getPosition() + minOffset;
+      if (offset < this.runnerAdditional.getPosition() - this.bar.getPosition() + minOffset) {
+        offset = this.runnerAdditional.getPosition() - this.bar.getPosition() + minOffset;
       }
     }
 
@@ -84,7 +83,7 @@ class Track {
   }
 
   private roundOffsetButt = (currentOffset: number): [number, number] => {
-    const currentValue = this.parameters.minValue + (currentOffset + this.runnerMain.getWidth()/2)*(this.parameters.maxValue - this.parameters.minValue)/this.scale.getDimension();
+    const currentValue = this.parameters.minValue + (currentOffset + this.runnerMain.getWidth()/2)*(this.parameters.maxValue - this.parameters.minValue)/this.bar.getDimension();
     let roundValue = this.round(currentValue, this.parameters.step);
 
     if (this.parameters.isFloat) {
@@ -98,8 +97,8 @@ class Track {
       roundValue = this.parameters.minValue;
     }
 
-    if (roundOffset > this.scale.getDimension() - this.runnerMain.getWidth()/2) {
-      roundOffset = this.scale.getDimension() - this.runnerMain.getWidth()/2;
+    if (roundOffset > this.bar.getDimension() - this.runnerMain.getWidth()/2) {
+      roundOffset = this.bar.getDimension() - this.runnerMain.getWidth()/2;
       roundValue = this.parameters.maxValue;
     }
 

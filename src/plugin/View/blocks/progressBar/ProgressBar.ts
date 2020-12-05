@@ -5,7 +5,7 @@ class ProgressBar {
   isVertical: boolean;
 
   constructor(isVertical: boolean) {
-    this.elem = createElem('slider__scale-filling');
+    this.elem = createElem('slider__progress-bar');
     this.isVertical = isVertical;
   }
 
