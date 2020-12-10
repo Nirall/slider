@@ -25,21 +25,17 @@ class Controller {
   }
 
   updateConfig = (parameters: types.RawParameters): void => {
-    const parametersSnapShot = this.view.parameters;
-
     Object.keys(parameters).map((key) => {
       if (key === 'step') {
-        parametersSnapShot.step = this.checkStep(parameters.step);
+        parameters.step = this.checkStep(parameters.step as string);
       } else if (key === 'maxValue') {
-        parametersSnapShot.maxValue = this.checkMaxValue(parameters.maxValue);
+        parameters.maxValue = this.checkMaxValue(parameters.maxValue as string);
       } else if (key === 'minValue') {
-        parametersSnapShot.minValue = this.checkMinValue(parameters.minValue);
-      } else {
-        parametersSnapShot[key] = parameters[key];
+        parameters.minValue = this.checkMinValue(parameters.minValue as string);
       }
     })
 
-    this.view.parameters = Object.assign(this.view.parameters, parametersSnapShot);
+    this.view.parameters = Object.assign(this.view.parameters, parameters);
     this.view.init();
   }
 
