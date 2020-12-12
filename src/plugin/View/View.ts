@@ -43,53 +43,6 @@ class View {
     });
   }
 
-  onClickScaleObserver = (value: number) => {
-    let offset = this.track.convertOffsetToValue(value);
-    let runner;
-
-    if (this.parameters.isRange) {
-      runner = this.checkRunnerCloser(offset);
-    } else {
-      runner = this.runnerMain;
-    }
-
-    this.handleRunnerMove(this.track.offsetProcessing(offset, runner));
-  }
-
-  onMoveRunnerObserver = ({ event, runner }: types.RunnerObserverData): void => {
-    this.handleRunnerMove(this.track.onMoveRunner(event, runner));
-  }
-
-  handleRunnerMove = (obj: types.RunnerMoveData): void => {
-    obj.runner.setPosition(obj.offset, obj.value);
-
-    if (obj.runner === this.runnerAdditional) {
-      this.currentValues.currentMinValue = obj.value;
-    }
-
-    if (obj.runner === this.runnerMain) {
-      this.currentValues.currentMaxValue = obj.value;
-    }
-
-    this.track.updateProgressBar();
-    this.observers.notifyObservers();
-  }
-
-  checkRunnerCloser = (offset: number): Runner => {
-    if (Math.abs(offset - this.track.getMainRunnerOffset()) < Math.abs(offset - this.track.getAdditionalRunnerOffset())) {
-      return this.runnerMain;
-    }
-
-    return this.runnerAdditional;
-  }
-
-  handleBarClick = (event: MouseEvent): void => {
-    const coordinate = this.parameters.isVertical ? event.clientY : event.clientX;
-    const offset = coordinate - this.bar.getPosition() - this.runnerMain.getWidth()/2;
-
-    this.handleRunnerMove(this.track.offsetProcessing(offset, this.checkRunnerCloser(offset)));
-  }
-
   init = (): void => {
     this.bar.init(this.parameters.isVertical);
     this.progressBar.init(this.parameters.isVertical);
@@ -134,6 +87,53 @@ class View {
 
     this.scale.moveMarks();
     this.bar.elem.onclick = this.handleBarClick;
+  }
+
+  private onClickScaleObserver = (value: number) => {
+    let offset = this.track.convertOffsetToValue(value);
+    let runner;
+
+    if (this.parameters.isRange) {
+      runner = this.checkRunnerCloser(offset);
+    } else {
+      runner = this.runnerMain;
+    }
+
+    this.handleRunnerMove(this.track.offsetProcessing(offset, runner));
+  }
+
+  private onMoveRunnerObserver = ({ event, runner }: types.RunnerObserverData): void => {
+    this.handleRunnerMove(this.track.onMoveRunner(event, runner));
+  }
+
+  private handleRunnerMove = (obj: types.RunnerMoveData): void => {
+    obj.runner.setPosition(obj.offset, obj.value);
+
+    if (obj.runner === this.runnerAdditional) {
+      this.currentValues.currentMinValue = obj.value;
+    }
+
+    if (obj.runner === this.runnerMain) {
+      this.currentValues.currentMaxValue = obj.value;
+    }
+
+    this.track.updateProgressBar();
+    this.observers.notifyObservers();
+  }
+
+  private checkRunnerCloser = (offset: number): Runner => {
+    if (Math.abs(offset - this.track.getMainRunnerOffset()) < Math.abs(offset - this.track.getAdditionalRunnerOffset())) {
+      return this.runnerMain;
+    }
+
+    return this.runnerAdditional;
+  }
+
+  private handleBarClick = (event: MouseEvent): void => {
+    const coordinate = this.parameters.isVertical ? event.clientY : event.clientX;
+    const offset = coordinate - this.bar.getPosition() - this.runnerMain.getWidth()/2;
+
+    this.handleRunnerMove(this.track.offsetProcessing(offset, this.checkRunnerCloser(offset)));
   }
 }
 
