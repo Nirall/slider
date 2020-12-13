@@ -5,9 +5,9 @@ class ParsingDigits {
     }
 
     if (typeof item === 'string') {
-      if (/^-?\d+[\.,]\d+$/.test(item)) {
+      if (/^-?\d+[.,]\d+$/.test(item)) {
         return parseFloat(item);
-      } else if (/^-?\d+$/.test(item)) {
+      } if (/^-?\d+$/.test(item)) {
         return parseInt(item);
       }
     }

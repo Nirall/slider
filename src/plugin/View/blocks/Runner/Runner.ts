@@ -4,8 +4,11 @@ import MakeObservableObject from '../../../makeObservableObject/MakeObservableOb
 
 class Runner {
   knob: Knob;
+
   tooltip: Tooltip;
+
   isVertical: boolean;
+
   observers: MakeObservableObject;
 
   constructor(isVertical: boolean, moveObserver: Function) {
@@ -21,7 +24,7 @@ class Runner {
   }
 
   setPosition = (offset: number, value: number): void => {
-    this.tooltip.setPosition(offset + this.knob.getWidth()/2, value);
+    this.tooltip.setPosition(offset + this.knob.getWidth() / 2, value);
     this.knob.setPosition(offset);
   }
 
@@ -35,33 +38,33 @@ class Runner {
   }
 
   hideRunner = (): void => {
-    this.knob.elem.style.display = "none";
-    this.tooltip.elem.style.display = "none";
+    this.knob.elem.style.display = 'none';
+    this.tooltip.elem.style.display = 'none';
   }
 
   hideLabel = (): void => {
-    this.tooltip.elem.style.display = "none";
+    this.tooltip.elem.style.display = 'none';
   }
 
   showLabel = (): void => {
-    this.tooltip.elem.style.display = "block";
+    this.tooltip.elem.style.display = 'block';
   }
 
   showRunner = (): void => {
-    this.knob.elem.style.display = "block";
+    this.knob.elem.style.display = 'block';
   }
 
   appendToNode = (entry: HTMLElement): void => {
-    [this.knob.elem, this.tooltip.elem].map((elem) => {
+    [this.knob.elem, this.tooltip.elem].forEach((elem) => {
       entry.appendChild(elem);
-      elem.onmousedown = this.handleRunnerMouseDown;
-    })
+      elem.onmousedown = this.handleRunnerMouseDown; // eslint-disable-line no-param-reassign
+    });
   }
 
   private handleRunnerMouseDown = (event: MouseEvent): void => {
     event.preventDefault();
-    document.addEventListener("mousemove", this.handleRunnerMouseMove);
-    document.addEventListener("mouseup", this.handleRunnerMouseUp);
+    document.addEventListener('mousemove', this.handleRunnerMouseMove);
+    document.addEventListener('mouseup', this.handleRunnerMouseUp);
   }
 
   private handleRunnerMouseMove = (event: MouseEvent): void => {
@@ -69,8 +72,8 @@ class Runner {
   }
 
   private handleRunnerMouseUp = (): void => {
-    document.removeEventListener("mouseup", this.handleRunnerMouseUp);
-    document.removeEventListener("mousemove", this.handleRunnerMouseMove);
+    document.removeEventListener('mouseup', this.handleRunnerMouseUp);
+    document.removeEventListener('mousemove', this.handleRunnerMouseMove);
   }
 }
 

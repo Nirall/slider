@@ -2,6 +2,7 @@ import createElem from '../createElem/createElem';
 
 class Bar {
   elem: HTMLElement;
+
   isVertical: boolean;
 
   constructor(isVertical: boolean) {

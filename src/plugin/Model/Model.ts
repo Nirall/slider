@@ -3,6 +3,7 @@ import MakeObservableObject from '../makeObservableObject/MakeObservableObject';
 
 class Model {
   currentValues: types.CurrentValues;
+
   observers: MakeObservableObject;
 
   constructor(currentValues: types.CurrentValues) {

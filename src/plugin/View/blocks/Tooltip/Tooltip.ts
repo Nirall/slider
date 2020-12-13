@@ -2,6 +2,7 @@ import createElem from '../createElem/createElem';
 
 class Tooltip {
   elem: HTMLElement;
+
   isVertical: boolean;
 
   constructor(isVertical: boolean) {
@@ -22,10 +23,10 @@ class Tooltip {
 
     if (this.isVertical) {
       this.elem.style.left = '50%';
-      this.elem.style.top = offset - this.getDimension()/2 + 'px';
+      this.elem.style.top = offset - this.getDimension() / 2 + 'px';
     } else {
       this.elem.style.top = '50%';
-      this.elem.style.left = offset - this.getDimension()/2 + 'px';
+      this.elem.style.left = offset - this.getDimension() / 2 + 'px';
     }
   }
 

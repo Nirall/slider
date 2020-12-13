@@ -2,7 +2,6 @@ import Runner from './View/blocks/Runner/Runner';
 import Bar from './View/blocks/Bar/Bar';
 import ProgressBar from './View/blocks/ProgressBar/ProgressBar';
 
-
 export type RunnerMoveData = {
   runner: Runner,
   offset: number,
@@ -60,4 +59,4 @@ export const defaultParameters = {
   isVertical: false,
   showLabel: false,
   isFloat: false
-}
+};

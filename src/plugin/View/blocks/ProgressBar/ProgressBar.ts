@@ -2,6 +2,7 @@ import createElem from '../createElem/createElem';
 
 class ProgressBar {
   elem: HTMLElement;
+
   isVertical: boolean;
 
   constructor(isVertical: boolean) {

@@ -2,18 +2,20 @@ import * as types from '../types';
 import MakeObservableObject from '../makeObservableObject/MakeObservableObject';
 import Track from './blocks/Track/Track';
 
-
 class View {
   parameters: types.Parameters;
+
   currentValues: types.CurrentValues;
+
   observers: MakeObservableObject;
+
   track: Track;
 
   constructor(parameters = types.defaultParameters) {
     this.currentValues = {
       currentMinValue: parameters.minValue,
-      currentMaxValue: parameters.maxValue,
-    }
+      currentMaxValue: parameters.maxValue
+    };
 
     this.observers = new MakeObservableObject();
     this.parameters = parameters;
@@ -26,7 +28,7 @@ class View {
     this.track.renewRunners(this.currentValues);
   }
 
-  handleTrackValueChanging = (data: types.CurrentValueChangingData) => {
+  handleTrackValueChanging = (data: types.CurrentValueChangingData): void => {
     if (data.typeOfValue === 'minValue') {
       this.currentValues.currentMinValue = data.value;
     } else if (data.typeOfValue === 'maxValue') {
