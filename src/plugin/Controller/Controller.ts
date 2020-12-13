@@ -1,5 +1,5 @@
 import * as types from '../types';
-import { View } from '../View/View';
+import View from '../View/View';
 import Model from '../Model/Model';
 import MakeObservableObject from '../makeObservableObject/MakeObservableObject';
 import ParsingDigits from './blocks/parsingDigits/ParsingDigits';
@@ -149,7 +149,7 @@ class Controller {
   private addModelObserver = (): void => {
     this.model.observers.addObserver(() => {
       this.view.currentValues = this.model.currentValues;
-      this.view.renewRunners();
+      this.view.init();
     });
   }
 }
