@@ -1,6 +1,6 @@
-import createElem from '../../createElem/createElem';
+import createElem from '../createElem/createElem';
 
-class Label {
+class Tooltip {
   elem: HTMLElement;
   isVertical: boolean;
 
@@ -48,4 +48,4 @@ class Label {
   }
 }
 
-export default Label;
+export default Tooltip;

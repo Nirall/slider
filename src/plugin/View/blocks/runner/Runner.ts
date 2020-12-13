@@ -1,58 +1,58 @@
-import Button from './button/Button';
-import Label from './label/Label';
+import Knob from '../Knob/Knob';
+import Tooltip from '../Tooltip/Tooltip';
 import MakeObservableObject from '../../../makeObservableObject/MakeObservableObject';
 
 class Runner {
-  button: Button;
-  label: Label;
+  knob: Knob;
+  tooltip: Tooltip;
   isVertical: boolean;
   observers: MakeObservableObject;
 
   constructor(isVertical: boolean, moveObserver: Function) {
     this.isVertical = isVertical;
-    this.button = new Button(isVertical);
-    this.label = new Label(isVertical);
+    this.knob = new Knob(isVertical);
+    this.tooltip = new Tooltip(isVertical);
     this.observers = new MakeObservableObject();
     this.observers.addObserver(moveObserver);
   }
 
   getPosition = (): number => {
-    return this.button.getPosition();
+    return this.knob.getPosition();
   }
 
   setPosition = (offset: number, value: number): void => {
-    this.label.setPosition(offset + this.button.getWidth()/2, value);
-    this.button.setPosition(offset);
+    this.tooltip.setPosition(offset + this.knob.getWidth()/2, value);
+    this.knob.setPosition(offset);
   }
 
   init = (isVertical: boolean): void => {
-    this.button.init(isVertical);
-    this.label.init(isVertical);
+    this.knob.init(isVertical);
+    this.tooltip.init(isVertical);
   }
 
   getWidth = (): number => {
-    return this.button.getWidth();
+    return this.knob.getWidth();
   }
 
   hideRunner = (): void => {
-    this.button.elem.style.display = "none";
-    this.label.elem.style.display = "none";
+    this.knob.elem.style.display = "none";
+    this.tooltip.elem.style.display = "none";
   }
 
   hideLabel = (): void => {
-    this.label.elem.style.display = "none";
+    this.tooltip.elem.style.display = "none";
   }
 
   showLabel = (): void => {
-    this.label.elem.style.display = "block";
+    this.tooltip.elem.style.display = "block";
   }
 
   showRunner = (): void => {
-    this.button.elem.style.display = "block";
+    this.knob.elem.style.display = "block";
   }
 
   appendToNode = (entry: HTMLElement): void => {
-    [this.button.elem, this.label.elem].map((elem) => {
+    [this.knob.elem, this.tooltip.elem].map((elem) => {
       entry.appendChild(elem);
       elem.onmousedown = this.handleRunnerMouseDown;
     })

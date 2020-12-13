@@ -1,6 +1,6 @@
-import createElem from '../../createElem/createElem';
+import createElem from '../createElem/createElem';
 
-class Button {
+class Knob {
   elem: HTMLElement;
 
   isVertical: boolean;
@@ -43,4 +43,4 @@ class Button {
   }
 }
 
-export default Button;
+export default Knob;
