@@ -1,6 +1,6 @@
-import Runner from './View/blocks/runner/Runner';
-import Bar from './View/blocks/bar/Bar';
-import ProgressBar from './View/blocks/progressBar/ProgressBar';
+import Runner from './View/blocks/Runner/Runner';
+import Bar from './View/blocks/Bar/Bar';
+import ProgressBar from './View/blocks/ProgressBar/ProgressBar';
 
 
 export type RunnerMoveData = {

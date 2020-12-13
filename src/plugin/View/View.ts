@@ -1,11 +1,11 @@
 import * as types from '../types';
 import MakeObservableObject from '../makeObservableObject/MakeObservableObject';
 import createElem from './blocks/createElem/createElem';
-import Bar from './blocks/bar/Bar';
-import Scale from './blocks/scale/Scale';
-import Runner from './blocks/runner/Runner';
-import Track from './blocks/track/Track';
-import ProgressBar from './blocks/progressBar/ProgressBar';
+import Bar from './blocks/Bar/Bar';
+import Scale from './blocks/Scale/Scale';
+import Runner from './blocks/Runner/Runner';
+import Track from './blocks/Track/Track';
+import ProgressBar from './blocks/ProgressBar/ProgressBar';
 
 class View {
   bar: Bar;

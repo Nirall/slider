@@ -1,7 +1,7 @@
 import * as types from '../../../types';
-import Bar from '../bar/Bar';
-import Runner from '../../blocks/runner/Runner';
-import ProgressBar from '../../blocks/progressBar/ProgressBar';
+import Bar from '../Bar/Bar';
+import Runner from '../Runner/Runner';
+import ProgressBar from '../ProgressBar/ProgressBar';
 
 class Track {
   parameters: types.Parameters;

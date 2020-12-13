@@ -1,5 +1,5 @@
 import * as types from '../../../types';
-import Mark from './mark/Mark';
+import Mark from './Mark/Mark';
 import MakeObservableObject from '../../../makeObservableObject/MakeObservableObject';
 
 class Scale {
