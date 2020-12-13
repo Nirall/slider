@@ -18,12 +18,12 @@ class View {
     this.observers = new MakeObservableObject();
     this.parameters = parameters;
     this.track = new Track(this.parameters);
+    this.track.observers.addObserver(this.handleTrackValueChanging);
   }
 
   init = (): void => {
     this.track.init(this.parameters);
     this.track.renewRunners(this.currentValues);
-    this.track.observers.addObserver(this.handleTrackValueChanging);
   }
 
   handleTrackValueChanging = (data: types.CurrentValueChangingData) => {
