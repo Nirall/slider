@@ -1,6 +1,6 @@
 import Runner from './View/blocks/Runner/Runner';
-import Bar from './View/blocks/Bar/Bar';
-import ProgressBar from './View/blocks/ProgressBar/ProgressBar';
+
+export type FunctionCallbackVoid = () => void;
 
 export type RunnerMoveData = {
   runner: Runner,
@@ -41,14 +41,6 @@ export type RawParameters = {
   isVertical: boolean,
   showLabel: boolean,
   isFloat: boolean
-}
-
-export type TrackConstructorData = {
-  runnerMain: Runner,
-  runnerAdditional: Runner,
-  bar: Bar,
-  progressBar: ProgressBar,
-  parameters: Parameters;
 }
 
 export const defaultParameters = {

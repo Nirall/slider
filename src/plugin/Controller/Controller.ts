@@ -13,7 +13,10 @@ class Controller {
 
   constructor(parameters = types.defaultParameters) {
     this.view = new View(parameters);
-    this.model = new Model({ currentMinValue: parameters.minValue, currentMaxValue: parameters.maxValue });
+    this.model = new Model({
+      currentMinValue: parameters.minValue,
+      currentMaxValue: parameters.maxValue
+    });
     this.observers = new MakeObservableObject();
     this.addViewObserver();
     this.addModelObserver();
@@ -25,17 +28,18 @@ class Controller {
   }
 
   updateConfig = (parameters: types.RawParameters): void => {
+    const parametersSnapshot = parameters;
     Object.keys(parameters).forEach((key) => {
       if (key === 'step') {
-        parameters.step = this.checkStep(parameters.step as string);
+        parametersSnapshot.step = this.checkStep(parameters.step as string);
       } else if (key === 'maxValue') {
-        parameters.maxValue = this.checkMaxValue(parameters.maxValue as string);
+        parametersSnapshot.maxValue = this.checkMaxValue(parameters.maxValue as string);
       } else if (key === 'minValue') {
-        parameters.minValue = this.checkMinValue(parameters.minValue as string);
+        parametersSnapshot.minValue = this.checkMinValue(parameters.minValue as string);
       }
     });
 
-    this.view.parameters = Object.assign(this.view.parameters, parameters);
+    this.view.parameters = Object.assign(this.view.parameters, parametersSnapshot);
     this.view.init();
   }
 
@@ -57,7 +61,7 @@ class Controller {
     return this.view.parameters;
   }
 
-  addObserver = (fn: Function): void => {
+  addObserver = (fn: types.FunctionCallbackVoid): void => {
     this.observers.addObserver(fn);
   }
 

@@ -8,7 +8,7 @@ class ParsingDigits {
       if (/^-?\d+[.,]\d+$/.test(item)) {
         return parseFloat(item);
       } if (/^-?\d+$/.test(item)) {
-        return parseInt(item);
+        return parseInt(item, 10);
       }
     }
 
