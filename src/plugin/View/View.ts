@@ -23,16 +23,17 @@ class View {
   init = (): void => {
     this.track.init(this.parameters);
     this.track.renewRunners(this.currentValues);
+    this.track.observers.addObserver(this.handleTrackValueChanging);
+  }
 
-    this.track.observers.addObserver((data: types.CurrentValueChangingData) => {
-      if (data.typeOfValue === 'minValue') {
-        this.currentValues.currentMinValue = data.value;
-      } else if (data.typeOfValue === 'maxValue') {
-        this.currentValues.currentMaxValue = data.value;
-      }
+  handleTrackValueChanging = (data: types.CurrentValueChangingData) => {
+    if (data.typeOfValue === 'minValue') {
+      this.currentValues.currentMinValue = data.value;
+    } else if (data.typeOfValue === 'maxValue') {
+      this.currentValues.currentMaxValue = data.value;
+    }
 
-      this.observers.notifyObservers();
-    })
+    this.observers.notifyObservers();
   }
 
   appendToNode = (entry: HTMLElement): void => {
