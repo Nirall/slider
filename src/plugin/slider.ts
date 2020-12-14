@@ -1,6 +1,7 @@
+/* global jQuery */
 import Controller from './Controller/Controller';
 
-(function($) {
+(function pluginWrapper($) {
   const config = {
     minValue: 0,
     maxValue: 1000,
@@ -8,11 +9,11 @@ import Controller from './Controller/Controller';
     isRange: false,
     isVertical: false,
     showLabel: false,
-    isFloat: false,
+    isFloat: false
   };
 
   const methods: Methods = {
-    init: function(opt: Config) {
+    init: function init(opt: Config) {
       if (!$(this).data('slider')) {
         const newConfig = { ...config };
         const slider = new Controller($.extend(newConfig, opt));
@@ -22,22 +23,22 @@ import Controller from './Controller/Controller';
       }
     },
 
-    update: function(opt: Config) {
+    update: function update(opt: Config) {
       const slider = $(this).data('slider');
       slider.updateConfig(opt);
     },
 
-    getConfig: function() {
+    getConfig: function getConfig() {
       const slider = $(this).data('slider');
       return slider.getConfig();
     },
 
-    setValues: function(opt: Config) {
+    setValues: function setValues(opt: Config) {
       const slider = $(this).data('slider');
       slider.setValues(opt.currentMinValue, opt.currentMaxValue);
     },
 
-    inputsAttach: function(opt: InputsObject) {
+    inputsAttach: function inputsAttach(opt: InputsObject) {
       const slider = $(this).data('slider');
       slider.addObserver(() => {
         opt.minValueInput.val(slider.getValues().currentMinValue);
@@ -45,17 +46,16 @@ import Controller from './Controller/Controller';
         opt.maxValue.val(slider.getConfig().maxValue);
         opt.minValue.val(slider.getConfig().minValue);
         opt.step.val(slider.getConfig().step);
-      })
-    },
-  }
-
-  $.fn.omfgslider = function(method: string) {
-    if (methods[method]) {
-      return methods[method].apply(this, Array.prototype.slice.call(arguments, 1));
-    } else if (typeof method === 'object' || !method) {
-      return methods.init.apply(this, arguments);
-    } else {
-      $.error(`Метод ${method} не найден в плагине jQuery.omfgslider`);
+      });
     }
   };
-})(jQuery);
+
+  $.fn.omfgslider = function processMethod(method: string) {
+    if (methods[method]) {
+      return methods[method].apply(this, Array.prototype.slice.call(arguments, 1));
+    } if (typeof method === 'object' || !method) {
+      return methods.init.apply(this, arguments);
+    }
+    $.error(`Метод ${method} не найден в плагине jQuery.omfgslider`);
+  };
+}(jQuery));

@@ -21,4 +21,3 @@ interface InputsObject {
 interface Methods {
   [index: string]: Function;
 }
-

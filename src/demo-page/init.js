@@ -1,3 +1,4 @@
+/* global $ */
 $('#s1').omfgslider({ showLabel: true });
 $('#s2').omfgslider({
   minValue: -1000, maxValue: 0, step: 100, isRange: true, showLabel: true
