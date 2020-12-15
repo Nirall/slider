@@ -1,4 +1,5 @@
 /* global jQuery */
+import * as types from './types';
 import Controller from './Controller/Controller';
 
 (function pluginWrapper($) {
@@ -13,7 +14,7 @@ import Controller from './Controller/Controller';
   };
 
   const methods: Methods = {
-    init: function init(opt: Config) {
+    init: function init(opt: types.Parameters) {
       if (!$(this).data('slider')) {
         const newConfig = { ...config };
         const slider = new Controller($.extend(newConfig, opt));
@@ -23,7 +24,7 @@ import Controller from './Controller/Controller';
       }
     },
 
-    update: function update(opt: Config) {
+    update: function update(opt: types.Parameters) {
       const slider = $(this).data('slider');
       slider.updateConfig(opt);
     },
@@ -33,7 +34,7 @@ import Controller from './Controller/Controller';
       return slider.getConfig();
     },
 
-    setValues: function setValues(opt: Config) {
+    setValues: function setValues(opt: types.CurrentValues) {
       const slider = $(this).data('slider');
       slider.setValues(opt.currentMinValue, opt.currentMaxValue);
     },
@@ -50,9 +51,9 @@ import Controller from './Controller/Controller';
     }
   };
 
-  $.fn.omfgslider = function processMethod(method: string) {
+  $.fn.omfgslider = function processMethod(method: string, ...args: any) {
     if (methods[method]) {
-      return methods[method].apply(this, Array.prototype.slice.call(arguments, 1));
+      return methods[method].apply(this, args);
     } if (typeof method === 'object' || !method) {
       return methods.init.apply(this, arguments);
     }

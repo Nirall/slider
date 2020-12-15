@@ -1,23 +1,11 @@
 interface JQuery {
-  omfgslider: Function,
+  omfgslider: (arg: any) => void,
 }
 
-interface Config {
-  minValue: number,
-  maxValue: number,
-  step: number,
-  isRange: boolean,
-  isVertical: boolean,
-  showLabel: boolean,
-  isFloat: boolean,
-  currentMinValue: number,
-  currentMaxValue: number
-}
-
-interface InputsObject {
+type InputsObject = {
   [index: string]: JQuery;
 }
 
 interface Methods {
-  [index: string]: Function;
+  [index: string]: (arg: any) => void;
 }

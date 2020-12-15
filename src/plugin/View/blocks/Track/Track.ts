@@ -138,7 +138,7 @@ class Track {
   }
 
   private processRunnerOffset = (offset: number, runner: Runner): types.RunnerMoveData => {
-    let roundValue;
+    let roundValue = 0;
     let roundOffset;
     roundOffset = this.checkRunnerOffset(offset, runner);
     [roundOffset, roundValue] = this.roundOffsetRunner(roundOffset);
@@ -228,7 +228,8 @@ class Track {
   }
 
   private checkRunnerCloser = (offset: number): Runner => {
-    if (Math.abs(offset - this.getMainRunnerOffset()) < Math.abs(offset - this.getAdditionalRunnerOffset())) {
+    if (Math.abs(offset - this.getMainRunnerOffset())
+      < Math.abs(offset - this.getAdditionalRunnerOffset())) {
       return this.runnerMain;
     }
 

@@ -1,3 +1,4 @@
+import * as types from '../../../../types';
 import createElem from '../../createElem/createElem';
 import MakeObservableObject from '../../../../makeObservableObject/MakeObservableObject';
 
@@ -10,12 +11,11 @@ class Mark {
 
   observers: MakeObservableObject;
 
-  constructor(isVertical: boolean, observer: Function) {
+  constructor(isVertical: boolean, observer: types.FunctionCallbackData) {
     this.elem = createElem('slider__mark');
     this.isVertical = isVertical;
     this.observers = new MakeObservableObject();
-    this.observers.addObserver(observer);
-    this.elem.onclick = this.handleMarkClick;
+    this.init(observer);
   }
 
   getPosition = (): number => {
@@ -51,7 +51,12 @@ class Mark {
     return this.elem.getBoundingClientRect().width;
   }
 
-  init = (isVertical: boolean): void => {
+  init = (observer: types.FunctionCallbackData): void => {
+    this.elem.onclick = this.handleMarkClick;
+    this.observers.addObserver(observer);
+  }
+
+  update = (isVertical: boolean): void => {
     this.isVertical = isVertical;
 
     if (this.isVertical) {

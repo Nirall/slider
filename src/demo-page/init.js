@@ -1,4 +1,68 @@
 /* global $ */
+
+const handleCurrentMinValueInputFocusout = (e) => {
+  const elementID = e.data.elementName;
+  if ($(`${elementID}`).omfgslider('getConfig').isFloat) {
+    $(`${elementID}`).omfgslider('setValues', { currentMinValue: parseFloat(e.data.inputElement.val()) });
+  } else {
+    $(`${elementID}`).omfgslider('setValues', { currentMinValue: parseInt(e.data.inputElement.val(), 10) });
+  }
+};
+
+const handleCurrentMaxValueInputFocusout = (e) => {
+  const elementID = e.data.elementName;
+  if ($(`${elementID}`).omfgslider('getConfig').isFloat) {
+    $(`${elementID}`).omfgslider('setValues', { currentMaxValue: parseFloat(e.data.inputElement.val()) });
+  } else {
+    $(`${elementID}`).omfgslider('setValues', { currentMaxValue: parseInt(e.data.inputElement.val(), 10) });
+  }
+};
+
+const handleMinValueInputFocusout = (e) => {
+  const elementID = e.data.elementName;
+  $(`${elementID}`).omfgslider('update', { minValue: $(`${elementID} + .input-wrapper .minValue`).val() });
+};
+
+const handleMaxValueInputFocusout = (e) => {
+  const elementID = e.data.elementName;
+  $(`${elementID}`).omfgslider('update', { maxValue: $(`${elementID} + .input-wrapper .maxValue`).val() });
+};
+
+const handleStepInputFocusout = (e) => {
+  const elementID = e.data.elementName;
+  $(`${elementID}`).omfgslider('update', { step: $(`${elementID} + .input-wrapper .step`).val() });
+};
+
+const handleRangeButtonChange = (e) => {
+  const elementID = e.data.elementName;
+  const conf = $(`${elementID}`).omfgslider('getConfig');
+  if (conf.isRange === false) {
+    $(`${elementID}`).omfgslider('update', { isRange: true });
+  } else {
+    $(`${elementID}`).omfgslider('update', { isRange: false });
+  }
+};
+
+const handleVerticalButtonChange = (e) => {
+  const elementID = e.data.elementName;
+  const conf = $(`${elementID}`).omfgslider('getConfig');
+  if (conf.isVertical === false) {
+    $(`${elementID}`).omfgslider('update', { isVertical: true });
+  } else {
+    $(`${elementID}`).omfgslider('update', { isVertical: false });
+  }
+};
+
+const handleLabelButtonChange = (e) => {
+  const elementID = e.data.elementName;
+  const conf = $(`${elementID}`).omfgslider('getConfig');
+  if (conf.showLabel === false) {
+    $(`${elementID}`).omfgslider('update', { showLabel: true });
+  } else {
+    $(`${elementID}`).omfgslider('update', { showLabel: false });
+  }
+};
+
 $('#s1').omfgslider({ showLabel: true });
 $('#s2').omfgslider({
   minValue: -1000, maxValue: 0, step: 100, isRange: true, showLabel: true
@@ -18,77 +82,32 @@ $('#s4').omfgslider({
 ['#s1', '#s2', '#s3', '#s4'].forEach((i) => {
   $(`${i}`).omfgslider();
   const config = $(`${i}`).omfgslider('getConfig');
-  const minValueInput = $(`${i} + .input-wrapper .minValueIn`);
-  const maxValueInput = $(`${i} + .input-wrapper .maxValueIn`);
+  const currentMinValueInput = $(`${i} + .input-wrapper .minValueIn`);
+  const currentMaxValueInput = $(`${i} + .input-wrapper .maxValueIn`);
   const minValue = $(`${i} + .input-wrapper .minValue`);
   const maxValue = $(`${i} + .input-wrapper .maxValue`);
   const step = $(`${i} + .input-wrapper .step`);
-  minValueInput.val(config.minValue);
-  maxValueInput.val(config.maxValue);
+  currentMinValueInput.val(config.minValue);
+  currentMaxValueInput.val(config.maxValue);
   $(`${i} + .input-wrapper .minValue`).val(config.minValue);
   $(`${i} + .input-wrapper .maxValue`).val(config.maxValue);
   $(`${i} + .input-wrapper .step`).val(config.step);
   $(`${i}`).omfgslider('inputsAttach', {
-    minValueInput: minValueInput,
-    maxValueInput: maxValueInput,
+    minValueInput: currentMinValueInput,
+    maxValueInput: currentMaxValueInput,
     maxValue: maxValue,
     minValue:
     minValue,
     step: step
   });
 
-  minValueInput.focusout(() => {
-    if ($(`${i}`).omfgslider('getConfig').isFloat) {
-      $(`${i}`).omfgslider('setValues', { currentMinValue: parseFloat(minValueInput.val()) });
-    } else {
-      $(`${i}`).omfgslider('setValues', { currentMinValue: parseInt(minValueInput.val(), 10) });
-    }
-  });
+  currentMinValueInput.on('focusout', { elementName: i, inputElement: currentMinValueInput }, handleCurrentMinValueInputFocusout);
+  currentMaxValueInput.on('focusout', { elementName: i, inputElement: currentMaxValueInput }, handleCurrentMaxValueInputFocusout);
+  minValue.on('focusout', { elementName: i }, handleMinValueInputFocusout);
+  maxValue.on('focusout', { elementName: i }, handleMaxValueInputFocusout);
+  step.on('focusout', { elementName: i }, handleStepInputFocusout);
 
-  maxValueInput.focusout(() => {
-    if ($(`${i}`).omfgslider('getConfig').isFloat) {
-      $(`${i}`).omfgslider('setValues', { currentMaxValue: parseFloat(maxValueInput.val()) });
-    } else {
-      $(`${i}`).omfgslider('setValues', { currentMaxValue: parseInt(maxValueInput.val(), 10) });
-    }
-  });
-
-  minValue.focusout(() => {
-    $(`${i}`).omfgslider('update', { minValue: $(`${i} + .input-wrapper .minValue`).val() });
-  });
-
-  maxValue.focusout(() => {
-    $(`${i}`).omfgslider('update', { maxValue: $(`${i} + .input-wrapper .maxValue`).val() });
-  });
-
-  step.focusout(() => {
-    $(`${i}`).omfgslider('update', { step: $(`${i} + .input-wrapper .step`).val() });
-  });
-
-  $(`${i} + .input-wrapper input[name = "range"]`).on('change', () => {
-    const conf = $(`${i}`).omfgslider('getConfig');
-    if (conf.isRange === false) {
-      $(`${i}`).omfgslider('update', { isRange: true });
-    } else {
-      $(`${i}`).omfgslider('update', { isRange: false });
-    }
-  });
-
-  $(`${i} + .input-wrapper input[name = "vertical"]`).change(() => {
-    const conf = $(`${i}`).omfgslider('getConfig');
-    if (conf.isVertical === false) {
-      $(`${i}`).omfgslider('update', { isVertical: true });
-    } else {
-      $(`${i}`).omfgslider('update', { isVertical: false });
-    }
-  });
-
-  $(`${i} + .input-wrapper input[name = "showLabel"]`).change(() => {
-    const conf = $(`${i}`).omfgslider('getConfig');
-    if (conf.showLabel === false) {
-      $(`${i}`).omfgslider('update', { showLabel: true });
-    } else {
-      $(`${i}`).omfgslider('update', { showLabel: false });
-    }
-  });
+  $(`${i} + .input-wrapper input[name = "range"]`).on('change', { elementName: i }, handleRangeButtonChange);
+  $(`${i} + .input-wrapper input[name = "vertical"]`).on('change', { elementName: i }, handleVerticalButtonChange);
+  $(`${i} + .input-wrapper input[name = "showLabel"]`).on('change', { elementName: i }, handleLabelButtonChange);
 });

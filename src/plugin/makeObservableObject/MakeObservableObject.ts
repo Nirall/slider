@@ -9,7 +9,7 @@ class MakeObservableObject {
     if (typeof fn !== 'function') {
       throw new Error('observer must be a function');
     }
-    this.observers.map((observer) => {
+    this.observers.forEach((observer) => {
       if (observer === fn) {
         throw new Error('observer already in the list');
       }
@@ -18,7 +18,7 @@ class MakeObservableObject {
   }
 
   removeObserver(fn: Function): void {
-    for (let i = 0; i < this.observers.length; i++) {
+    for (let i = 0; i < this.observers.length; i += 1) {
       const observer = this.observers[i];
       if (observer === fn) {
         this.observers.splice(i, 1);

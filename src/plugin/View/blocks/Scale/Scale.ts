@@ -9,7 +9,7 @@ class Scale {
 
   observers: MakeObservableObject;
 
-  constructor(parameters: types.Parameters, observer: Function) {
+  constructor(parameters: types.Parameters, observer: types.FunctionCallbackData) {
     this.marks = [];
     this.parameters = parameters;
     this.createMarks();
@@ -25,7 +25,7 @@ class Scale {
 
   moveMarks = (): void => {
     this.marks.forEach((mark, index) => {
-      mark.init(this.parameters.isVertical);
+      mark.update(this.parameters.isVertical);
       if (index === 0) {
         mark.setPosition(0, this.parameters.minValue);
       } else if (index === this.marks.length - 1) {
