@@ -51,7 +51,7 @@ class Scale {
   }
 
   private handleScaleClick = (value: number): void => {
-    this.observers.notifyObserversData(value);
+    this.observers.notifyObservers(value);
   }
 
   private createMarks = (): void => {

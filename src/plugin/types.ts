@@ -1,7 +1,5 @@
 import Runner from './View/blocks/Runner/Runner';
 
-export type FunctionCallbackVoid = () => void;
-
 export type FunctionCallbackData = (arg: any) => void;
 
 export type RunnerMoveData = {

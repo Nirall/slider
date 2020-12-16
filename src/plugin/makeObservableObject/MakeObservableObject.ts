@@ -1,11 +1,13 @@
+import * as types from '../types';
+
 class MakeObservableObject {
-  observers: Array<Function>;
+  observers: Array<types.FunctionCallbackData>;
 
   constructor() {
     this.observers = [];
   }
 
-  addObserver(fn: Function): void {
+  addObserver(fn: types.FunctionCallbackData): void {
     if (typeof fn !== 'function') {
       throw new Error('observer must be a function');
     }
@@ -17,7 +19,7 @@ class MakeObservableObject {
     this.observers.push(fn);
   }
 
-  removeObserver(fn: Function): void {
+  removeObserver(fn: types.FunctionCallbackData): void {
     for (let i = 0; i < this.observers.length; i += 1) {
       const observer = this.observers[i];
       if (observer === fn) {
@@ -28,12 +30,7 @@ class MakeObservableObject {
     throw new Error('could not find observer in list of observers');
   }
 
-  notifyObservers(): void {
-    const observersSnapshot = [...this.observers];
-    observersSnapshot.map((observer) => observer());
-  }
-
-  notifyObserversData(data: any): void {
+  notifyObservers(data: any = null): void {
     const observersSnapshot = [...this.observers];
     observersSnapshot.map((observer) => observer(data));
   }

@@ -69,7 +69,7 @@ class Runner {
   }
 
   private handleRunnerMouseMove = (event: MouseEvent): void => {
-    this.observers.notifyObserversData({ event: event, runner: this });
+    this.observers.notifyObservers({ event: event, runner: this });
   }
 
   private handleRunnerMouseUp = (): void => {

@@ -120,11 +120,11 @@ class Track {
     obj.runner.setPosition(obj.offset, obj.value);
 
     if (obj.runner === this.runnerAdditional) {
-      this.observers.notifyObserversData({ typeOfValue: 'minValue', value: obj.value });
+      this.observers.notifyObservers({ typeOfValue: 'minValue', value: obj.value });
     }
 
     if (obj.runner === this.runnerMain) {
-      this.observers.notifyObserversData({ typeOfValue: 'maxValue', value: obj.value });
+      this.observers.notifyObservers({ typeOfValue: 'maxValue', value: obj.value });
     }
 
     this.updateProgressBar();

@@ -67,7 +67,7 @@ class Mark {
   }
 
   private handleMarkClick = (): void => {
-    this.observers.notifyObserversData(this.value);
+    this.observers.notifyObservers(this.value);
   }
 }
 

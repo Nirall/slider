@@ -61,7 +61,7 @@ class Controller {
     return this.view.parameters;
   }
 
-  addObserver = (fn: types.FunctionCallbackVoid): void => {
+  addObserver = (fn: types.FunctionCallbackData): void => {
     this.observers.addObserver(fn);
   }
 
