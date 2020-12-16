@@ -51,11 +51,6 @@ class Mark {
     return this.elem.getBoundingClientRect().width;
   }
 
-  init = (observer: types.FunctionCallbackData): void => {
-    this.elem.onclick = this.handleMarkClick;
-    this.observers.addObserver(observer);
-  }
-
   update = (isVertical: boolean): void => {
     this.isVertical = isVertical;
 
@@ -64,6 +59,11 @@ class Mark {
     } else {
       this.elem.classList.remove('slider__mark_position_vertical');
     }
+  }
+
+  private init = (observer: types.FunctionCallbackData): void => {
+    this.elem.onclick = this.handleMarkClick;
+    this.observers.addObserver(observer);
   }
 
   private handleMarkClick = (): void => {

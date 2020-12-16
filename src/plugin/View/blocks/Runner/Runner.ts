@@ -29,9 +29,9 @@ class Runner {
     this.knob.setPosition(offset);
   }
 
-  init = (isVertical: boolean): void => {
-    this.knob.init(isVertical);
-    this.tooltip.init(isVertical);
+  update = (isVertical: boolean): void => {
+    this.knob.update(isVertical);
+    this.tooltip.update(isVertical);
   }
 
   getWidth = (): number => {

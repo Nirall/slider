@@ -24,7 +24,7 @@ class Controller {
 
   appendToNode = (entry: JQuery): void => {
     this.view.appendToNode(entry.get(0));
-    this.view.init();
+    this.view.update();
   }
 
   updateConfig = (parameters: types.RawParameters): void => {
@@ -40,7 +40,7 @@ class Controller {
     });
 
     this.view.parameters = Object.assign(this.view.parameters, parametersSnapshot);
-    this.view.init();
+    this.view.update();
   }
 
   getValues = (): types.CurrentValues => {
@@ -150,7 +150,7 @@ class Controller {
   private addModelObserver = (): void => {
     this.model.observers.addObserver(() => {
       this.view.currentValues = this.model.currentValues;
-      this.view.init();
+      this.view.update();
     });
   }
 }

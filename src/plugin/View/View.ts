@@ -12,19 +12,14 @@ class View {
   track: Track;
 
   constructor(parameters = types.defaultParameters) {
-    this.currentValues = {
-      currentMinValue: parameters.minValue,
-      currentMaxValue: parameters.maxValue
-    };
-
-    this.observers = new MakeObservableObject();
     this.parameters = parameters;
+    this.observers = new MakeObservableObject();
     this.track = new Track(this.parameters);
-    this.track.observers.addObserver(this.handleTrackValueChanging);
+    this.init();
   }
 
-  init = (): void => {
-    this.track.init(this.parameters);
+  update = (): void => {
+    this.track.update(this.parameters);
     this.track.renewRunners(this.currentValues);
   }
 
@@ -40,6 +35,15 @@ class View {
 
   appendToNode = (entry: HTMLElement): void => {
     this.track.appendToNode(entry);
+  }
+
+  private init = (): void => {
+    this.currentValues = {
+      currentMinValue: this.parameters.minValue,
+      currentMaxValue: this.parameters.maxValue
+    };
+
+    this.track.observers.addObserver(this.handleTrackValueChanging);
   }
 }
 

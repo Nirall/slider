@@ -22,21 +22,21 @@ class Track {
 
   constructor(parameters: types.Parameters) {
     this.parameters = parameters;
-    this.bar = new Bar(this.parameters.isVertical);
-    this.progressBar = new ProgressBar(this.parameters.isVertical);
-    this.scale = new Scale(this.parameters, this.handleScaleClick);
-    this.runnerAdditional = new Runner(this.parameters.isVertical, this.handleRunnerMove);
     this.runnerMain = new Runner(this.parameters.isVertical, this.handleRunnerMove);
+    this.runnerAdditional = new Runner(this.parameters.isVertical, this.handleRunnerMove);
+    this.progressBar = new ProgressBar(this.parameters.isVertical);
+    this.bar = new Bar(this.parameters.isVertical);
+    this.scale = new Scale(this.parameters, this.handleScaleClick);
     this.observers = new MakeObservableObject();
   }
 
-  init = (parameters: types.Parameters): void => {
+  update = (parameters: types.Parameters): void => {
     this.parameters = parameters;
-    this.bar.init(this.parameters.isVertical);
-    this.progressBar.init(this.parameters.isVertical);
-    this.runnerAdditional.init(this.parameters.isVertical);
-    this.runnerMain.init(this.parameters.isVertical);
-    this.scale.init(this.parameters);
+    this.bar.update(this.parameters.isVertical);
+    this.progressBar.update(this.parameters.isVertical);
+    this.runnerAdditional.update(this.parameters.isVertical);
+    this.runnerMain.update(this.parameters.isVertical);
+    this.scale.update(this.parameters);
     this.runnerAdditional.hideRunner();
 
     if (this.parameters.showLabel) {
@@ -244,7 +244,7 @@ class Track {
   }
 
   private updateProgressBar = (): void => {
-    this.progressBar.init(this.parameters.isVertical);
+    this.progressBar.update(this.parameters.isVertical);
     this.progressBar.setPosition(this.getAdditionalRunnerOffset());
     this.progressBar.setDimension(this.getMainRunnerOffset() - this.getAdditionalRunnerOffset());
   }

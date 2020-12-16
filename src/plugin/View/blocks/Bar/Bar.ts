@@ -26,7 +26,7 @@ class Bar {
     return this.elem.getBoundingClientRect().width;
   }
 
-  init = (isVertical: boolean): void => {
+  update = (isVertical: boolean): void => {
     this.isVertical = isVertical;
 
     if (this.isVertical) {
