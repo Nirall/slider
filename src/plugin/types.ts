@@ -2,6 +2,10 @@ import Runner from './View/blocks/Runner/Runner';
 
 export type FunctionCallbackData = (arg: any) => void;
 
+export type configUpdateData = {
+  [index: string]: number|string|boolean;
+}
+
 export type RunnerMoveData = {
   runner: Runner,
   offset: number,
@@ -49,6 +53,6 @@ export const defaultParameters = {
   step: 1,
   isRange: false,
   isVertical: false,
-  showLabel: false,
+  showLabel: true,
   isFloat: false
 };

@@ -3,23 +3,12 @@ import * as types from './types';
 import Controller from './Controller/Controller';
 
 (function pluginWrapper($) {
-  const config = {
-    minValue: 0,
-    maxValue: 1000,
-    step: 1,
-    isRange: false,
-    isVertical: false,
-    showLabel: false,
-    isFloat: false
-  };
-
   const methods: Methods = {
     init: function init(opt: types.Parameters) {
       if (!$(this).data('slider')) {
-        const newConfig = { ...config };
+        const newConfig = { ...types.defaultParameters };
         const slider = new Controller($.extend(newConfig, opt));
         $(this).data('slider', slider);
-
         slider.appendToNode($(this));
       }
     },
@@ -51,12 +40,14 @@ import Controller from './Controller/Controller';
     }
   };
 
-  $.fn.omfgslider = function processMethod(method: string, ...args: any) {
+  $.fn.omfgslider = function processMethod(method: string, // eslint-disable-line no-param-reassign
+    ...args: Array<types.configUpdateData>) {
     if (methods[method]) {
       return methods[method].apply(this, args);
     } if (typeof method === 'object' || !method) {
-      return methods.init.apply(this, arguments);
+      return methods.init.apply(this, method);
     }
     $.error(`Метод ${method} не найден в плагине jQuery.omfgslider`);
+    return null;
   };
 }(jQuery));
