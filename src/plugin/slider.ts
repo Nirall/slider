@@ -45,7 +45,7 @@ import Controller from './Controller/Controller';
     if (methods[method]) {
       return methods[method].apply(this, args);
     } if (typeof method === 'object' || !method) {
-      return methods.init.apply(this, method);
+      return methods.init.apply(this, [method]);
     }
     $.error(`Метод ${method} не найден в плагине jQuery.omfgslider`);
     return null;
