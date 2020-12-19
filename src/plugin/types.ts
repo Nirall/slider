@@ -1,6 +1,8 @@
 import Runner from './View/blocks/Runner/Runner';
 
-export type FunctionCallbackData = (arg: any) => void;
+export type FunctionCallbackData = (data: any, eventName?: string) => void;
+
+export type ObserverFunction = (eventName: string, data?: any,) => void;
 
 export type configUpdateData = {
   [index: string]: number|string|boolean;

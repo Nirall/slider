@@ -9,7 +9,7 @@ class Scale {
 
   observers: MakeObservableObject;
 
-  constructor(parameters: types.Parameters, observer: types.FunctionCallbackData) {
+  constructor(parameters: types.Parameters, observer: types.ObserverFunction) {
     this.parameters = parameters;
     this.marks = [];
     this.observers = new MakeObservableObject();
@@ -44,14 +44,16 @@ class Scale {
     });
   }
 
-  private init = (observer: types.FunctionCallbackData): void => {
+  private init = (observer: types.ObserverFunction): void => {
     this.moveMarks();
     this.createMarks();
     this.observers.addObserver(observer);
   }
 
-  private handleScaleClick = (value: number): void => {
-    this.observers.notifyObservers(value);
+  private handleScaleClick = (eventName: string, value: number): void => {
+    if (eventName === 'ClickOnMark') {
+      this.observers.notifyObservers('ClickOnScale', value);
+    }
   }
 
   private createMarks = (): void => {

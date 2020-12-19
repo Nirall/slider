@@ -1,13 +1,19 @@
+import * as types from '../../../types';
 import createElem from '../createElem/createElem';
+import MakeObservableObject from '../../../makeObservableObject/MakeObservableObject';
 
 class Bar {
   elem: HTMLElement;
 
   isVertical: boolean;
 
-  constructor(isVertical: boolean) {
+  observers: MakeObservableObject;
+
+  constructor(isVertical: boolean, observer: types.ObserverFunction) {
     this.elem = createElem('slider__bar');
     this.isVertical = isVertical;
+    this.observers = new MakeObservableObject();
+    this.init(observer);
   }
 
   getPosition = (): number => {
@@ -34,6 +40,15 @@ class Bar {
     } else {
       this.elem.classList.remove('slider__bar_position_vertical');
     }
+  }
+
+  private init = (observer: types.FunctionCallbackData): void => {
+    this.elem.onclick = this.handleBarClick;
+    this.observers.addObserver(observer);
+  }
+
+  private handleBarClick = (event: MouseEvent): void => {
+    this.observers.notifyObservers('ClickOnBar', event);
   }
 }
 

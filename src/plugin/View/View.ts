@@ -11,39 +11,32 @@ class View {
 
   track: Track;
 
-  constructor(parameters = types.defaultParameters) {
+  constructor(parameters = types.defaultParameters, observer: types.ObserverFunction) {
     this.parameters = parameters;
     this.observers = new MakeObservableObject();
-    this.track = new Track(this.parameters);
-    this.init();
+    this.track = new Track(this.parameters, this.handleTrackValueChanging);
+    this.observers.addObserver(observer);
+    this.observers.addObserver(this.track.observeViewFromTrack);
   }
 
   update = (): void => {
     this.track.update(this.parameters);
-    this.track.renewRunners(this.currentValues);
   }
 
-  handleTrackValueChanging = (data: types.CurrentValueChangingData): void => {
-    if (data.typeOfValue === 'minValue') {
-      this.currentValues.currentMinValue = data.value;
-    } else if (data.typeOfValue === 'maxValue') {
-      this.currentValues.currentMaxValue = data.value;
+  handleTrackValueChanging = (eventName: string, data: types.CurrentValueChangingData): void => {
+    if (eventName === 'ChangingCurrentValueFromTrack') {
+      this.observers.notifyObservers('ChangingCurrentValueFromView', data);
     }
+  }
 
-    this.observers.notifyObservers();
+  observeControllerFromView = (eventName: string, data: types.CurrentValues): void => {
+    if (eventName === 'SendingCurrentValues') {
+      this.observers.notifyObservers('SendingCurrentValues', data);
+    }
   }
 
   appendToNode = (entry: HTMLElement): void => {
     this.track.appendToNode(entry);
-  }
-
-  private init = (): void => {
-    this.currentValues = {
-      currentMinValue: this.parameters.minValue,
-      currentMaxValue: this.parameters.maxValue
-    };
-
-    this.track.observers.addObserver(this.handleTrackValueChanging);
   }
 }
 

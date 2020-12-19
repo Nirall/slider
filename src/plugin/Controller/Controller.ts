@@ -25,19 +25,19 @@ class Controller {
   observers: MakeObservableObject;
 
   constructor(parameters = types.defaultParameters) {
-    this.view = new View(parameters);
+    this.view = new View(parameters, this.handleViewChangingValue);
     this.model = new Model({
       currentMinValue: parameters.minValue,
       currentMaxValue: parameters.maxValue
-    });
+    }, this.handleModelSendingValues);
     this.observers = new MakeObservableObject();
-    this.addViewObserver();
-    this.addModelObserver();
+    this.init();
   }
 
   appendToNode = (entry: JQuery): void => {
     this.view.appendToNode(entry.get(0));
     this.view.update();
+    this.observers.notifyObservers('UpdatingConfig');
   }
 
   updateConfig = (parameters: types.RawParameters): void => {
@@ -54,6 +54,7 @@ class Controller {
 
     this.view.parameters = Object.assign(this.view.parameters, parametersSnapshot);
     this.view.update();
+    this.observers.notifyObservers('UpdatingConfig');
   }
 
   getValues = (): types.CurrentValues => {
@@ -76,6 +77,11 @@ class Controller {
 
   addObserver = (fn: types.FunctionCallbackData): void => {
     this.observers.addObserver(fn);
+  }
+
+  private init = ():void => {
+    this.observers.addObserver(this.view.observeControllerFromView);
+    this.observers.addObserver(this.model.observeControllerFromModel);
   }
 
   private checkStep = (step: string): number => {
@@ -129,18 +135,17 @@ class Controller {
     return minValueChecked;
   }
 
-  private addViewObserver = (): void => {
-    this.view.observers.addObserver(() => {
-      this.model.currentValues = this.view.currentValues;
-      this.observers.notifyObservers();
-    });
+  private handleViewChangingValue = (eventName: string,
+    data: types.CurrentValueChangingData): void => {
+    if (eventName === 'ChangingCurrentValueFromView') {
+      this.observers.notifyObservers('ChangingCurrentValueFromView', data);
+    }
   }
 
-  private addModelObserver = (): void => {
-    this.model.observers.addObserver(() => {
-      this.view.currentValues = this.model.currentValues;
-      this.view.update();
-    });
+  private handleModelSendingValues = (eventName: string, data: types.CurrentValues): void => {
+    if (eventName === 'SendingCurrentValues') {
+      this.observers.notifyObservers('SendingCurrentValues', data);
+    }
   }
 }
 

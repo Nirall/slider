@@ -12,7 +12,7 @@ class Runner {
 
   observers: MakeObservableObject;
 
-  constructor(isVertical: boolean, moveObserver: types.FunctionCallbackData) {
+  constructor(isVertical: boolean, moveObserver: types.ObserverFunction) {
     this.isVertical = isVertical;
     this.knob = new Knob(isVertical);
     this.tooltip = new Tooltip(isVertical);
@@ -69,7 +69,7 @@ class Runner {
   }
 
   private handleRunnerMouseMove = (event: MouseEvent): void => {
-    this.observers.notifyObservers({ event: event, runner: this });
+    this.observers.notifyObservers('MovingRunner', { event: event, runner: this });
   }
 
   private handleRunnerMouseUp = (): void => {
