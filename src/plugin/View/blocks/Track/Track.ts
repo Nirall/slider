@@ -8,15 +8,15 @@ import MakeObservableObject from '../../../makeObservableObject/MakeObservableOb
 class Track {
   parameters: types.Parameters;
 
-  runnerMain: Runner;
+  private runnerMain: Runner;
 
-  runnerAdditional: Runner;
+  private runnerAdditional: Runner;
 
-  progressBar: ProgressBar;
+  private progressBar: ProgressBar;
 
-  bar: Bar;
+  private bar: Bar;
 
-  scale: Scale;
+  private scale: Scale;
 
   observers: MakeObservableObject;
 
@@ -64,9 +64,13 @@ class Track {
     );
   }
 
-  observeViewFromTrack = (eventName: string, data: types.CurrentValues): void => {
+  observeViewFromTrack = (eventName: string, data?: any): void => {
     if (eventName === 'SendingCurrentValues') {
       this.renewRunners(data);
+    } if (eventName === 'UpdatingConfig') {
+      this.update(data);
+    } if (eventName === 'AppendingToNode') {
+      this.appendToNode(data);
     }
   }
 
@@ -129,11 +133,11 @@ class Track {
     obj.runner.setPosition(obj.offset, obj.value);
 
     if (obj.runner === this.runnerAdditional) {
-      this.observers.notifyObservers('ChangingCurrentValueFromTrack', { typeOfValue: 'minValue', value: obj.value });
+      this.observers.notifyObservers('ChangingCurrentValueFromTrack', { currentMinValue: obj.value });
     }
 
     if (obj.runner === this.runnerMain) {
-      this.observers.notifyObservers('ChangingCurrentValueFromTrack', { typeOfValue: 'maxValue', value: obj.value });
+      this.observers.notifyObservers('ChangingCurrentValueFromTrack', { currentMaxValue: obj.value });
     }
 
     this.updateProgressBar();
@@ -259,7 +263,6 @@ class Track {
   private updateProgressBar = (): void => {
     this.progressBar.update(this.parameters.isVertical);
     this.progressBar.setPosition(this.getAdditionalRunnerOffset());
-    // console.log(this.getMainRunnerOffset(), this.getAdditionalRunnerOffset());
     this.progressBar.setDimension(this.getMainRunnerOffset() - this.getAdditionalRunnerOffset());
   }
 }

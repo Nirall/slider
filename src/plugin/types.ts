@@ -19,11 +19,6 @@ export type CurrentValues = {
   currentMaxValue: number,
 }
 
-export type CurrentValueChangingData = {
-  typeOfValue: string,
-  value: number,
-}
-
 export type RunnerObserverData = {
   event: MouseEvent,
   runner: Runner,

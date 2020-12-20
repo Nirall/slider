@@ -80,7 +80,6 @@ $('#s4').omfgslider({
   isFloat: true
 });
 ['#s1', '#s2', '#s3', '#s4'].forEach((i) => {
-  // $(`${i}`).omfgslider();
   const config = $(`${i}`).omfgslider('getConfig');
   const currentMinValueInput = $(`${i} + .input-wrapper .minValueIn`);
   const currentMaxValueInput = $(`${i} + .input-wrapper .maxValueIn`);
@@ -96,8 +95,7 @@ $('#s4').omfgslider({
     minValueInput: currentMinValueInput,
     maxValueInput: currentMaxValueInput,
     maxValue: maxValue,
-    minValue:
-    minValue,
+    minValue: minValue,
     step: step
   });
 

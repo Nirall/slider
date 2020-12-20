@@ -12,33 +12,33 @@ class Model {
     this.observers.addObserver(observer);
   }
 
-  setCurrentMinValue(data: number): void {
-    if (this.currentValues.currentMinValue !== data) {
-      this.currentValues.currentMinValue = data;
+  setCurrentValues = (data: types.CurrentValues, sourceOfChanging?: string): void => {
+    const isCurrentMaxValueReal = data.currentMaxValue || data.currentMaxValue === 0;
+    const isCurrentMinValueReal = data.currentMinValue || data.currentMinValue === 0;
+    if (isCurrentMaxValueReal && data.currentMaxValue !== this.currentValues.currentMaxValue) {
+      this.currentValues.currentMaxValue = data.currentMaxValue;
+    } if (isCurrentMinValueReal && data.currentMinValue !== this.currentValues.currentMinValue) {
+      this.currentValues.currentMinValue = data.currentMinValue;
+    }
+
+    if (sourceOfChanging === 'fromPanel') {
       this.observers.notifyObservers('SendingCurrentValues', this.currentValues);
     }
   }
 
-  setCurrentMaxValue(data: number): void {
-    if (this.currentValues.currentMaxValue !== data) {
-      this.currentValues.currentMaxValue = data;
-      this.observers.notifyObservers('SendingCurrentValues', this.currentValues);
-    }
+  getCurrentValues = (): void => {
+    this.observers.notifyObservers('SendingCurrentValuesForTracking', this.currentValues);
   }
 
-  setCurrentValue(data: types.CurrentValueChangingData): void {
-    if (data.typeOfValue === 'minValue') {
-      this.setCurrentMinValue(data.value);
-    } if (data.typeOfValue === 'maxValue') {
-      this.setCurrentMaxValue(data.value);
-    }
-  }
-
-  observeControllerFromModel = (eventName: string, data?: types.CurrentValueChangingData): void => {
+  observeControllerFromModel = (eventName: string, data?: types.CurrentValues): void => {
     if (eventName === 'UpdatingConfig') {
       this.observers.notifyObservers('SendingCurrentValues', this.currentValues);
     } if (eventName === 'ChangingCurrentValueFromView') {
-      this.setCurrentValue(data);
+      this.setCurrentValues(data, 'fromView');
+    } if (eventName === 'ChangingCurrentValueFromPanel') {
+      this.setCurrentValues(data, 'fromPanel');
+    } if (eventName === 'GettingValues') {
+      this.getCurrentValues();
     }
   }
 }

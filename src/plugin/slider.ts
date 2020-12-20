@@ -7,15 +7,14 @@ import Controller from './Controller/Controller';
     init: function init(opt: types.Parameters) {
       if (!$(this).data('slider')) {
         const newConfig = { ...types.defaultParameters };
-        const slider = new Controller($.extend(newConfig, opt));
+        const slider = new Controller($.extend(newConfig, opt), $(this));
         $(this).data('slider', slider);
-        slider.appendToNode($(this));
       }
     },
 
     update: function update(opt: types.Parameters) {
       const slider = $(this).data('slider');
-      slider.updateConfig(opt);
+      slider.update(opt);
     },
 
     getConfig: function getConfig() {
@@ -25,14 +24,16 @@ import Controller from './Controller/Controller';
 
     setValues: function setValues(opt: types.CurrentValues) {
       const slider = $(this).data('slider');
-      slider.setValues(opt.currentMinValue, opt.currentMaxValue);
+      slider.setValues(opt);
     },
 
     inputsAttach: function inputsAttach(opt: InputsObject) {
       const slider = $(this).data('slider');
-      slider.addObserver(() => {
-        opt.minValueInput.val(slider.getValues().currentMinValue);
-        opt.maxValueInput.val(slider.getValues().currentMaxValue);
+      slider.addObserver((eventName?: string, data?: any) => {
+        if (eventName === 'SendingCurrentValuesForTracking') {
+          opt.minValueInput.val(data.currentMinValue);
+          opt.maxValueInput.val(data.currentMaxValue);
+        }
         opt.maxValue.val(slider.getConfig().maxValue);
         opt.minValue.val(slider.getConfig().minValue);
         opt.step.val(slider.getConfig().step);
