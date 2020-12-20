@@ -2,35 +2,27 @@
 
 const handleCurrentMinValueInputFocusout = (e) => {
   const elementID = e.data.elementName;
-  if ($(`${elementID}`).omfgslider('getConfig').isFloat) {
-    $(`${elementID}`).omfgslider('setValues', { currentMinValue: parseFloat(e.data.inputElement.val()) });
-  } else {
-    $(`${elementID}`).omfgslider('setValues', { currentMinValue: parseInt(e.data.inputElement.val(), 10) });
-  }
+  $(`${elementID}`).omfgslider('setValues', { currentMinValue: parseFloat(e.data.inputElement.val()) });
 };
 
 const handleCurrentMaxValueInputFocusout = (e) => {
   const elementID = e.data.elementName;
-  if ($(`${elementID}`).omfgslider('getConfig').isFloat) {
-    $(`${elementID}`).omfgslider('setValues', { currentMaxValue: parseFloat(e.data.inputElement.val()) });
-  } else {
-    $(`${elementID}`).omfgslider('setValues', { currentMaxValue: parseInt(e.data.inputElement.val(), 10) });
-  }
+  $(`${elementID}`).omfgslider('setValues', { currentMaxValue: parseFloat(e.data.inputElement.val()) });
 };
 
 const handleMinValueInputFocusout = (e) => {
   const elementID = e.data.elementName;
-  $(`${elementID}`).omfgslider('update', { minValue: $(`${elementID} + .input-wrapper .minValue`).val() });
+  $(`${elementID}`).omfgslider('update', { minValue: parseFloat($(`${elementID} + .input-wrapper .minValue`).val()) });
 };
 
 const handleMaxValueInputFocusout = (e) => {
   const elementID = e.data.elementName;
-  $(`${elementID}`).omfgslider('update', { maxValue: $(`${elementID} + .input-wrapper .maxValue`).val() });
+  $(`${elementID}`).omfgslider('update', { maxValue: parseFloat($(`${elementID} + .input-wrapper .maxValue`).val()) });
 };
 
 const handleStepInputFocusout = (e) => {
   const elementID = e.data.elementName;
-  $(`${elementID}`).omfgslider('update', { step: $(`${elementID} + .input-wrapper .step`).val() });
+  $(`${elementID}`).omfgslider('update', { step: parseFloat($(`${elementID} + .input-wrapper .step`).val()) });
 };
 
 const handleRangeButtonChange = (e) => {

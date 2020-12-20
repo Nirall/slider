@@ -29,7 +29,7 @@ class View {
     this.init(observer);
   }
 
-  update = (parameters: types.RawParameters): void => {
+  update = (parameters: types.Parameters): void => {
     const checkedParameters = this.validateConfig(parameters);
     this.parameters = checkedParameters;
     this.observers.notifyObservers('UpdatingConfig', this.parameters);
@@ -61,15 +61,15 @@ class View {
     this.observers.notifyObservers('UpdatingConfig', this.parameters);
   }
 
-  private validateConfig = (parameters: types.RawParameters): types.Parameters => {
+  private validateConfig = (parameters: types.Parameters): types.Parameters => {
     const parametersSnapshot = parameters;
     Object.keys(parameters).forEach((key) => {
       if (key === 'step') {
-        parametersSnapshot.step = this.checkStep(parameters.step as string);
+        parametersSnapshot.step = this.checkStep(parameters.step);
       } else if (key === 'maxValue') {
-        parametersSnapshot.maxValue = this.checkMaxValue(parameters.maxValue as string);
+        parametersSnapshot.maxValue = this.checkMaxValue(parameters.maxValue);
       } else if (key === 'minValue') {
-        parametersSnapshot.minValue = this.checkMinValue(parameters.minValue as string);
+        parametersSnapshot.minValue = this.checkMinValue(parameters.minValue);
       }
     });
 
@@ -77,52 +77,46 @@ class View {
     return newParameters;
   }
 
-  private checkStep = (step: string): number => {
-    const stepChecked = Math.abs(parseFloat(step));
-
-    if (!stepChecked || stepChecked > (this.parameters.maxValue - this.parameters.minValue) / 2) {
+  private checkStep = (step: number): number => {
+    if (!step || step > (this.parameters.maxValue - this.parameters.minValue) / 2) {
       return this.parameters.step;
     }
 
-    if (stepChecked % 1 !== 0) {
+    if (step % 1 !== 0) {
       this.parameters.isFloat = true;
     } else if (!isOthersValuesFloat(this, 'step')) {
       this.parameters.isFloat = false;
     }
 
-    return stepChecked;
+    return step;
   }
 
-  private checkMaxValue = (maxValue: string): number => {
-    const maxValueChecked = parseFloat(maxValue);
-
-    if (Number.isNaN(maxValueChecked) || maxValueChecked <= this.parameters.minValue) {
+  private checkMaxValue = (maxValue: number): number => {
+    if (Number.isNaN(maxValue) || maxValue <= this.parameters.minValue) {
       return this.parameters.maxValue;
     }
 
-    if (maxValueChecked % 1 !== 0) {
+    if (maxValue % 1 !== 0) {
       this.parameters.isFloat = true;
     } else if (!isOthersValuesFloat(this, 'maxValue')) {
       this.parameters.isFloat = false;
     }
 
-    return maxValueChecked;
+    return maxValue;
   }
 
-  private checkMinValue = (minValue: string): number => {
-    const minValueChecked = parseFloat(minValue);
-
-    if (Number.isNaN(minValueChecked) || minValueChecked >= this.parameters.maxValue) {
+  private checkMinValue = (minValue: number): number => {
+    if (Number.isNaN(minValue) || minValue >= this.parameters.maxValue) {
       return this.parameters.minValue;
     }
 
-    if (minValueChecked % 1 !== 0) {
+    if (minValue % 1 !== 0) {
       this.parameters.isFloat = true;
     } else if (!isOthersValuesFloat(this, 'minValue')) {
       this.parameters.isFloat = false;
     }
 
-    return minValueChecked;
+    return minValue;
   }
 }
 

@@ -20,7 +20,7 @@ class Controller {
     this.init(entry, parameters);
   }
 
-  update = (parameters: types.RawParameters): void => {
+  update = (parameters: types.Parameters): void => {
     this.observers.notifyObservers('UpdatingConfig', parameters);
   }
 
