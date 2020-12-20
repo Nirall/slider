@@ -1,7 +1,6 @@
 import * as types from '../types';
 import MakeObservableObject from '../makeObservableObject/MakeObservableObject';
 import Track from './blocks/Track/Track';
-import ParsingDigits from './blocks/ParsingDigits/ParsingDigits';
 
 const isOthersValuesFloat = (item: View, parameter: string): boolean => {
   switch (parameter) {
@@ -79,8 +78,8 @@ class View {
   }
 
   private checkStep = (step: string): number => {
-    const stepChecked = Math.abs(ParsingDigits.parsing(step));
-    const isStepNumber = stepChecked !== null && stepChecked !== 0;
+    const stepChecked = Math.abs(parseFloat(step));
+    const isStepNumber = !Number.isNaN(stepChecked) && stepChecked !== 0;
     const isStepMoreThanHalf = stepChecked
       > (this.parameters.maxValue - this.parameters.minValue) / 2;
 
@@ -98,9 +97,9 @@ class View {
   }
 
   private checkMaxValue = (maxValue: string): number => {
-    const maxValueChecked = ParsingDigits.parsing(maxValue);
+    const maxValueChecked = parseFloat(maxValue);
 
-    if (maxValueChecked === null || maxValueChecked <= this.parameters.minValue) {
+    if (Number.isNaN(maxValueChecked) || maxValueChecked <= this.parameters.minValue) {
       return this.parameters.maxValue;
     }
 
@@ -114,9 +113,9 @@ class View {
   }
 
   private checkMinValue = (minValue: string): number => {
-    const minValueChecked = ParsingDigits.parsing(minValue);
+    const minValueChecked = parseFloat(minValue);
 
-    if (minValueChecked === null || minValueChecked >= this.parameters.maxValue) {
+    if (Number.isNaN(minValueChecked) || minValueChecked >= this.parameters.maxValue) {
       return this.parameters.minValue;
     }
 
