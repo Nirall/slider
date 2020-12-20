@@ -79,11 +79,8 @@ class View {
 
   private checkStep = (step: string): number => {
     const stepChecked = Math.abs(parseFloat(step));
-    const isStepNumber = !Number.isNaN(stepChecked) && stepChecked !== 0;
-    const isStepMoreThanHalf = stepChecked
-      > (this.parameters.maxValue - this.parameters.minValue) / 2;
 
-    if (!isStepNumber || isStepMoreThanHalf) {
+    if (!stepChecked || stepChecked > (this.parameters.maxValue - this.parameters.minValue) / 2) {
       return this.parameters.step;
     }
 
