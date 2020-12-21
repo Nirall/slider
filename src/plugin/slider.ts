@@ -17,9 +17,9 @@ import Controller from './Controller/Controller';
       slider.update(opt);
     },
 
-    getConfig: function getConfig() {
+    renew: function renew() {
       const slider = $(this).data('slider');
-      return slider.getConfig();
+      return slider.renew();
     },
 
     setValues: function setValues(opt: types.CurrentValues) {
@@ -29,14 +29,15 @@ import Controller from './Controller/Controller';
 
     inputsAttach: function inputsAttach(opt: InputsObject) {
       const slider = $(this).data('slider');
-      slider.addObserver((eventName?: string, data?: any) => {
+      slider.observers.addObserver((eventName?: string, data?: any) => {
         if (eventName === 'SendingCurrentValuesForTracking') {
           opt.minValueInput.val(data.currentMinValue);
           opt.maxValueInput.val(data.currentMaxValue);
+        } if (eventName === 'SendingConfig') {
+          opt.maxValue.val(data.maxValue);
+          opt.minValue.val(data.minValue);
+          opt.step.val(data.step);
         }
-        opt.maxValue.val(slider.getConfig().maxValue);
-        opt.minValue.val(slider.getConfig().minValue);
-        opt.step.val(slider.getConfig().step);
       });
     }
   };

@@ -27,32 +27,17 @@ const handleStepInputFocusout = (e) => {
 
 const handleRangeButtonChange = (e) => {
   const elementID = e.data.elementName;
-  const conf = $(`${elementID}`).omfgslider('getConfig');
-  if (conf.isRange === false) {
-    $(`${elementID}`).omfgslider('update', { isRange: true });
-  } else {
-    $(`${elementID}`).omfgslider('update', { isRange: false });
-  }
+  $(`${elementID}`).omfgslider('update', { isRange: 'toggle' });
 };
 
 const handleVerticalButtonChange = (e) => {
   const elementID = e.data.elementName;
-  const conf = $(`${elementID}`).omfgslider('getConfig');
-  if (conf.isVertical === false) {
-    $(`${elementID}`).omfgslider('update', { isVertical: true });
-  } else {
-    $(`${elementID}`).omfgslider('update', { isVertical: false });
-  }
+  $(`${elementID}`).omfgslider('update', { isVertical: 'toggle' });
 };
 
 const handleLabelButtonChange = (e) => {
   const elementID = e.data.elementName;
-  const conf = $(`${elementID}`).omfgslider('getConfig');
-  if (conf.showLabel === false) {
-    $(`${elementID}`).omfgslider('update', { showLabel: true });
-  } else {
-    $(`${elementID}`).omfgslider('update', { showLabel: false });
-  }
+  $(`${elementID}`).omfgslider('update', { showLabel: 'toggle' });
 };
 
 $('#s1').omfgslider({ showLabel: true });
@@ -72,17 +57,11 @@ $('#s4').omfgslider({
   isFloat: true
 });
 ['#s1', '#s2', '#s3', '#s4'].forEach((i) => {
-  const config = $(`${i}`).omfgslider('getConfig');
   const currentMinValueInput = $(`${i} + .input-wrapper .minValueIn`);
   const currentMaxValueInput = $(`${i} + .input-wrapper .maxValueIn`);
   const minValue = $(`${i} + .input-wrapper .minValue`);
   const maxValue = $(`${i} + .input-wrapper .maxValue`);
   const step = $(`${i} + .input-wrapper .step`);
-  currentMinValueInput.val(config.minValue);
-  currentMaxValueInput.val(config.maxValue);
-  $(`${i} + .input-wrapper .minValue`).val(config.minValue);
-  $(`${i} + .input-wrapper .maxValue`).val(config.maxValue);
-  $(`${i} + .input-wrapper .step`).val(config.step);
   $(`${i}`).omfgslider('inputsAttach', {
     minValueInput: currentMinValueInput,
     maxValueInput: currentMaxValueInput,
@@ -90,6 +69,7 @@ $('#s4').omfgslider({
     minValue: minValue,
     step: step
   });
+  $(`${i}`).omfgslider('renew');
 
   currentMinValueInput.on('focusout', { elementName: i, inputElement: currentMinValueInput }, handleCurrentMinValueInputFocusout);
   currentMaxValueInput.on('focusout', { elementName: i, inputElement: currentMaxValueInput }, handleCurrentMaxValueInputFocusout);

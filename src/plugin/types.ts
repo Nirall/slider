@@ -34,6 +34,16 @@ export type Parameters = {
   isFloat: boolean
 }
 
+export type RawParameters = {
+  minValue: number,
+  maxValue: number,
+  step: number,
+  isRange: boolean|string,
+  isVertical: boolean|string,
+  showLabel: boolean|string,
+  isFloat: boolean|string
+}
+
 export const defaultParameters = {
   minValue: 0,
   maxValue: 1000,

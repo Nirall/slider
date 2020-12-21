@@ -4,9 +4,9 @@ import Model from '../Model/Model';
 import MakeObservableObject from '../makeObservableObject/MakeObservableObject';
 
 class Controller {
-  view: View;
+  private view: View;
 
-  model: Model;
+  private model: Model;
 
   observers: MakeObservableObject;
 
@@ -20,38 +20,30 @@ class Controller {
     this.init(entry, parameters);
   }
 
-  update = (parameters: types.Parameters): void => {
+  update = (parameters: types.RawParameters): void => {
     this.observers.notifyObservers('UpdatingConfig', parameters);
-  }
-
-  getValues = (): void => {
-    this.observers.notifyObservers('GettingValues');
+    this.observers.notifyObservers('GettingConfig');
   }
 
   setValues = (currentValues: types.CurrentValues): void => {
     this.observers.notifyObservers('ChangingCurrentValueFromPanel', currentValues);
   }
 
-  getConfig = (): types.Parameters => {
-    return this.view.parameters;
-  }
-
-  addObserver = (fn: types.FunctionCallbackData): void => {
-    this.observers.addObserver(fn);
+  renew = (): void => {
+    this.observers.notifyObservers('GettingConfig');
+    this.observers.notifyObservers('GettingValues');
   }
 
   private init = (entry: JQuery, parameters: types.Parameters):void => {
     this.observers.addObserver(this.view.observeControllerFromView);
     this.observers.addObserver(this.model.observeControllerFromModel);
-    this.view.appendToNode(entry.get(0));
+    this.observers.notifyObservers('AppendingToNode', entry.get(0));
     this.observers.notifyObservers('UpdatingConfig', parameters);
   }
 
-  private handleViewChangingValue = (eventName: string,
-    data: any): void => {
+  private handleViewChangingValue = (eventName: string, data: any): void => {
     if (eventName === 'ChangingCurrentValueFromView') {
       this.observers.notifyObservers('ChangingCurrentValueFromView', data);
-      this.getValues();
     } if (eventName === 'SendingConfig') {
       this.observers.notifyObservers('SendingConfig', data);
     }
@@ -60,7 +52,7 @@ class Controller {
   private handleModelSendingValues = (eventName: string, data: types.CurrentValues): void => {
     if (eventName === 'SendingCurrentValues') {
       this.observers.notifyObservers('SendingCurrentValues', data);
-      this.getValues();
+      this.observers.notifyObservers('GettingValues');
     } if (eventName === 'SendingCurrentValuesForTracking') {
       this.observers.notifyObservers('SendingCurrentValuesForTracking', data);
     }

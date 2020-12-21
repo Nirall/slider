@@ -29,7 +29,7 @@ class View {
     this.init(observer);
   }
 
-  update = (parameters: types.Parameters): void => {
+  update = (parameters: types.RawParameters): void => {
     const checkedParameters = this.validateConfig(parameters);
     this.parameters = checkedParameters;
     this.observers.notifyObservers('UpdatingConfig', this.parameters);
@@ -48,11 +48,9 @@ class View {
       this.update(data);
     } if (eventName === 'GettingConfig') {
       this.observers.notifyObservers('SendingConfig', this.parameters);
+    } if (eventName === 'AppendingToNode') {
+      this.observers.notifyObservers('AppendingToNode', data);
     }
-  }
-
-  appendToNode = (entry: HTMLElement): void => {
-    this.observers.notifyObservers('AppendingToNode', entry);
   }
 
   private init = (observer: types.ObserverFunction): void => {
@@ -61,15 +59,48 @@ class View {
     this.observers.notifyObservers('UpdatingConfig', this.parameters);
   }
 
-  private validateConfig = (parameters: types.Parameters): types.Parameters => {
+  private validateConfig = (parameters: types.RawParameters): types.Parameters => {
     const parametersSnapshot = parameters;
     Object.keys(parameters).forEach((key) => {
-      if (key === 'step') {
-        parametersSnapshot.step = this.checkStep(parameters.step);
-      } else if (key === 'maxValue') {
-        parametersSnapshot.maxValue = this.checkMaxValue(parameters.maxValue);
-      } else if (key === 'minValue') {
-        parametersSnapshot.minValue = this.checkMinValue(parameters.minValue);
+      switch (key) {
+        case 'step':
+          parametersSnapshot.step = this.checkStep(parameters.step);
+          break;
+        case 'maxValue':
+          parametersSnapshot.maxValue = this.checkMaxValue(parameters.maxValue);
+          break;
+        case 'minValue':
+          parametersSnapshot.minValue = this.checkMinValue(parameters.minValue);
+          break;
+        case 'isRange':
+          if (parameters.isRange === 'toggle') {
+            if (this.parameters.isRange === true) {
+              parametersSnapshot.isRange = false;
+            } else {
+              parametersSnapshot.isRange = true;
+            }
+          }
+          break;
+        case 'isVertical':
+          if (parameters.isVertical === 'toggle') {
+            if (this.parameters.isVertical === true) {
+              parametersSnapshot.isVertical = false;
+            } else {
+              parametersSnapshot.isVertical = true;
+            }
+          }
+          break;
+        case 'showLabel':
+          if (parameters.showLabel === 'toggle') {
+            if (this.parameters.showLabel === true) {
+              parametersSnapshot.showLabel = false;
+            } else {
+              parametersSnapshot.showLabel = true;
+            }
+          }
+          break;
+        default:
+          break;
       }
     });
 
@@ -81,7 +112,6 @@ class View {
     if (!step || step > (this.parameters.maxValue - this.parameters.minValue) / 2) {
       return this.parameters.step;
     }
-
     if (step % 1 !== 0) {
       this.parameters.isFloat = true;
     } else if (!isOthersValuesFloat(this, 'step')) {

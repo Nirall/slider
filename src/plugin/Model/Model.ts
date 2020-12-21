@@ -26,19 +26,16 @@ class Model {
     }
   }
 
-  getCurrentValues = (): void => {
-    this.observers.notifyObservers('SendingCurrentValuesForTracking', this.currentValues);
-  }
-
   observeControllerFromModel = (eventName: string, data?: types.CurrentValues): void => {
     if (eventName === 'UpdatingConfig') {
       this.observers.notifyObservers('SendingCurrentValues', this.currentValues);
     } if (eventName === 'ChangingCurrentValueFromView') {
       this.setCurrentValues(data, 'fromView');
+      this.observers.notifyObservers('SendingCurrentValuesForTracking', this.currentValues);
     } if (eventName === 'ChangingCurrentValueFromPanel') {
       this.setCurrentValues(data, 'fromPanel');
     } if (eventName === 'GettingValues') {
-      this.getCurrentValues();
+      this.observers.notifyObservers('SendingCurrentValuesForTracking', this.currentValues);
     }
   }
 }
