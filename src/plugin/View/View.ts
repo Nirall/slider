@@ -60,51 +60,51 @@ class View {
   }
 
   private validateConfig = (parameters: types.RawParameters): types.Parameters => {
-    const parametersSnapshot = parameters;
-    Object.keys(parameters).forEach((key) => {
+    const checkedParameters = Object.keys(parameters).reduce((acc, key) => {
       switch (key) {
         case 'step':
-          parametersSnapshot.step = this.checkStep(parameters.step);
+          acc.step = this.checkStep(parameters.step);
           break;
         case 'maxValue':
-          parametersSnapshot.maxValue = this.checkMaxValue(parameters.maxValue);
+          acc.maxValue = this.checkMaxValue(parameters.maxValue);
           break;
         case 'minValue':
-          parametersSnapshot.minValue = this.checkMinValue(parameters.minValue);
+          acc.minValue = this.checkMinValue(parameters.minValue);
           break;
         case 'isRange':
           if (parameters.isRange === 'toggle') {
             if (this.parameters.isRange === true) {
-              parametersSnapshot.isRange = false;
+              acc.isRange = false;
             } else {
-              parametersSnapshot.isRange = true;
+              acc.isRange = true;
             }
           }
           break;
         case 'isVertical':
           if (parameters.isVertical === 'toggle') {
             if (this.parameters.isVertical === true) {
-              parametersSnapshot.isVertical = false;
+              acc.isVertical = false;
             } else {
-              parametersSnapshot.isVertical = true;
+              acc.isVertical = true;
             }
           }
           break;
         case 'showLabel':
           if (parameters.showLabel === 'toggle') {
             if (this.parameters.showLabel === true) {
-              parametersSnapshot.showLabel = false;
+              acc.showLabel = false;
             } else {
-              parametersSnapshot.showLabel = true;
+              acc.showLabel = true;
             }
           }
           break;
         default:
           break;
       }
-    });
+      return acc;
+    }, {} as types.Parameters);
 
-    const newParameters = Object.assign(this.parameters, parametersSnapshot);
+    const newParameters = { ...this.parameters, ...checkedParameters };
     return newParameters;
   }
 
