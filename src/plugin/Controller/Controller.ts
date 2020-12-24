@@ -17,7 +17,7 @@ class Controller {
       currentMaxValue: parameters.maxValue
     }, this.handleModelSendingValues);
     this.observers = new MakeObservableObject();
-    this.init(entry, parameters);
+    this.init(entry);
   }
 
   update = (parameters: types.RawParameters): void => {
@@ -34,11 +34,10 @@ class Controller {
     this.observers.notifyObservers('GettingValues');
   }
 
-  private init = (entry: JQuery, parameters: types.Parameters):void => {
+  private init = (entry: JQuery):void => {
     this.observers.addObserver(this.view.observeControllerFromView);
     this.observers.addObserver(this.model.observeControllerFromModel);
     this.observers.notifyObservers('AppendingToNode', entry.get(0));
-    this.observers.notifyObservers('UpdatingConfig', parameters);
   }
 
   private handleViewChangingValue = (eventName: string, data: any): void => {

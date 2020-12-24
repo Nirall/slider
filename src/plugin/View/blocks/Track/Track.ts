@@ -84,6 +84,8 @@ class Track {
     });
 
     this.scale.moveMarks();
+    this.update(this.parameters);
+    this.updateProgressBar();
   }
 
   private renewRunners(currentValues: types.CurrentValues): void {

@@ -56,56 +56,53 @@ class View {
   private init = (observer: types.ObserverFunction): void => {
     this.observers.addObserver(observer);
     this.observers.addObserver(this.track.observeViewFromTrack);
-    this.observers.notifyObservers('UpdatingConfig', this.parameters);
   }
 
   private validateConfig = (parameters: types.RawParameters): types.Parameters => {
-    const checkedParameters = Object.keys(parameters).reduce((acc, key) => {
-      switch (key) {
-        case 'step':
-          acc.step = this.checkStep(parameters.step);
-          break;
-        case 'maxValue':
-          acc.maxValue = this.checkMaxValue(parameters.maxValue);
-          break;
-        case 'minValue':
-          acc.minValue = this.checkMinValue(parameters.minValue);
-          break;
-        case 'isRange':
-          if (parameters.isRange === 'toggle') {
-            if (this.parameters.isRange === true) {
-              acc.isRange = false;
-            } else {
-              acc.isRange = true;
-            }
+    const key = Object.keys(parameters)[0];
+    const checkedParameters = this.parameters;
+    switch (key) {
+      case 'step':
+        checkedParameters.step = this.checkStep(parameters.step);
+        break;
+      case 'maxValue':
+        checkedParameters.maxValue = this.checkMaxValue(parameters.maxValue);
+        break;
+      case 'minValue':
+        checkedParameters.minValue = this.checkMinValue(parameters.minValue);
+        break;
+      case 'isRange':
+        if (parameters.isRange === 'toggle') {
+          if (this.parameters.isRange === true) {
+            checkedParameters.isRange = false;
+          } else {
+            checkedParameters.isRange = true;
           }
-          break;
-        case 'isVertical':
-          if (parameters.isVertical === 'toggle') {
-            if (this.parameters.isVertical === true) {
-              acc.isVertical = false;
-            } else {
-              acc.isVertical = true;
-            }
+        }
+        break;
+      case 'isVertical':
+        if (parameters.isVertical === 'toggle') {
+          if (this.parameters.isVertical === true) {
+            checkedParameters.isVertical = false;
+          } else {
+            checkedParameters.isVertical = true;
           }
-          break;
-        case 'showLabel':
-          if (parameters.showLabel === 'toggle') {
-            if (this.parameters.showLabel === true) {
-              acc.showLabel = false;
-            } else {
-              acc.showLabel = true;
-            }
+        }
+        break;
+      case 'showLabel':
+        if (parameters.showLabel === 'toggle') {
+          if (this.parameters.showLabel === true) {
+            checkedParameters.showLabel = false;
+          } else {
+            checkedParameters.showLabel = true;
           }
-          break;
-        default:
-          break;
-      }
-      return acc;
-    }, {} as types.Parameters);
+        }
+        break;
+      default:
+        break;
+    }
 
-    const newParameters = { ...this.parameters, ...checkedParameters };
-    return newParameters;
+    return checkedParameters;
   }
 
   private checkStep = (step: number): number => {
