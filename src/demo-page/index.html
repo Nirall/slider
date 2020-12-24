@@ -23,29 +23,29 @@
     <body>
         <div class = "sliders-container">
             <h1>Слайдеры</h1>
-            <div class = "slider-wrapper">
-                <div class = "slider" id = "s1">
+            <div class = "slider-wrapper js-slider-wrapper">
+                <div class = "slider js-slider" id = "s1">
                 </div>
                 <div class = "input-wrapper">
                     <form name = "slider1">
                         <div class = "slider__values">
                             <h3>Значения</h3>
-                            <input type = "text" class = "minValueIn">
-                            <input type = "text" class = "maxValueIn">
+                            <input type = "text" class = "minValueIn js-minValueIn">
+                            <input type = "text" class = "maxValueIn js-maxValueIn">
                         </div>
                         <div class = "slider__config">
                         <div class = "row">
                             <h3>Конфигурация</h3>
                             <div>
-                                <input type = "text" class = "minValue">
+                                <input type = "text" class = "js-minValue">
                                 Минимум
                             </div>
                             <div>
-                                <input type = "text" class = "maxValue">
+                                <input type = "text" class = "js-maxValue">
                                 Максимум
                             </div>
                             <div>
-                                <input type = "text" class = "step">
+                                <input type = "text" class = "js-step">
                                 Шаг
                             </div>
 
@@ -53,33 +53,33 @@
                         <div class = "row">
                             <h3>Диапазон</h3>
                             <label>
-                                <input type = "radio" name = "range" value = "single" checked>
+                                <input class = "js-range" type = "radio" name = "range" value = "single" checked>
                                 Одиночный
                             </label>
                             <label>
-                                <input type = "radio" name = "range" value = "range">
+                                <input class = "js-range" type = "radio" name = "range" value = "range">
                                 Диапазон
                             </label>
                         </div>
                         <div class = "row">
                             <h3>Ориентация</h3>
                             <label>
-                                <input type = "radio" name = "vertical" value = "horizontal" checked>
+                                <input class = "js-vertical" type = "radio" name = "vertical" value = "horizontal" checked>
                                 Горизонтальный
                             </label>
                             <label>
-                                <input type = "radio" name = "vertical" value = "vertical">
+                                <input class = "js-vertical" type = "radio" name = "vertical" value = "vertical">
                                 Вертикальный
                             </label>
                         </div>
                         <div class = "row">
                             <h3>Отображение значений</h3>
                             <label>
-                                <input type = "radio" name = "showLabel" value = "noLabel">
+                                <input class = "js-label" type = "radio" name = "showLabel" value = "noLabel">
                                 Без значений
                             </label>
                             <label>
-                                <input type = "radio" name = "showLabel" value = "showLabel" checked>
+                                <input class = "js-label" type = "radio" name = "showLabel" value = "showLabel" checked>
                                 Со значениями
                             </label>
                         </div>
@@ -88,194 +88,197 @@
                     </form>
                 </div>
             </div>
-            <div class = "slider-wrapper">
-                <div class = "slider" id = "s2">
+            <div class = "slider-wrapper js-slider-wrapper">
+                <div class = "slider js-slider">
                 </div>
                 <div class = "input-wrapper">
                     <form name = "slider2">
                         <div class = "slider__values">
                             <h3>Значения</h3>
-                            <input type = "text" class = "minValueIn">
-                            <input type = "text" class = "maxValueIn">
+                            <input type = "text" class = "minValueIn js-minValueIn">
+                            <input type = "text" class = "maxValueIn js-maxValueIn">
                         </div>
                         <div class = "slider__config">
-                            <div class = "row">
-                                <h3>Конфигурация</h3>
-                                <div>
-                                    <input type = "text" class = "minValue">
-                                    Минимум
-                                </div>
-                                <div>
-                                    <input type = "text" class = "maxValue">
-                                    Максимум
-                                </div>
-                                <div>
-                                    <input type = "text" class = "step">
-                                    Шаг
-                                </div>
+                        <div class = "row">
+                            <h3>Конфигурация</h3>
+                            <div>
+                                <input type = "text" class = "js-minValue">
+                                Минимум
+                            </div>
+                            <div>
+                                <input type = "text" class = "js-maxValue">
+                                Максимум
+                            </div>
+                            <div>
+                                <input type = "text" class = "js-step">
+                                Шаг
+                            </div>
 
-                            </div>
-                            <div class = "row">
-                                <h3>Диапазон</h3>
-                                <label>
-                                    <input type = "radio" name = "range" value = "single">
-                                    Одиночный
-                                </label>
-                                <label>
-                                    <input type = "radio" name = "range" value = "range" checked>
-                                    Диапазон
-                                </label>
-                            </div>
-                            <div class = "row">
-                                <h3>Ориентация</h3>
-                                <label>
-                                    <input type = "radio" name = "vertical" value = "horizontal" checked>
-                                    Горизонтальный
-                                </label>
-                                <label>
-                                    <input type = "radio" name = "vertical" value = "vertical">
-                                    Вертикальный
-                                </label>
-                            </div>
-                            <div class = "row">
-                                <h3>Отображение значений</h3>
-                                <label>
-                                    <input type = "radio" name = "showLabel" value = "noLabel">
-                                    Без значений
-                                </label>
-                                <label>
-                                    <input type = "radio" name = "showLabel" value = "showLabel" checked>
-                                    Со значениями
-                                </label>
-                            </div>
+                        </div>
+                        <div class = "row">
+                            <h3>Диапазон</h3>
+                            <label>
+                                <input class = "js-range" type = "radio" name = "range" value = "single" checked>
+                                Одиночный
+                            </label>
+                            <label>
+                                <input class = "js-range" type = "radio" name = "range" value = "range">
+                                Диапазон
+                            </label>
+                        </div>
+                        <div class = "row">
+                            <h3>Ориентация</h3>
+                            <label>
+                                <input class = "js-vertical" type = "radio" name = "vertical" value = "horizontal" checked>
+                                Горизонтальный
+                            </label>
+                            <label>
+                                <input class = "js-vertical" type = "radio" name = "vertical" value = "vertical">
+                                Вертикальный
+                            </label>
+                        </div>
+                        <div class = "row">
+                            <h3>Отображение значений</h3>
+                            <label>
+                                <input class = "js-label" type = "radio" name = "showLabel" value = "noLabel">
+                                Без значений
+                            </label>
+                            <label>
+                                <input class = "js-label" type = "radio" name = "showLabel" value = "showLabel" checked>
+                                Со значениями
+                            </label>
+                        </div>
+
                         </div>
                     </form>
                 </div>
             </div>
-            <div class = "slider-wrapper">
-                <div class = "slider" id = "s3">
+            <div class = "slider-wrapper js-slider-wrapper">
+                <div class = "slider js-slider">
                 </div>
                 <div class = "input-wrapper">
                     <form name = "slider3">
                         <div class = "slider__values">
                             <h3>Значения</h3>
-                            <input type = "text" class = "minValueIn">
-                            <input type = "text" class = "maxValueIn">
+                            <input type = "text" class = "minValueIn js-minValueIn">
+                            <input type = "text" class = "maxValueIn js-maxValueIn">
                         </div>
                         <div class = "slider__config">
-                            <div class = "row">
-                                <h3>Конфигурация</h3>
-                                <div>
-                                    <input type = "text" class = "minValue">
-                                    Минимум
-                                </div>
-                                <div>
-                                    <input type = "text" class = "maxValue">
-                                    Максимум
-                                </div>
-                                <div>
-                                    <input type = "text" class = "step">
-                                    Шаг
-                                </div>
+                        <div class = "row">
+                            <h3>Конфигурация</h3>
+                            <div>
+                                <input type = "text" class = "js-minValue">
+                                Минимум
+                            </div>
+                            <div>
+                                <input type = "text" class = "js-maxValue">
+                                Максимум
+                            </div>
+                            <div>
+                                <input type = "text" class = "js-step">
+                                Шаг
+                            </div>
 
-                            </div>
-                            <div class = "row">
-                                <h3>Диапазон</h3>
-                                <label>
-                                    <input type = "radio" name = "range" value = "single" checked>
-                                    Одиночный
-                                </label>
-                                <label>
-                                    <input type = "radio" name = "range" value = "range">
-                                    Диапазон
-                                </label>
-                            </div>
-                            <div class = "row">
-                                <h3>Ориентация</h3>
-                                <label>
-                                    <input type = "radio" name = "vertical" value = "horizontal">
-                                    Горизонтальный
-                                </label>
-                                <label>
-                                    <input type = "radio" name = "vertical" value = "vertical" checked>
-                                    Вертикальный
-                                </label>
-                            </div>
-                            <div class = "row">
-                                <h3>Отображение значений</h3>
-                                <label>
-                                    <input type = "radio" name = "showLabel" value = "noLabel">
-                                    Без значений
-                                </label>
-                                <label>
-                                    <input type = "radio" name = "showLabel" value = "showLabel" checked>
-                                    Со значениями
-                                </label>
-                            </div>
+                        </div>
+                        <div class = "row">
+                            <h3>Диапазон</h3>
+                            <label>
+                                <input class = "js-range" type = "radio" name = "range" value = "single" checked>
+                                Одиночный
+                            </label>
+                            <label>
+                                <input class = "js-range" type = "radio" name = "range" value = "range">
+                                Диапазон
+                            </label>
+                        </div>
+                        <div class = "row">
+                            <h3>Ориентация</h3>
+                            <label>
+                                <input class = "js-vertical" type = "radio" name = "vertical" value = "horizontal" checked>
+                                Горизонтальный
+                            </label>
+                            <label>
+                                <input class = "js-vertical" type = "radio" name = "vertical" value = "vertical">
+                                Вертикальный
+                            </label>
+                        </div>
+                        <div class = "row">
+                            <h3>Отображение значений</h3>
+                            <label>
+                                <input class = "js-label" type = "radio" name = "showLabel" value = "noLabel">
+                                Без значений
+                            </label>
+                            <label>
+                                <input class = "js-label" type = "radio" name = "showLabel" value = "showLabel" checked>
+                                Со значениями
+                            </label>
+                        </div>
+
                         </div>
                     </form>
                 </div>
             </div>
-            <div class = "slider-wrapper">
-                <div class = "slider" id = "s4">
+            <div class = "slider-wrapper js-slider-wrapper">
+                <div class = "slider js-slider">
                 </div>
                 <div class = "input-wrapper">
                     <form name = "slider4">
                         <div class = "slider__values">
                             <h3>Значения</h3>
-                            <input type = "text" class = "minValueIn">
-                            <input type = "text" class = "maxValueIn">
+                            <input type = "text" class = "minValueIn js-minValueIn">
+                            <input type = "text" class = "maxValueIn js-maxValueIn">
                         </div>
                         <div class = "slider__config">
-                            <div class = "row">
-                                <h3>Конфигурация</h3>
-                                <div>
-                                    <input type = "text" class = "minValue">
-                                    Минимум
-                                </div>
-                                <div>
-                                    <input type = "text" class = "maxValue">
-                                    Максимум
-                                </div>
-                                <div>
-                                    <input type = "text" class = "step">
-                                    Шаг
-                                </div>
+                        <div class = "row">
+                            <h3>Конфигурация</h3>
+                            <div>
+                                <input type = "text" class = "js-minValue">
+                                Минимум
+                            </div>
+                            <div>
+                                <input type = "text" class = "js-maxValue">
+                                Максимум
+                            </div>
+                            <div>
+                                <input type = "text" class = "js-step">
+                                Шаг
+                            </div>
 
-                            </div>
-                            <div class = "row">
-                                <h3>Диапазон</h3>
-                                <label>
-                                    <input type = "radio" name = "range" value = "single">
-                                    Одиночный
-                                </label>
-                                <label>
-                                    <input type = "radio" name = "range" value = "range" checked>
-                                    Диапазон
-                                </label>
-                            </div>
-                            <div class = "row">
-                                <h3>Ориентация</h3>
-                                <label>
-                                    <input type = "radio" name = "vertical" value = "horizontal">
-                                    Горизонтальный
-                                </label>
-                                <label>
-                                    <input type = "radio" name = "vertical" value = "vertical" checked>
-                                    Вертикальный
-                                </label>
-                            </div>
-                            <div class = "row">
-                                <h3>Отображение значений</h3>
-                                <label>
-                                    <input type = "radio" name = "showLabel" value = "noLabel">
-                                    Без значений
-                                </label>
-                                <label>
-                                    <input type = "radio" name = "showLabel" value = "showLabel" checked>
-                                    Со значениями
-                                </label>
-                            </div>
+                        </div>
+                        <div class = "row">
+                            <h3>Диапазон</h3>
+                            <label>
+                                <input class = "js-range" type = "radio" name = "range" value = "single" checked>
+                                Одиночный
+                            </label>
+                            <label>
+                                <input class = "js-range" type = "radio" name = "range" value = "range">
+                                Диапазон
+                            </label>
+                        </div>
+                        <div class = "row">
+                            <h3>Ориентация</h3>
+                            <label>
+                                <input class = "js-vertical" type = "radio" name = "vertical" value = "horizontal" checked>
+                                Горизонтальный
+                            </label>
+                            <label>
+                                <input class = "js-vertical" type = "radio" name = "vertical" value = "vertical">
+                                Вертикальный
+                            </label>
+                        </div>
+                        <div class = "row">
+                            <h3>Отображение значений</h3>
+                            <label>
+                                <input class = "js-label" type = "radio" name = "showLabel" value = "noLabel">
+                                Без значений
+                            </label>
+                            <label>
+                                <input class = "js-label" type = "radio" name = "showLabel" value = "showLabel" checked>
+                                Со значениями
+                            </label>
+                        </div>
+
                         </div>
                     </form>
                 </div>
