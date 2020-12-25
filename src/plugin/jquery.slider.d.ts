@@ -1,9 +1,5 @@
 interface JQuery {
-  omfgslider: (arg: any) => void,
-}
-
-type InputsObject = {
-  [index: string]: JQuery;
+  omfgslider: (...args: any) => void,
 }
 
 interface Methods {

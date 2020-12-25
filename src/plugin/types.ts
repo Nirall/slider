@@ -8,6 +8,10 @@ export type configUpdateData = {
   [index: string]: number|string|boolean;
 }
 
+export type InputsObject = {
+  [index: string]: JQuery;
+}
+
 export type RunnerMoveData = {
   runner: Runner,
   offset: number,

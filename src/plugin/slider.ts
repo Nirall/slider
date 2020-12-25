@@ -27,7 +27,7 @@ import Controller from './Controller/Controller';
       slider.setValues(opt);
     },
 
-    inputsAttach: function inputsAttach(opt: InputsObject) {
+    inputsAttach: function inputsAttach(opt: types.InputsObject) {
       const slider = $(this).data('slider');
       slider.observers.addObserver((eventName?: string, data?: any) => {
         if (eventName === 'SendingCurrentValuesForTracking') {
