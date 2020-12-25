@@ -1,0 +1,4 @@
+mixin radio-button(parameters)
+  label.radio-button
+    input(type = "radio" class = parameters.class  name = parameters.name parameters.value = "single" checked= parameters.checked).radio-button__field
+    span.radio-button__text= parameters.text

@@ -1,6 +1,7 @@
 const path = require('path');
 const CleanWebpackPlugin = require('clean-webpack-plugin').CleanWebpackPlugin;
-const cssExtract = require('mini-css-extract-plugin');
+const HtmlPlugin = require('html-webpack-plugin');
+const CssExtract = require('mini-css-extract-plugin');
 
 module.exports = {
   entry: {
@@ -18,12 +19,24 @@ module.exports = {
   },
   plugins: [
     new CleanWebpackPlugin(),
-    new cssExtract({
+    new HtmlPlugin({
+      template: 'src/demo-page/index.pug',
+      inject: false,
+      filename: 'index.html'
+    }),
+    new CssExtract({
       filename: 'style.css'
     })
   ],
   module: {
     rules: [
+      {
+        test: /\.pug$/,
+        loader: 'pug-loader',
+        options: {
+          pretty: true
+        }
+      },
       {
         test: /\.tsx?$/,
         use: 'ts-loader',
@@ -32,12 +45,13 @@ module.exports = {
       {
         test: /\.s?css$/,
         use: [
-          cssExtract.loader,
+          CssExtract.loader,
           'css-loader',
           'sass-loader'
         ],
         exclude: /node_modules/
       },
+      /*
       {
         test: /\.html$/,
         use: {
@@ -47,6 +61,7 @@ module.exports = {
           }
         }
       },
+      */
       {
         test: /(?=init.*)\.js$/,
         use: {
@@ -60,9 +75,5 @@ module.exports = {
   },
   resolve: {
     extensions: ['.ts', '.tsx', '.js']
-  },
-  devServer: {
-    contentBase: path.resolve(__dirname, 'dist'),
-    hot: true
   }
 };
