@@ -4,6 +4,11 @@ export type FunctionCallbackData = (data: any, eventName?: string) => void;
 
 export type ObserverFunction = (eventName: string, data?: any,) => void;
 
+export type ObserverTestResult = {
+  eventName: string,
+  data?: any,
+}
+
 export type configUpdateData = {
   [index: string]: number|string|boolean;
 }
