@@ -6,7 +6,7 @@ const CssExtract = require('mini-css-extract-plugin');
 module.exports = {
   entry: {
     bundle: './src/index.ts',
-    init: './src/demo-page/init.js'
+    init: './src/demo-page/init.ts'
   },
   output: {
     filename: '[name].js',
@@ -52,13 +52,15 @@ module.exports = {
         exclude: /node_modules/
       },
       {
-        test: /(?=init.*)\.js$/,
-        use: {
-          loader: 'file-loader',
-          options: {
-            name: '[name].[ext]'
+        test: /favicon.*\.(svg|png|ico|xml|json)$/i,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              name: 'favicon/[name].[ext]'
+            }
           }
-        }
+        ]
       }
     ]
   },

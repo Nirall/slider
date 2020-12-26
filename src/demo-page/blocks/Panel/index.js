@@ -1,6 +1,6 @@
 /* global $ */
 
-import Panel from './blocks/Panel/Panel';
+import Panel from './Panel';
 
 const parameters = [
   { showLabel: true },
