@@ -1,6 +1,6 @@
 /* global $ */
 
-import SliderWrapper from './blocks/slider-wrapper/Slider-wrapper';
+import Panel from './blocks/Panel/Panel';
 
 const parameters = [
   { showLabel: true },
@@ -30,6 +30,6 @@ const parameters = [
   }
 ];
 
-$('.js-slider-wrapper').each((index, elem) => {
-  new SliderWrapper(elem, parameters[index]);
+$('.js-panel').each((index, elem) => {
+  new Panel(elem, parameters[index]);
 });

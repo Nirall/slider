@@ -2,7 +2,7 @@
 
 import * as types from '../../../plugin/types';
 
-class SliderWrapper {
+class Panel {
   node: JQuery;
 
   inputs: types.InputsObject;
@@ -13,7 +13,7 @@ class SliderWrapper {
   }
 
   private init = (parameters: types.Parameters) => {
-    const slider = $(this.node).find('.js-slider');
+    const slider = $(this.node).siblings('.js-slider');
     const currentMinValueInput = this.node.find('.js-panel__current-minvalue');
     const currentMaxValueInput = this.node.find('.js-panel__current-maxvalue');
     const minValueInput = this.node.find('.js-panel__minValue');
@@ -91,4 +91,4 @@ class SliderWrapper {
   };
 }
 
-export default SliderWrapper;
+export default Panel;
