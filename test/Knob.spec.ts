@@ -15,8 +15,9 @@ describe('Knob class(horizontal)', () => {
   });
 
   it('getWidth() should return width of the elem', () => {
-    newItem.elem.style.width = '15px';
-    expect(newItem.getWidth()).toEqual(15);
+    newItem.elem.style.width = '20px';
+    newItem.elem.style.border = '0';
+    expect(newItem.getWidth()).toEqual(20);
   });
 
   it('getPosition() should return left offset of the elem if isVertical = false', () => {

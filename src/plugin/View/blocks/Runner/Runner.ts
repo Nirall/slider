@@ -30,8 +30,9 @@ class Runner {
   }
 
   update = (isVertical: boolean): void => {
-    this.knob.update(isVertical);
-    this.tooltip.update(isVertical);
+    this.isVertical = isVertical;
+    this.knob.update(this.isVertical);
+    this.tooltip.update(this.isVertical);
   }
 
   getWidth = (): number => {

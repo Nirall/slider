@@ -8,15 +8,15 @@ import MakeObservableObject from '../../../makeObservableObject/MakeObservableOb
 class Track {
   parameters: types.Parameters;
 
-  private runnerMain: Runner;
+  runnerMain: Runner;
 
-  private runnerAdditional: Runner;
+  runnerAdditional: Runner;
 
-  private progressBar: ProgressBar;
+  progressBar: ProgressBar;
 
-  private bar: Bar;
+  bar: Bar;
 
-  private scale: Scale;
+  scale: Scale;
 
   observers: MakeObservableObject;
 
@@ -78,11 +78,7 @@ class Track {
     entry.appendChild(this.bar.elem).appendChild(this.progressBar.elem);
     this.runnerMain.appendToNode(entry);
     this.runnerAdditional.appendToNode(entry);
-
-    this.scale.marks.forEach((mark) => {
-      entry.appendChild(mark.elem);
-    });
-
+    this.scale.appendToNode(entry);
     this.scale.moveMarks();
     this.update(this.parameters);
     this.updateProgressBar();
@@ -157,7 +153,6 @@ class Track {
     let roundOffset;
     roundOffset = this.checkRunnerOffset(offset, runner);
     [roundOffset, roundValue] = this.roundOffsetRunner(roundOffset);
-
     return {
       runner: runner,
       offset: roundOffset,

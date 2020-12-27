@@ -44,9 +44,15 @@ class Scale {
     });
   }
 
+  appendToNode = (entry: HTMLElement): void => {
+    this.marks.forEach((mark) => {
+      entry.appendChild(mark.elem);
+    });
+  }
+
   private init = (observer: types.ObserverFunction): void => {
-    this.moveMarks();
     this.createMarks();
+    this.moveMarks();
     this.observers.addObserver(observer);
   }
 

@@ -38,17 +38,17 @@ module.exports = {
         }
       },
       {
-        test: /\.tsx?$/,
-        use: 'ts-loader',
-        exclude: /node_modules/
-      },
-      {
-        test: /\.s?css$/,
+        test: /\.scss$/,
         use: [
           CssExtract.loader,
           'css-loader',
           'sass-loader'
         ],
+        exclude: /node_modules/
+      },
+      {
+        test: /\.tsx?$/,
+        use: 'ts-loader',
         exclude: /node_modules/
       },
       {

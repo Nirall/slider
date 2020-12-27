@@ -11,7 +11,7 @@ webpackConfig.module.rules.push(
     }
   }
 );
-// webpackConfig.module.rules[1].use = ['style-loader', 'css-loader', 'sass-loader'];
+webpackConfig.module.rules[1].use = ['style-loader', 'css-loader', 'sass-loader'];
 
 module.exports = function (config) {
   config.set({
