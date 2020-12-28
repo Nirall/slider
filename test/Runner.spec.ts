@@ -102,10 +102,9 @@ describe('Runner class(horizontal)', () => {
 
 describe('Runner class(vertical)', () => {
   let newItem: Runner;
-  let observerResult: types.ObserverTestResult;
 
-  const observer = (eventName: string, data: any): void => {
-    observerResult = ({ eventName: eventName, data: data });
+  const observer = (): void => {
+    return null;
   };
 
   beforeEach(() => {

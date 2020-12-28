@@ -65,10 +65,9 @@ describe('Scale class(horizontal)', () => {
 
 describe('Scale class(vertical)', () => {
   let newItem: Scale;
-  let observerResult: types.ObserverTestResult;
 
-  const observer = (eventName: string, data: any): void => {
-    observerResult = ({ eventName: eventName, data: data });
+  const observer = (): void => {
+    return null;
   };
 
   const parameters = {
@@ -92,4 +91,3 @@ describe('Scale class(vertical)', () => {
     expect(newItem.marks[1].elem.style.top).toEqual('22.2222%');
   });
 });
-

@@ -44,13 +44,13 @@ export type Parameters = {
 }
 
 export type RawParameters = {
-  minValue: number,
-  maxValue: number,
-  step: number,
-  isRange: string,
-  isVertical: string,
-  showLabel: string,
-  isFloat: string
+  minValue?: number,
+  maxValue?: number,
+  step?: number,
+  isRange?: string,
+  isVertical?: string,
+  showLabel?: string,
+  isFloat?: string
 }
 
 export const defaultParameters = {

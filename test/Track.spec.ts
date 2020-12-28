@@ -3,12 +3,11 @@ import MakeObservableObject from '../src/plugin/makeObservableObject/MakeObserva
 import * as types from '../src/plugin/types';
 import '../src/plugin/style.scss';
 
-describe('Track class(horizontal)', () => {
+describe('Track class', () => {
   let newItem: Track;
-  let observerResult: types.ObserverTestResult;
 
-  const observer = (eventName: string, data: any): void => {
-    observerResult = ({ eventName: eventName, data: data });
+  const observer = (): void => {
+    return null;
   };
 
   let parameters: types.Parameters;
@@ -84,14 +83,14 @@ describe('Track class(horizontal)', () => {
     const testObject = new MakeObservableObject();
     testObject.addObserver(newItem.observeViewFromTrack);
     parameters.maxValue = 999;
-    testObject.notifyObservers('UpdatingConfig', parameters)
+    testObject.notifyObservers('UpdatingConfig', parameters);
     expect(newItem.parameters.maxValue).toEqual(999);
   });
 
   it('observeViewFromTrack() should renew main runner if there is an event "SendingCurrentValues"', () => {
     const testObject = new MakeObservableObject();
     testObject.addObserver(newItem.observeViewFromTrack);
-    testObject.notifyObservers('SendingCurrentValues', { currentMaxValue: 322 })
+    testObject.notifyObservers('SendingCurrentValues', { currentMaxValue: 322 });
     expect(newItem.runnerMain.tooltip.elem.innerHTML).toEqual('322');
   });
 
@@ -103,7 +102,7 @@ describe('Track class(horizontal)', () => {
     parameters.isFloat = true;
     parameters.step = 0.1;
     newItem.update(parameters);
-    testObject.notifyObservers('SendingCurrentValues', { currentMinValue: 20.2 })
+    testObject.notifyObservers('SendingCurrentValues', { currentMinValue: 20.2 });
     expect(newItem.runnerAdditional.tooltip.elem.innerHTML).toEqual('20.2');
   });
 
@@ -118,13 +117,31 @@ describe('Track class(horizontal)', () => {
 
   it('should move Runner on the certain distance if there is a MouseEvent ', () => {
     const mDownEvent = new MouseEvent('mousedown');
-    const mMoveEvent = new MouseEvent('mousemove', {clientX: 200});
+    const mMoveEvent = new MouseEvent('mousemove', { clientX: 200 });
     const mUpEvent = new MouseEvent('mouseup');
     newItem.bar.elem.style.width = '1000px';
     newItem.runnerMain.tooltip.elem.dispatchEvent(mDownEvent);
     document.dispatchEvent(mMoveEvent);
     document.dispatchEvent(mUpEvent);
-    const offset = newItem.runnerMain.knob.getPosition();
-    expect(offset <= 194 && offset >= 192).toEqual(true);
+    const offset = 200 - newItem.bar.getPosition() - newItem.runnerMain.getWidth() / 2;
+    expect(newItem.runnerMain.knob.getPosition()).toEqual(offset);
+  });
+
+  it('should move the closest runner according if click on the mark', () => {
+    parameters.isRange = true;
+    newItem.update(parameters);
+    const mClickEvent = new MouseEvent('click');
+    newItem.scale.marks[1].elem.dispatchEvent(mClickEvent);
+    expect(newItem.runnerAdditional.tooltip.elem.innerHTML).toEqual('250');
+  });
+
+  it('should move closest Runner on the certain distance if there is a click on bar ', () => {
+    parameters.isRange = true;
+    newItem.update(parameters);
+    const mClickEvent = new MouseEvent('click', { clientX: 800 });
+    newItem.bar.elem.style.width = '1000px';
+    newItem.bar.elem.dispatchEvent(mClickEvent);
+    const offset = 800 - newItem.bar.getPosition() - newItem.runnerMain.getWidth() / 2;
+    expect(newItem.runnerMain.getPosition()).toEqual(offset);
   });
 });

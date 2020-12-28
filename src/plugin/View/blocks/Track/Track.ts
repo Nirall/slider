@@ -143,7 +143,7 @@ class Track {
 
   private processRunnerMouseEvent = (eventMm: MouseEvent, runner: Runner): types.RunnerMoveData => {
     const coordinate = this.parameters.isVertical ? eventMm.clientY : eventMm.clientX;
-    const offset = coordinate - this.bar.getPosition() - this.runnerAdditional.getWidth() / 2;
+    const offset = coordinate - this.bar.getPosition() - this.runnerMain.getWidth() / 2;
 
     return this.processRunnerOffset(offset, runner);
   }
