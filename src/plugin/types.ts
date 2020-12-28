@@ -52,13 +52,3 @@ export type RawParameters = {
   showLabel?: string,
   isFloat?: string
 }
-
-export const defaultParameters = {
-  minValue: 0,
-  maxValue: 1000,
-  step: 1,
-  isRange: false,
-  isVertical: false,
-  showLabel: true,
-  isFloat: false
-};

@@ -2,11 +2,21 @@
 import * as types from './types';
 import Controller from './Controller/Controller';
 
+const defaultParameters = {
+  minValue: 0,
+  maxValue: 1000,
+  step: 1,
+  isRange: false,
+  isVertical: false,
+  showLabel: true,
+  isFloat: false
+};
+
 (function pluginWrapper($) {
   const methods: Methods = {
     init: function init(opt: types.Parameters) {
       if (!$(this).data('slider')) {
-        const newConfig = { ...types.defaultParameters };
+        const newConfig = { ...defaultParameters };
         const slider = new Controller($.extend(newConfig, opt), $(this));
         $(this).data('slider', slider);
       }

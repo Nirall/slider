@@ -15,6 +15,16 @@ const isOthersValuesFloat = (item: View, parameter: string): boolean => {
   }
 };
 
+const defaultParameters = {
+  minValue: 0,
+  maxValue: 1000,
+  step: 1,
+  isRange: false,
+  isVertical: false,
+  showLabel: true,
+  isFloat: false
+};
+
 class View {
   parameters: types.Parameters;
 
@@ -22,7 +32,7 @@ class View {
 
   private track: Track;
 
-  constructor(parameters = types.defaultParameters, observer: types.ObserverFunction) {
+  constructor(parameters = defaultParameters, observer: types.ObserverFunction) {
     this.observers = new MakeObservableObject();
     this.track = new Track(parameters, this.handleTrackValueChanging);
     this.parameters = parameters;
