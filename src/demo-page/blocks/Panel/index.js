@@ -31,5 +31,6 @@ const parameters = [
 ];
 
 $('.js-panel').each((index, elem) => {
+  // eslint-disable-next-line no-new
   new Panel(elem, parameters[index]);
 });
