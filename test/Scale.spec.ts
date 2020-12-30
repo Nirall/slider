@@ -1,57 +1,93 @@
-import Scale from '../src/plugin/View/blocks/scale/Scale';
+import Scale from '../src/plugin/View/blocks/Scale/Scale';
+import * as types from '../src/plugin/types';
 
 describe('Scale class(horizontal)', () => {
   let newItem: Scale;
+  let observerResult: types.ObserverTestResult;
+
+  const observer = (eventName: string, data: any): void => {
+    observerResult = ({ eventName: eventName, data: data });
+  };
+
+  const parameters = {
+    minValue: 0,
+    maxValue: 1000,
+    step: 1,
+    isRange: false,
+    isVertical: false,
+    showLabel: true,
+    isFloat: false
+  };
 
   beforeEach(() => {
-    newItem = new Scale(false);
+    newItem = new Scale(parameters, observer);
     const entry = document.createElement('div');
-    entry.style.width = '300px';
-    entry.style.height = '300px';
-    entry.appendChild(newItem.elem);
+    newItem.appendToNode(entry);
     document.body.appendChild(entry);
   });
 
-  it('elem should has elem with class "slider__scale"', () => {
-    expect((new Scale(false)).elem.classList.contains('slider__scale')).toEqual(true);
+  it('should has marks', () => {
+    expect(newItem.marks.length).not.toEqual(0);
   });
 
-  it('getPosition() should return left offset of the elem if isVertical = false', () => {
-    expect(newItem.getPosition()).toEqual(newItem.elem.getBoundingClientRect().left);
+  it('update() should set parameters property', () => {
+    parameters.step = 2;
+    newItem.update(parameters);
+    expect(newItem.parameters.step).toEqual(2);
   });
 
-  it('getDimension() should return width of the elem if isVertical = false', () => {
-    expect(newItem.getDimension()).toEqual(newItem.elem.getBoundingClientRect().width);
+  it('moveMarks() should move marks according their index', () => {
+    expect(newItem.marks[2].elem.style.left).toEqual('50%');
   });
 
-  it('init() should add class "slider__scale_position_vertical" if isVertical = true', () => {
-    newItem.init(true);
-    expect(newItem.elem.classList.contains('slider__scale_position_vertical')).toEqual(true);
+  it('marks should have value according their index', () => {
+    expect(newItem.marks[2].value).toEqual(500);
+  });
+
+  it('appendToNode should append marks to the element', () => {
+    const entry = document.createElement('div');
+    newItem.appendToNode(entry);
+    expect(Array.from(entry.children).indexOf(newItem.marks[1].elem)).not.toEqual(-1);
+  });
+
+  it('should notify observers with event "ClickOnScale" on click', () => {
+    const mouseClick = new MouseEvent('click');
+    newItem.marks[2].elem.dispatchEvent(mouseClick);
+    expect(observerResult.eventName).toEqual('ClickOnScale');
+  });
+
+  it('should notify observers with value of the mark on click', () => {
+    const mouseClick = new MouseEvent('click');
+    newItem.marks[2].elem.dispatchEvent(mouseClick);
+    expect(observerResult.data).toEqual(500);
   });
 });
 
 describe('Scale class(vertical)', () => {
   let newItem: Scale;
 
+  const observer = (): void => {
+    return null;
+  };
+
+  const parameters = {
+    minValue: 0,
+    maxValue: 900,
+    step: 100,
+    isRange: false,
+    isVertical: true,
+    showLabel: true,
+    isFloat: false
+  };
+
   beforeEach(() => {
-    newItem = new Scale(true);
+    newItem = new Scale(parameters, observer);
     const entry = document.createElement('div');
-    entry.style.width = '300px';
-    entry.style.height = '300px';
-    entry.appendChild(newItem.elem);
+    newItem.appendToNode(entry);
     document.body.appendChild(entry);
   });
 
-  it('getPosition() should return top offset of the elem if isVertical = true', () => {
-    expect(newItem.getPosition()).toEqual(newItem.elem.getBoundingClientRect().top);
-  });
-
-  it('getDimension() should return height of the elem if isVertical = true', () => {
-    expect(newItem.getDimension()).toEqual(newItem.elem.getBoundingClientRect().height);
-  });
-
-  it('init(), elem should not has class "slider__scale_position_vertical" if isVertical = false', () => {
-    newItem.init(false);
-    expect(newItem.elem.classList.contains('slider__scale_position_vertical')).toEqual(false);
+  it('moveMarks() should move marks according their index', () => {
+    expect(newItem.marks[1].elem.style.top).toEqual('22.2222%');
   });
 });

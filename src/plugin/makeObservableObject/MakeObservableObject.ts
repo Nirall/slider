@@ -7,7 +7,7 @@ class MakeObservableObject {
     this.observers = [];
   }
 
-  addObserver(fn: types.FunctionCallbackData): void {
+  addObserver(fn: types.ObserverFunction): void {
     if (typeof fn !== 'function') {
       throw new Error('observer must be a function');
     }
@@ -19,7 +19,7 @@ class MakeObservableObject {
     this.observers.push(fn);
   }
 
-  removeObserver(fn: types.FunctionCallbackData): void {
+  removeObserver(fn: types.ObserverFunction): void {
     for (let i = 0; i < this.observers.length; i += 1) {
       const observer = this.observers[i];
       if (observer === fn) {
@@ -30,9 +30,9 @@ class MakeObservableObject {
     throw new Error('could not find observer in list of observers');
   }
 
-  notifyObservers(data: any = null): void {
+  notifyObservers(eventName?: string, data?: any): void {
     const observersSnapshot = [...this.observers];
-    observersSnapshot.map((observer) => observer(data));
+    observersSnapshot.map((observer) => observer(eventName, data));
   }
 }
 

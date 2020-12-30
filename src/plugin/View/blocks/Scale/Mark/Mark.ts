@@ -11,7 +11,7 @@ class Mark {
 
   observers: MakeObservableObject;
 
-  constructor(isVertical: boolean, observer: types.FunctionCallbackData) {
+  constructor(isVertical: boolean, observer: types.ObserverFunction) {
     this.elem = createElem('slider__mark');
     this.isVertical = isVertical;
     this.observers = new MakeObservableObject();
@@ -67,7 +67,7 @@ class Mark {
   }
 
   private handleMarkClick = (): void => {
-    this.observers.notifyObservers(this.value);
+    this.observers.notifyObservers('ClickOnMark', this.value);
   }
 }
 

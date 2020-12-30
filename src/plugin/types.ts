@@ -1,9 +1,20 @@
 import Runner from './View/blocks/Runner/Runner';
 
-export type FunctionCallbackData = (arg: any) => void;
+export type FunctionCallbackData = (data: any, eventName?: string) => void;
+
+export type ObserverFunction = (eventName: string, data?: any,) => void;
+
+export type ObserverTestResult = {
+  eventName: string,
+  data?: any,
+}
 
 export type configUpdateData = {
   [index: string]: number|string|boolean;
+}
+
+export type InputsObject = {
+  [index: string]: JQuery;
 }
 
 export type RunnerMoveData = {
@@ -15,11 +26,6 @@ export type RunnerMoveData = {
 export type CurrentValues = {
   currentMinValue: number,
   currentMaxValue: number,
-}
-
-export type CurrentValueChangingData = {
-  typeOfValue: string,
-  value: number,
 }
 
 export type RunnerObserverData = {
@@ -38,21 +44,11 @@ export type Parameters = {
 }
 
 export type RawParameters = {
-  minValue: string|number,
-  maxValue: string|number,
-  step: string|number,
-  isRange: boolean,
-  isVertical: boolean,
-  showLabel: boolean,
-  isFloat: boolean
+  minValue?: number,
+  maxValue?: number,
+  step?: number,
+  isRange?: string,
+  isVertical?: string,
+  showLabel?: string,
+  isFloat?: string
 }
-
-export const defaultParameters = {
-  minValue: 0,
-  maxValue: 1000,
-  step: 1,
-  isRange: false,
-  isVertical: false,
-  showLabel: true,
-  isFloat: false
-};

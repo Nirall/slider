@@ -11,7 +11,7 @@ $red: #990033;
   position: relative;
   font: 14px/18px 'Montserrat';
 
-  &__button {
+  &__knob {
     width: 10px;
     height: 10px;
     border-radius: 50%;
@@ -27,7 +27,7 @@ $red: #990033;
     }
   }
 
-  &__button-label {
+  &__tooltip {
     height: 15px;
     min-width: 30px;
     padding: 5px;

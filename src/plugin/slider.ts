@@ -2,40 +2,52 @@
 import * as types from './types';
 import Controller from './Controller/Controller';
 
+const defaultParameters = {
+  minValue: 0,
+  maxValue: 1000,
+  step: 1,
+  isRange: false,
+  isVertical: false,
+  showLabel: true,
+  isFloat: false
+};
+
 (function pluginWrapper($) {
   const methods: Methods = {
     init: function init(opt: types.Parameters) {
       if (!$(this).data('slider')) {
-        const newConfig = { ...types.defaultParameters };
-        const slider = new Controller($.extend(newConfig, opt));
+        const newConfig = { ...defaultParameters };
+        const slider = new Controller($.extend(newConfig, opt), $(this));
         $(this).data('slider', slider);
-        slider.appendToNode($(this));
       }
     },
 
     update: function update(opt: types.Parameters) {
       const slider = $(this).data('slider');
-      slider.updateConfig(opt);
+      slider.update(opt);
     },
 
-    getConfig: function getConfig() {
+    renew: function renew() {
       const slider = $(this).data('slider');
-      return slider.getConfig();
+      return slider.renew();
     },
 
     setValues: function setValues(opt: types.CurrentValues) {
       const slider = $(this).data('slider');
-      slider.setValues(opt.currentMinValue, opt.currentMaxValue);
+      slider.setValues(opt);
     },
 
-    inputsAttach: function inputsAttach(opt: InputsObject) {
+    inputsAttach: function inputsAttach(opt: types.InputsObject) {
       const slider = $(this).data('slider');
-      slider.addObserver(() => {
-        opt.minValueInput.val(slider.getValues().currentMinValue);
-        opt.maxValueInput.val(slider.getValues().currentMaxValue);
-        opt.maxValue.val(slider.getConfig().maxValue);
-        opt.minValue.val(slider.getConfig().minValue);
-        opt.step.val(slider.getConfig().step);
+      slider.observers.addObserver((eventName?: string, data?: any) => {
+        if (eventName === 'SendingCurrentValuesForTracking') {
+          opt.minValueInput.val(data.currentMinValue);
+          opt.maxValueInput.val(data.currentMaxValue);
+        } if (eventName === 'SendingConfig') {
+          opt.maxValue.val(data.maxValue);
+          opt.minValue.val(data.minValue);
+          opt.step.val(data.step);
+        }
       });
     }
   };

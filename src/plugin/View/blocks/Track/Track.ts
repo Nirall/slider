@@ -20,14 +20,15 @@ class Track {
 
   observers: MakeObservableObject;
 
-  constructor(parameters: types.Parameters) {
+  constructor(parameters: types.Parameters, observer: types.ObserverFunction) {
     this.parameters = parameters;
     this.runnerMain = new Runner(this.parameters.isVertical, this.handleRunnerMove);
     this.runnerAdditional = new Runner(this.parameters.isVertical, this.handleRunnerMove);
     this.progressBar = new ProgressBar(this.parameters.isVertical);
-    this.bar = new Bar(this.parameters.isVertical);
+    this.bar = new Bar(this.parameters.isVertical, this.handleBarClick);
     this.scale = new Scale(this.parameters, this.handleScaleClick);
     this.observers = new MakeObservableObject();
+    this.observers.addObserver(observer);
   }
 
   update = (parameters: types.Parameters): void => {
@@ -63,7 +64,27 @@ class Track {
     );
   }
 
-  renewRunners(currentValues: types.CurrentValues): void {
+  observeViewFromTrack = (eventName: string, data?: any): void => {
+    if (eventName === 'SendingCurrentValues') {
+      this.renewRunners(data);
+    } if (eventName === 'UpdatingConfig') {
+      this.update(data);
+    } if (eventName === 'AppendingToNode') {
+      this.appendToNode(data);
+    }
+  }
+
+  appendToNode = (entry: HTMLElement): void => {
+    entry.appendChild(this.bar.elem).appendChild(this.progressBar.elem);
+    this.runnerMain.appendToNode(entry);
+    this.runnerAdditional.appendToNode(entry);
+    this.scale.appendToNode(entry);
+    this.scale.moveMarks();
+    this.update(this.parameters);
+    this.updateProgressBar();
+  }
+
+  private renewRunners(currentValues: types.CurrentValues): void {
     this.moveRunner(
       this.processRunnerOffset(
         this.convertOffsetToValue(currentValues.currentMaxValue),
@@ -76,19 +97,6 @@ class Track {
         this.runnerAdditional
       )
     );
-  }
-
-  appendToNode = (entry: HTMLElement): void => {
-    entry.appendChild(this.bar.elem).appendChild(this.progressBar.elem);
-    this.bar.elem.onclick = this.handleBarClick;
-    this.runnerMain.appendToNode(entry);
-    this.runnerAdditional.appendToNode(entry);
-
-    this.scale.marks.forEach((mark) => {
-      entry.appendChild(mark.elem);
-    });
-
-    this.scale.moveMarks();
   }
 
   private convertOffsetToValue = (value: number): number => {
@@ -112,19 +120,22 @@ class Track {
     return 0;
   }
 
-  private handleRunnerMove = ({ event, runner }: types.RunnerObserverData): void => {
-    this.moveRunner(this.processRunnerMouseEvent(event, runner));
+  private handleRunnerMove = (eventName: string,
+    { event, runner }: types.RunnerObserverData): void => {
+    if (eventName === 'MovingRunner') {
+      this.moveRunner(this.processRunnerMouseEvent(event, runner));
+    }
   }
 
   private moveRunner = (obj: types.RunnerMoveData): void => {
     obj.runner.setPosition(obj.offset, obj.value);
 
     if (obj.runner === this.runnerAdditional) {
-      this.observers.notifyObservers({ typeOfValue: 'minValue', value: obj.value });
+      this.observers.notifyObservers('ChangingCurrentValueFromTrack', { currentMinValue: obj.value });
     }
 
     if (obj.runner === this.runnerMain) {
-      this.observers.notifyObservers({ typeOfValue: 'maxValue', value: obj.value });
+      this.observers.notifyObservers('ChangingCurrentValueFromTrack', { currentMaxValue: obj.value });
     }
 
     this.updateProgressBar();
@@ -132,7 +143,7 @@ class Track {
 
   private processRunnerMouseEvent = (eventMm: MouseEvent, runner: Runner): types.RunnerMoveData => {
     const coordinate = this.parameters.isVertical ? eventMm.clientY : eventMm.clientX;
-    const offset = coordinate - this.bar.getPosition() - this.runnerAdditional.getWidth() / 2;
+    const offset = coordinate - this.bar.getPosition() - this.runnerMain.getWidth() / 2;
 
     return this.processRunnerOffset(offset, runner);
   }
@@ -142,7 +153,6 @@ class Track {
     let roundOffset;
     roundOffset = this.checkRunnerOffset(offset, runner);
     [roundOffset, roundValue] = this.roundOffsetRunner(roundOffset);
-
     return {
       runner: runner,
       offset: roundOffset,
@@ -214,17 +224,19 @@ class Track {
     return reminder < step / 2 ? whole * step : (whole + 1) * step;
   }
 
-  private handleScaleClick = (value: number) => {
-    const offset = this.convertOffsetToValue(value);
-    let runner;
+  private handleScaleClick = (eventName: string, value: number) => {
+    if (eventName === 'ClickOnScale') {
+      const offset = this.convertOffsetToValue(value);
+      let runner;
 
-    if (this.parameters.isRange) {
-      runner = this.checkRunnerCloser(offset);
-    } else {
-      runner = this.runnerMain;
+      if (this.parameters.isRange) {
+        runner = this.checkRunnerCloser(offset);
+      } else {
+        runner = this.runnerMain;
+      }
+
+      this.moveRunner(this.processRunnerOffset(offset, runner));
     }
-
-    this.moveRunner(this.processRunnerOffset(offset, runner));
   }
 
   private checkRunnerCloser = (offset: number): Runner => {
@@ -236,11 +248,13 @@ class Track {
     return this.runnerAdditional;
   }
 
-  private handleBarClick = (event: MouseEvent): void => {
-    const coordinate = this.parameters.isVertical ? event.clientY : event.clientX;
-    const offset = coordinate - this.bar.getPosition() - this.runnerMain.getWidth() / 2;
+  private handleBarClick = (eventName: string, event: MouseEvent): void => {
+    if (eventName === 'ClickOnBar') {
+      const coordinate = this.parameters.isVertical ? event.clientY : event.clientX;
+      const offset = coordinate - this.bar.getPosition() - this.runnerMain.getWidth() / 2;
 
-    this.moveRunner(this.processRunnerOffset(offset, this.checkRunnerCloser(offset)));
+      this.moveRunner(this.processRunnerOffset(offset, this.checkRunnerCloser(offset)));
+    }
   }
 
   private updateProgressBar = (): void => {

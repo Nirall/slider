@@ -1,0 +1,13 @@
+.demopage {
+  width: 900px;
+  margin: 0 auto;
+  font-family: Helvetica, sans-serif;
+
+  &__title {
+    text-align: center;
+  }
+
+  &__slider-wrapper {
+    display: flex;
+  }
+}

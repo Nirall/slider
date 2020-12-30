@@ -6,7 +6,7 @@ class Knob {
   isVertical: boolean;
 
   constructor(isVertical: boolean) {
-    this.elem = createElem('slider__button');
+    this.elem = createElem('slider__knob');
     this.isVertical = isVertical;
   }
 
@@ -36,9 +36,9 @@ class Knob {
     this.isVertical = isVertical;
 
     if (this.isVertical) {
-      this.elem.classList.add('slider__button_position_vertical');
+      this.elem.classList.add('slider__knob_position_vertical');
     } else {
-      this.elem.classList.remove('slider__button_position_vertical');
+      this.elem.classList.remove('slider__knob_position_vertical');
     }
   }
 }

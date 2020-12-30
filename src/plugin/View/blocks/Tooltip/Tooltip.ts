@@ -6,7 +6,7 @@ class Tooltip {
   isVertical: boolean;
 
   constructor(isVertical: boolean) {
-    this.elem = createElem('slider__button-label');
+    this.elem = createElem('slider__tooltip');
     this.isVertical = isVertical;
   }
 
@@ -42,9 +42,9 @@ class Tooltip {
     this.isVertical = isVertical;
 
     if (this.isVertical) {
-      this.elem.classList.add('slider__button-label_position_vertical');
+      this.elem.classList.add('slider__tooltip_position_vertical');
     } else {
-      this.elem.classList.remove('slider__button-label_position_vertical');
+      this.elem.classList.remove('slider__tooltip_position_vertical');
     }
   }
 }
