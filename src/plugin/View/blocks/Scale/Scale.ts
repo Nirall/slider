@@ -48,11 +48,12 @@ class Scale {
     this.marks.forEach((mark) => {
       entry.appendChild(mark.elem);
     });
+
+    this.moveMarks();
   }
 
   private init = (observer: types.ObserverFunction): void => {
     this.createMarks();
-    this.moveMarks();
     this.observers.addObserver(observer);
   }
 

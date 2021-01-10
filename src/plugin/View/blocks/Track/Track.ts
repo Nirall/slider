@@ -79,7 +79,6 @@ class Track {
     this.runnerMain.appendToNode(entry);
     this.runnerAdditional.appendToNode(entry);
     this.scale.appendToNode(entry);
-    this.scale.moveMarks();
     this.update(this.parameters);
     this.updateProgressBar();
   }
