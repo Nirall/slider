@@ -252,7 +252,11 @@ class Track {
       const coordinate = this.parameters.isVertical ? event.clientY : event.clientX;
       const offset = coordinate - this.bar.getPosition() - this.runnerMain.getWidth() / 2;
 
-      this.moveRunner(this.processRunnerOffset(offset, this.checkRunnerCloser(offset)));
+      if (this.parameters.isRange) {
+        this.moveRunner(this.processRunnerOffset(offset, this.checkRunnerCloser(offset)));
+      } else {
+        this.moveRunner(this.processRunnerOffset(offset, this.runnerMain));
+      }
     }
   }
 

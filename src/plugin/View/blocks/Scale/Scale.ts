@@ -7,6 +7,8 @@ class Scale {
 
   marks: Array<Mark>;
 
+  node: HTMLElement;
+
   observers: MakeObservableObject;
 
   constructor(parameters: types.Parameters, observer: types.ObserverFunction) {
@@ -18,7 +20,18 @@ class Scale {
 
   update = (options: types.Parameters): void => {
     this.parameters = options;
-    this.moveMarks();
+    this.removeMarks();
+    this.appendToNode(this.node);
+  }
+
+  removeMarks = () : void => {
+    this.node.querySelectorAll('.slider__mark').forEach((child) => {
+      this.node.removeChild(child);
+    });
+  }
+
+  removeMark = (child: HTMLElement) : void => {
+    this.node.removeChild(child);
   }
 
   moveMarks = (): void => {
@@ -37,14 +50,20 @@ class Scale {
           roundValue = parseFloat(roundValue.toFixed(2));
         }
 
-        const offset = (roundValue - this.parameters.minValue)
+        if (roundValue === this.marks[index - 1].value) {
+          this.removeMark(mark.elem);
+        } else {
+          const offset = (roundValue - this.parameters.minValue)
           / (this.parameters.maxValue - this.parameters.minValue);
-        mark.setPosition(offset * 100, roundValue);
+
+          mark.setPosition(offset * 100, roundValue);
+        }
       }
     });
   }
 
   appendToNode = (entry: HTMLElement): void => {
+    this.node = entry;
     this.marks.forEach((mark) => {
       entry.appendChild(mark.elem);
     });
@@ -64,7 +83,7 @@ class Scale {
   }
 
   private createMarks = (): void => {
-    for (let i = 0; i < 5; i += 1) {
+    for (let i = 0; i < 6; i += 1) {
       const mark = new Mark(this.parameters.isVertical, this.handleScaleClick);
       this.marks.push(mark);
     }
