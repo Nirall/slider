@@ -33,16 +33,6 @@ class Scale {
     this.moveMarks();
   }
 
-  private removeMarks = () : void => {
-    this.node.querySelectorAll('.slider__mark').forEach((child) => {
-      this.node.removeChild(child);
-    });
-  }
-
-  private removeMark = (child: HTMLElement) : void => {
-    this.node.removeChild(child);
-  }
-
   moveMarks = (): void => {
     this.marks.forEach((mark, index) => {
       mark.update(this.parameters.isVertical);
@@ -69,6 +59,16 @@ class Scale {
         }
       }
     });
+  }
+
+  private removeMarks = () : void => {
+    this.node.querySelectorAll('.slider__mark').forEach((child) => {
+      this.node.removeChild(child);
+    });
+  }
+
+  private removeMark = (child: HTMLElement) : void => {
+    this.node.removeChild(child);
   }
 
   private init = (observer: types.ObserverFunction): void => {

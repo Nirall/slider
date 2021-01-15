@@ -132,7 +132,7 @@ describe('Track class', () => {
     newItem.update(parameters);
     const mClickEvent = new MouseEvent('click');
     newItem.scale.marks[1].elem.dispatchEvent(mClickEvent);
-    expect(newItem.runnerAdditional.tooltip.elem.innerHTML).toEqual('250');
+    expect(newItem.runnerAdditional.tooltip.elem.innerHTML).toEqual('200');
   });
 
   it('should move closest Runner on the certain distance if there is a click on bar ', () => {

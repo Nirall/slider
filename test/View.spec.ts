@@ -28,6 +28,9 @@ describe('View class', () => {
     newItem = new View(parameters, observer);
     testObject = new MakeObservableObject();
     testObject.addObserver(newItem.observeControllerFromView);
+    const entry = document.createElement('div');
+    document.body.appendChild(entry);
+    newItem.observers.notifyObservers('AppendingToNode', entry);
   });
 
   it('update() should set parameters of the View', () => {

@@ -37,11 +37,11 @@ describe('Scale class(horizontal)', () => {
   });
 
   it('moveMarks() should move marks according their index', () => {
-    expect(newItem.marks[2].elem.style.left).toEqual('50%');
+    expect(newItem.marks[2].elem.style.left).toEqual('40%');
   });
 
   it('marks should have value according their index', () => {
-    expect(newItem.marks[2].value).toEqual(500);
+    expect(newItem.marks[2].value).toEqual(400);
   });
 
   it('appendToNode should append marks to the element', () => {
@@ -59,7 +59,7 @@ describe('Scale class(horizontal)', () => {
   it('should notify observers with value of the mark on click', () => {
     const mouseClick = new MouseEvent('click');
     newItem.marks[2].elem.dispatchEvent(mouseClick);
-    expect(observerResult.data).toEqual(500);
+    expect(observerResult.data).toEqual(400);
   });
 });
 
