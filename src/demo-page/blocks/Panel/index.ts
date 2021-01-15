@@ -3,19 +3,30 @@
 import Panel from './Panel';
 
 const parameters = [
-  { showLabel: true },
+  {
+    minValue: 0,
+    maxValue: 1000,
+    step: 1,
+    isVertical: false,
+    isRange: false,
+    showLabel: true,
+    isFloat: false
+  },
   {
     minValue: -1000,
     maxValue: 0,
     step: 100,
+    isVertical: false,
     isRange: true,
-    showLabel: true
+    showLabel: true,
+    isFloat: false
   },
   {
     minValue: 0,
     maxValue: 1,
     step: 0.05,
     isVertical: true,
+    isRange: false,
     showLabel: true,
     isFloat: true
   },

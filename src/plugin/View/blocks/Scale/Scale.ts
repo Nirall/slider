@@ -24,13 +24,22 @@ class Scale {
     this.appendToNode(this.node);
   }
 
-  removeMarks = () : void => {
+  appendToNode = (entry: HTMLElement): void => {
+    this.node = entry;
+    this.marks.forEach((mark) => {
+      entry.appendChild(mark.elem);
+    });
+
+    this.moveMarks();
+  }
+
+  private removeMarks = () : void => {
     this.node.querySelectorAll('.slider__mark').forEach((child) => {
       this.node.removeChild(child);
     });
   }
 
-  removeMark = (child: HTMLElement) : void => {
+  private removeMark = (child: HTMLElement) : void => {
     this.node.removeChild(child);
   }
 
@@ -60,15 +69,6 @@ class Scale {
         }
       }
     });
-  }
-
-  appendToNode = (entry: HTMLElement): void => {
-    this.node = entry;
-    this.marks.forEach((mark) => {
-      entry.appendChild(mark.elem);
-    });
-
-    this.moveMarks();
   }
 
   private init = (observer: types.ObserverFunction): void => {
