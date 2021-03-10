@@ -1,7 +1,7 @@
 import * as types from '../types';
 
 class MakeObservableObject {
-  observers: Array<types.FunctionCallbackData>;
+  observers: Array<types.ObserverFunction>;
 
   constructor() {
     this.observers = [];
@@ -30,7 +30,7 @@ class MakeObservableObject {
     throw new Error('could not find observer in list of observers');
   }
 
-  notifyObservers(eventName?: string, data?: any): void {
+  notifyObservers<T>(eventName: string, data?: T): void {
     const observersSnapshot = [...this.observers];
     observersSnapshot.map((observer) => observer(eventName, data));
   }
