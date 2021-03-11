@@ -9,6 +9,7 @@ class Panel {
 
   constructor(elem: HTMLElement, parameters: types.Parameters) {
     this.node = $(elem);
+    this.inputs = {};
     this.init(parameters);
   }
 

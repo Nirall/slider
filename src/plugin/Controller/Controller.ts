@@ -20,7 +20,7 @@ class Controller {
 
   observers: MakeObservableObject;
 
-  constructor(parameters = defaultParameters, entry: JQuery) {
+  constructor(parameters = defaultParameters, entry: JQuery<Methods>) {
     this.view = new View(parameters, this.handleViewChangingValue);
     this.model = new Model({
       currentMinValue: parameters.minValue,
@@ -44,7 +44,7 @@ class Controller {
     this.observers.notifyObservers('GettingValues');
   }
 
-  private init = (entry: JQuery):void => {
+  private init = (entry: JQuery<Methods>):void => {
     this.observers.addObserver(this.view.observeControllerFromView);
     this.observers.addObserver(this.model.observeControllerFromModel);
     this.observers.notifyObservers('AppendingToNode', entry.get(0));

@@ -30,10 +30,10 @@ class Model {
     if (eventName === 'UpdatingConfig') {
       this.observers.notifyObservers('SendingCurrentValues', this.currentValues);
     } if (eventName === 'ChangingCurrentValueFromView') {
-      this.setCurrentValues(data, 'fromView');
+      if (data) this.setCurrentValues(data, 'fromView');
       this.observers.notifyObservers('SendingCurrentValuesForTracking', this.currentValues);
     } if (eventName === 'ChangingCurrentValueFromPanel') {
-      this.setCurrentValues(data, 'fromPanel');
+      if (data) this.setCurrentValues(data, 'fromPanel');
     } if (eventName === 'GettingValues') {
       this.observers.notifyObservers('SendingCurrentValuesForTracking', this.currentValues);
     }

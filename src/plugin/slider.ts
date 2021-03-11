@@ -52,10 +52,10 @@ const defaultParameters = {
     }
   };
 
-  $.fn.omfgslider = function processMethod(method: string, // eslint-disable-line no-param-reassign
-    ...args: Array<types.configUpdateData>) {
+  // eslint-disable-next-line no-param-reassign
+  $.fn.omfgslider = function processMethod(method: string, ...args: Array<types.configUpdateData>) {
     if (methods[method]) {
-      return methods[method].apply(this, args);
+      return methods[method].apply(this, [args[0]]);
     } if (typeof method === 'object' || !method) {
       return methods.init.apply(this, [method]);
     }

@@ -1,5 +1,6 @@
-import * as types from '../../../types';
 import Mark from './Mark/Mark';
+import createElem from '../createElem/createElem';
+import * as types from '../../../types';
 import MakeObservableObject from '../../../makeObservableObject/MakeObservableObject';
 
 class Scale {
@@ -7,27 +8,31 @@ class Scale {
 
   marks: Array<Mark>;
 
-  node: HTMLElement;
+  elem: HTMLElement;
 
   observers: MakeObservableObject;
 
   constructor(parameters: types.Parameters, observer: types.ObserverFunction) {
     this.parameters = parameters;
     this.marks = [];
+    this.elem = createElem('slider__scale');
     this.observers = new MakeObservableObject();
     this.init(observer);
   }
 
   update = (options: types.Parameters): void => {
     this.parameters = options;
-    this.removeMarks();
-    this.appendToNode(this.node);
+    this.renewMarks();
   }
 
   appendToNode = (entry: HTMLElement): void => {
-    this.node = entry;
+    entry.appendChild(this.elem);
+  }
+
+  renewMarks = () : void => {
+    this.removeMarks();
     this.marks.forEach((mark) => {
-      entry.appendChild(mark.elem);
+      this.elem.appendChild(mark.elem);
     });
 
     this.moveMarks();
@@ -62,13 +67,13 @@ class Scale {
   }
 
   private removeMarks = () : void => {
-    this.node.querySelectorAll('.slider__mark').forEach((child) => {
-      this.node.removeChild(child);
+    this.elem.querySelectorAll('.slider__mark').forEach((child) => {
+      this.elem.removeChild(child);
     });
   }
 
   private removeMark = (child: HTMLElement) : void => {
-    this.node.removeChild(child);
+    this.elem.removeChild(child);
   }
 
   private init = (observer: types.ObserverFunction): void => {

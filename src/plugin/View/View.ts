@@ -115,45 +115,48 @@ class View {
     return checkedParameters;
   }
 
-  private checkStep = (step: number): number => {
-    if (!step || step > (this.parameters.maxValue - this.parameters.minValue) / 2) {
-      return this.parameters.step;
-    }
-    if (step % 1 !== 0) {
-      this.parameters.isFloat = true;
-    } else if (!isOthersValuesFloat(this, 'step')) {
-      this.parameters.isFloat = false;
+  private checkStep = (step: number | undefined): number => {
+    if (step && step < (this.parameters.maxValue - this.parameters.minValue) / 2) {
+      if (step > 0 && step < (this.parameters.maxValue - this.parameters.minValue) / 2) {
+        if (step % 1 !== 0) {
+          this.parameters.isFloat = true;
+        } else if (!isOthersValuesFloat(this, 'step')) {
+          this.parameters.isFloat = false;
+        }
+
+        return step;
+      }
     }
 
-    return step;
+    return this.parameters.step;
   }
 
-  private checkMaxValue = (maxValue: number): number => {
-    if (Number.isNaN(maxValue) || maxValue <= this.parameters.minValue) {
-      return this.parameters.maxValue;
+  private checkMaxValue = (maxValue: number | undefined): number => {
+    if (maxValue && maxValue > this.parameters.minValue) {
+      if (maxValue % 1 !== 0) {
+        this.parameters.isFloat = true;
+      } else if (!isOthersValuesFloat(this, 'maxValue')) {
+        this.parameters.isFloat = false;
+      }
+
+      return maxValue;
     }
 
-    if (maxValue % 1 !== 0) {
-      this.parameters.isFloat = true;
-    } else if (!isOthersValuesFloat(this, 'maxValue')) {
-      this.parameters.isFloat = false;
-    }
-
-    return maxValue;
+    return this.parameters.maxValue;
   }
 
-  private checkMinValue = (minValue: number): number => {
-    if (Number.isNaN(minValue) || minValue >= this.parameters.maxValue) {
-      return this.parameters.minValue;
+  private checkMinValue = (minValue: number | undefined): number => {
+    if (minValue && minValue < this.parameters.maxValue) {
+      if (minValue % 1 !== 0) {
+        this.parameters.isFloat = true;
+      } else if (!isOthersValuesFloat(this, 'minValue')) {
+        this.parameters.isFloat = false;
+      }
+
+      return minValue;
     }
 
-    if (minValue % 1 !== 0) {
-      this.parameters.isFloat = true;
-    } else if (!isOthersValuesFloat(this, 'minValue')) {
-      this.parameters.isFloat = false;
-    }
-
-    return minValue;
+    return this.parameters.minValue;
   }
 }
 

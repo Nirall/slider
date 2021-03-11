@@ -7,7 +7,7 @@ class Mark {
 
   isVertical: boolean;
 
-  value: number;
+  value: number | undefined;
 
   observers: MakeObservableObject;
 
