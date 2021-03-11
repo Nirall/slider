@@ -20,14 +20,15 @@ class MakeObservableObject {
   }
 
   removeObserver(fn: types.ObserverFunction): void {
-    for (let i = 0; i < this.observers.length; i += 1) {
-      const observer = this.observers[i];
-      if (observer === fn) {
-        this.observers.splice(i, 1);
-        return;
-      }
+    const observers = this.observers.filter((observer) => {
+      return observer !== fn;
+    });
+
+    if (observers === this.observers) {
+      throw new Error('could not find observer in list of observers');
+    } else {
+      this.observers = observers;
     }
-    throw new Error('could not find observer in list of observers');
   }
 
   notifyObservers<T>(eventName: string, data?: T): void {
