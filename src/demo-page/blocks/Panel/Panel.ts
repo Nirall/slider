@@ -59,23 +59,23 @@ class Panel {
   }
 
   private handleCurrentMinValueInputFocusout = () => {
-    this.inputs.slider.omfgslider('setValues', { currentMinValue: parseFloat(this.inputs.currentMinValueInput.val() as string) });
+    this.inputs.slider.omfgslider('setValues', { currentMinValue: parseFloat(this.inputs.currentMinValueInput.val() + '') });
   };
 
   private handleCurrentMaxValueInputFocusout = () => {
-    this.inputs.slider.omfgslider('setValues', { currentMaxValue: parseFloat(this.inputs.currentMaxValueInput.val() as string) });
+    this.inputs.slider.omfgslider('setValues', { currentMaxValue: parseFloat(this.inputs.currentMaxValueInput.val() + '') });
   };
 
   private handleMinValueInputFocusout = () => {
-    this.inputs.slider.omfgslider('update', { minValue: parseFloat(this.inputs.minValueInput.val() as string) });
+    this.inputs.slider.omfgslider('update', { minValue: parseFloat(this.inputs.minValueInput.val() + '') });
   };
 
   private handleMaxValueInputFocusout = () => {
-    this.inputs.slider.omfgslider('update', { maxValue: parseFloat(this.inputs.maxValueInput.val() as string) });
+    this.inputs.slider.omfgslider('update', { maxValue: parseFloat(this.inputs.maxValueInput.val() + '') });
   };
 
   private handleStepInputFocusout = () => {
-    this.inputs.slider.omfgslider('update', { step: parseFloat(this.inputs.stepInput.val() as string) });
+    this.inputs.slider.omfgslider('update', { step: parseFloat(this.inputs.stepInput.val() + '') });
   };
 
   private handleRangeButtonChange = () => {
