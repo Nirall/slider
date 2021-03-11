@@ -1,5 +1,4 @@
-/* global $ */
-
+import * as $ from 'jquery';
 import Panel from './Panel';
 
 const parameters = [

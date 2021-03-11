@@ -1,5 +1,4 @@
-/* global $ */
-
+import * as $ from 'jquery';
 import * as types from '../../../plugin/types';
 
 class Panel {

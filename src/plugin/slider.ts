@@ -1,6 +1,6 @@
-/* global jQuery */
 import * as types from './types';
 import Controller from './Controller/Controller';
+import * as jQuery from 'jquery';
 
 const defaultParameters = {
   minValue: 0,
