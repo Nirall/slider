@@ -1,6 +1,7 @@
 include ../radio-button/radio-button
 
 mixin panel(index, parameters)
+  - const { isRange, isVertical } = parameters
   .panel.js-panel
     form(name = "slider" + index)
       .panel__current-values
@@ -21,7 +22,7 @@ mixin panel(index, parameters)
             span.panel__input-text Шаг
         .panel__row
           h3.panel__title Диапазон
-          if parameters.isRange
+          if isRange
             +radio-button({ class: "panel__range js-panel__range", name: "range", value: "single", text: "Одиночный" })
             +radio-button({ class: "panel__range js-panel__range", name: "range", value: "range", text: "Диапазон", checked: true })
           else
@@ -29,7 +30,7 @@ mixin panel(index, parameters)
             +radio-button({ class: "panel__range js-panel__range", name: "range", value: "range", text: "Диапазон" })
         .panel__row
           h3.panel__title Ориентация
-          if parameters.isVertical
+          if isVertical
             +radio-button({ class: "panel__orientation js-panel__orientation", name: "vertical", value: "horizontal", text: "Горизонтальный" })
             +radio-button({ class: "panel__orientation js-panel__orientation", name: "vertical", value: "vertical", text: "Вертикальный", checked: true })
           else
