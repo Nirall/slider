@@ -18,12 +18,12 @@ $red: #990033;
     border: 2px solid white;
     background: $green;
     position: absolute;
-    margin: -7px 0 0 0;
+    transform: translateY(-50%);
     cursor: pointer;
     z-index: 3;
 
     &_position_vertical {
-      margin: 0 0 0 -7px;
+      transform: translateX(-50%);
     }
   }
 
@@ -32,7 +32,7 @@ $red: #990033;
     min-width: 30px;
     padding: 5px;
     border-radius: 4px;
-    margin: -35px 0 0 0;
+    transform: translateY(-35px);
     background: $green;
     color: white;
     position: absolute;
@@ -44,6 +44,7 @@ $red: #990033;
     z-index: 3;
 
     &_position_vertical {
+      transform: none;
       margin: 0 0 0 10px;
     }
   }
@@ -61,10 +62,6 @@ $red: #990033;
     text-align: center;
     cursor: pointer;
     z-index: 3;
-
-    &_position_vertical {
-      margin: 0 0 0 -50px;
-    }
   }
 
   &__bar {
@@ -75,7 +72,7 @@ $red: #990033;
     border-radius: 3px;
     position: absolute;
     top: 50%;
-    margin: -3px 0 0 0;
+    transform: translateY(-50%);
     cursor: pointer;
     z-index: 2;
 
@@ -84,7 +81,7 @@ $red: #990033;
       width: 6px;
       top: 0;
       left: 50%;
-      margin: 0 0 0 -3px;
+      transform: translateX(-50%);
     }
   }
 
