@@ -32,7 +32,6 @@ class Controller {
 
   update = (parameters: types.RawParameters): void => {
     this.observers.notifyObservers('UpdatingConfig', parameters);
-    this.observers.notifyObservers('GettingConfig');
   }
 
   setValues = (currentValues: types.CurrentValues): void => {
@@ -61,9 +60,10 @@ class Controller {
   private handleModelSendingValues = (eventName: string, data: types.CurrentValues): void => {
     if (eventName === 'SendingCurrentValues') {
       this.observers.notifyObservers('SendingCurrentValues', data);
-      this.observers.notifyObservers('GettingValues');
     } if (eventName === 'SendingCurrentValuesForTracking') {
       this.observers.notifyObservers('SendingCurrentValuesForTracking', data);
+    } if (eventName === 'UpdatingConfigAfterModelChecking') {
+      this.observers.notifyObservers('UpdatingConfigAfterModelChecking', data);
     }
   }
 }

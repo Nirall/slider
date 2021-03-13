@@ -22,7 +22,7 @@ class View {
 
   private track: Track;
 
-  constructor(parameters = defaultParameters, observer: types.ObserverFunction) {
+  constructor(parameters: types.Parameters, observer: types.ObserverFunction) {
     this.observers = new MakeObservableObject();
     this.track = new Track(parameters, this.handleTrackValueChanging);
     this.parameters = parameters;
@@ -33,6 +33,7 @@ class View {
     const checkedParameters = this.validateConfig(parameters);
     this.parameters = checkedParameters;
     this.observers.notifyObservers('UpdatingConfig', this.parameters);
+    this.observers.notifyObservers('SendingConfig', this.parameters);
   }
 
   handleTrackValueChanging = (eventName: string, data: types.CurrentValues): void => {
@@ -44,7 +45,7 @@ class View {
   observeControllerFromView = (eventName: string, data: any): void => {
     if (eventName === 'SendingCurrentValues') {
       this.observers.notifyObservers('SendingCurrentValues', data);
-    } if (eventName === 'UpdatingConfig') {
+    } if (eventName === 'UpdatingConfigAfterModelChecking') {
       this.update(data);
     } if (eventName === 'GettingConfig') {
       this.observers.notifyObservers('SendingConfig', this.parameters);
@@ -106,7 +107,7 @@ class View {
   }
 
   private checkStep = (step: number | undefined): number => {
-    if (step && step < (this.parameters.maxValue - this.parameters.minValue) / 2) {
+    if (step) {
       if (step > 0 && step < (this.parameters.maxValue - this.parameters.minValue) / 2) {
         if (step % 1 !== 0) {
           this.parameters.isFloat = true;
@@ -122,7 +123,7 @@ class View {
   }
 
   private checkMaxValue = (maxValue: number | undefined): number => {
-    if (maxValue && maxValue > this.parameters.minValue) {
+    if (maxValue || maxValue === 0) {
       if (maxValue % 1 !== 0) {
         this.parameters.isFloat = true;
       } else if (!isOthersValuesFloat(this, 'maxValue')) {
@@ -136,8 +137,8 @@ class View {
   }
 
   private checkMinValue = (minValue: number | undefined): number => {
-    if (minValue && minValue < this.parameters.maxValue) {
-      if (minValue % 1 !== 0) {
+    if (minValue || minValue === 0) {
+      if (minValue && minValue % 1 !== 0) {
         this.parameters.isFloat = true;
       } else if (!isOthersValuesFloat(this, 'minValue')) {
         this.parameters.isFloat = false;
