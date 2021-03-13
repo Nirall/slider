@@ -13,7 +13,7 @@ class Panel {
   }
 
   private init = (parameters: types.Parameters) => {
-    const slider = $(this.node).siblings('.js-slider');
+    const slider = $(this.node).parent().find('.js-slider');
     const currentMinValueInput = this.node.find('.js-panel__current-minvalue');
     const currentMaxValueInput = this.node.find('.js-panel__current-maxvalue');
     const minValueInput = this.node.find('.js-panel__minValue');

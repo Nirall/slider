@@ -23,7 +23,8 @@ html(lang = "ru")
         - var initParameters = [{ isRange: false, isVertical: false }, { isRange: true, isVertical: false }, { isRange: false, isVertical: true }, { isRange: true, isVertical: true }]
         each parameters, index in initParameters
           .demopage__slider-wrapper
-            .slider.js-slider
+            .demopage__slider
+              .slider.js-slider
             +panel(index, parameters)
       script(src = "bundle.js")
       script(src = "init.js")
