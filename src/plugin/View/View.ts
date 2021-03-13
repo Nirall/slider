@@ -15,16 +15,6 @@ const isOthersValuesFloat = (item: View, parameter: string): boolean => {
   }
 };
 
-const defaultParameters = {
-  minValue: 0,
-  maxValue: 1000,
-  step: 1,
-  isRange: false,
-  isVertical: false,
-  showLabel: true,
-  isFloat: false
-};
-
 class View {
   parameters: types.Parameters;
 
