@@ -14,7 +14,7 @@
 
 Сборка билда "npm run build".
 
-Для публикации на GitHub Pages добавьте путь до папки 'dist'. Пример - "https://nirall.github.io/slider/dist/".
+Для публикации на GitHub Pages добавьте путь до папки 'dist'. Демостраница - "https://nirall.github.io/slider_deploy/".
 
 Инициализация плагина с подключением методов для тестирования выполнена внутри "index.html".
 
