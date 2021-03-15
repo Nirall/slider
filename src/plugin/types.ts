@@ -9,7 +9,7 @@ export type ObserverTestResult = {
   data?: any,
 }
 
-export type configUpdateData = {
+export type updateData = {
   [index: string]: number|string|boolean;
 }
 
@@ -26,6 +26,11 @@ export type RunnerMoveData = {
 export type CurrentValues = {
   currentMinValue: number,
   currentMaxValue: number,
+}
+
+export type updateCurrentValues = {
+  currentMinValue?: number,
+  currentMaxValue?: number,
 }
 
 export type RunnerObserverData = {

@@ -53,7 +53,7 @@ const defaultParameters = {
   };
 
   // eslint-disable-next-line no-param-reassign
-  $.fn.omfgslider = function processMethod(method: string, ...args: Array<types.configUpdateData>) {
+  $.fn.omfgslider = function processMethod(method: string, ...args: Array<types.updateData>) {
     if (methods[method]) {
       return methods[method].apply(this, [args[0]]);
     } if (typeof method === 'object' || !method) {

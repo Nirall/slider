@@ -59,23 +59,23 @@ class Panel {
   }
 
   private handleCurrentMinValueInputFocusout = () => {
-    this.inputs.slider.omfgslider('setValues', { currentMinValue: parseFloat(this.inputs.currentMinValueInput.val() + '') });
+    this.inputs.slider.omfgslider('setValues', { currentMinValue: this.inputs.currentMinValueInput.val() });
   };
 
   private handleCurrentMaxValueInputFocusout = () => {
-    this.inputs.slider.omfgslider('setValues', { currentMaxValue: parseFloat(this.inputs.currentMaxValueInput.val() + '') });
+    this.inputs.slider.omfgslider('setValues', { currentMaxValue: this.inputs.currentMaxValueInput.val() });
   };
 
   private handleMinValueInputFocusout = () => {
-    this.inputs.slider.omfgslider('update', { minValue: parseFloat(this.inputs.minValueInput.val() + '') });
+    this.inputs.slider.omfgslider('update', { minValue: this.inputs.minValueInput.val() });
   };
 
   private handleMaxValueInputFocusout = () => {
-    this.inputs.slider.omfgslider('update', { maxValue: parseFloat(this.inputs.maxValueInput.val() + '') });
+    this.inputs.slider.omfgslider('update', { maxValue: this.inputs.maxValueInput.val() });
   };
 
   private handleStepInputFocusout = () => {
-    this.inputs.slider.omfgslider('update', { step: parseFloat(this.inputs.stepInput.val() + '') });
+    this.inputs.slider.omfgslider('update', { step: this.inputs.stepInput.val() });
   };
 
   private handleRangeButtonChange = () => {

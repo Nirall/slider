@@ -30,17 +30,54 @@ class Controller {
     this.init(entry);
   }
 
-  update = (parameters: types.RawParameters): void => {
-    this.observers.notifyObservers('UpdatingConfig', parameters);
+  update = (parameters: types.updateData): void => {
+    this.observers.notifyObservers('UpdatingConfig', this.normalizeUpdateConfig(parameters));
   }
 
   setValues = (currentValues: types.CurrentValues): void => {
-    this.observers.notifyObservers('ChangingCurrentValueFromPanel', currentValues);
+    this.observers.notifyObservers('ChangingCurrentValueFromPanel', this.normalizeSetValues(currentValues));
   }
 
   renew = (): void => {
     this.observers.notifyObservers('GettingConfig');
     this.observers.notifyObservers('GettingValues');
+  }
+
+  private normalizeUpdateConfig = (parameters: types.updateData)
+    : types.RawParameters | undefined => {
+    const key = Object.keys(parameters)[0];
+    let value: string;
+    switch (key) {
+      case 'minValue':
+        return { minValue: parseFloat(parameters.minValue + '') };
+      case 'maxValue':
+        return { maxValue: parseFloat(parameters.minValue + '') };
+      case 'step':
+        return { step: parseFloat(parameters.minValue + '') };
+      case 'isRange':
+        value = parameters.isRange ? 'toggle' : '';
+        return { isRange: value };
+      case 'isVertical':
+        value = parameters.isVertical ? 'toggle' : '';
+        return { isVertical: value };
+      case 'showLabel':
+        value = parameters.showLabel ? 'toggle' : '';
+        return { showLabel: value };
+      default:
+        return {};
+    }
+  }
+
+  private normalizeSetValues = (parameters: types.updateData): types.updateCurrentValues | null => {
+    const key = Object.keys(parameters)[0];
+    switch (key) {
+      case 'currentMinValue':
+        return { currentMinValue: parseFloat(parameters.minValue + '') };
+      case 'currentMaxValue':
+        return { currentMaxValue: parseFloat(parameters.minValue + '') };
+      default:
+        return null;
+    }
   }
 
   private init = (entry: JQuery<Methods>):void => {
