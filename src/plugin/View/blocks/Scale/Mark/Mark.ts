@@ -56,7 +56,7 @@ class Mark {
   }
 
   private init = (observer: types.FunctionCallbackData): void => {
-    this.elem.onclick = this.handleMarkClick;
+    this.elem.addEventListener('click', this.handleMarkClick);
     this.observers.addObserver(observer);
   }
 

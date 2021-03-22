@@ -51,9 +51,9 @@ class Controller {
       case 'minValue':
         return { minValue: parseFloat(parameters.minValue + '') };
       case 'maxValue':
-        return { maxValue: parseFloat(parameters.minValue + '') };
+        return { maxValue: parseFloat(parameters.maxValue + '') };
       case 'step':
-        return { step: parseFloat(parameters.minValue + '') };
+        return { step: parseFloat(parameters.step + '') };
       case 'isRange':
         value = parameters.isRange ? 'toggle' : '';
         return { isRange: value };
@@ -72,9 +72,9 @@ class Controller {
     const key = Object.keys(parameters)[0];
     switch (key) {
       case 'currentMinValue':
-        return { currentMinValue: parseFloat(parameters.minValue + '') };
+        return { currentMinValue: parseFloat(parameters.currentMinValue + '') };
       case 'currentMaxValue':
-        return { currentMaxValue: parseFloat(parameters.minValue + '') };
+        return { currentMaxValue: parseFloat(parameters.currentMaxValue + '') };
       default:
         return null;
     }

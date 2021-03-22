@@ -43,7 +43,7 @@ class Bar {
   }
 
   private init = (observer: types.FunctionCallbackData): void => {
-    this.elem.onclick = this.handleBarClick;
+    this.elem.addEventListener('click', this.handleBarClick);
     this.observers.addObserver(observer);
   }
 

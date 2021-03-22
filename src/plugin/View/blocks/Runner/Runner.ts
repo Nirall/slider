@@ -59,7 +59,7 @@ class Runner {
   appendToNode = (entry: HTMLElement): void => {
     [this.knob.elem, this.tooltip.elem].forEach((elem) => {
       entry.appendChild(elem);
-      elem.onmousedown = this.handleRunnerMouseDown; // eslint-disable-line no-param-reassign
+      elem.addEventListener('mousedown', this.handleRunnerMouseDown);
     });
   }
 
