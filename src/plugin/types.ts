@@ -52,8 +52,8 @@ export type RawParameters = {
   minValue?: number,
   maxValue?: number,
   step?: number,
-  isRange?: string,
-  isVertical?: string,
+  range?: string,
+  vertical?: string,
   showLabel?: string,
   isFloat?: string
 }

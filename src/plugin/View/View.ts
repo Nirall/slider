@@ -72,8 +72,8 @@ class View {
       case 'minValue':
         checkedParameters.minValue = this.checkMinValue(parameters.minValue);
         break;
-      case 'isRange':
-        if (parameters.isRange === 'toggle') {
+      case 'range':
+        if (parameters.range === 'toggle') {
           if (this.parameters.isRange === true) {
             checkedParameters.isRange = false;
           } else {
@@ -81,8 +81,8 @@ class View {
           }
         }
         break;
-      case 'isVertical':
-        if (parameters.isVertical === 'toggle') {
+      case 'vertical':
+        if (parameters.vertical === 'toggle') {
           if (this.parameters.isVertical === true) {
             checkedParameters.isVertical = false;
           } else {

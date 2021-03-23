@@ -46,7 +46,6 @@ class Controller {
   private normalizeUpdateConfig = (parameters: types.updateData)
     : types.RawParameters | undefined => {
     const key = Object.keys(parameters)[0];
-    let value: string;
     switch (key) {
       case 'minValue':
         return { minValue: parseFloat(parameters.minValue + '') };
@@ -54,15 +53,12 @@ class Controller {
         return { maxValue: parseFloat(parameters.maxValue + '') };
       case 'step':
         return { step: parseFloat(parameters.step + '') };
-      case 'isRange':
-        value = parameters.isRange ? 'toggle' : '';
-        return { isRange: value };
-      case 'isVertical':
-        value = parameters.isVertical ? 'toggle' : '';
-        return { isVertical: value };
+      case 'range':
+        return { range: parameters.range ? 'toggle' : '' };
+      case 'vertical':
+        return { vertical: parameters.vertical ? 'toggle' : '' };
       case 'showLabel':
-        value = parameters.showLabel ? 'toggle' : '';
-        return { showLabel: value };
+        return { showLabel: parameters.showLabel ? 'toggle' : '' };
       default:
         return {};
     }

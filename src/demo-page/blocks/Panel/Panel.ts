@@ -79,11 +79,11 @@ class Panel {
   };
 
   private handleRangeButtonChange = () => {
-    this.inputs.slider.omfgslider('update', { isRange: 'toggle' });
+    this.inputs.slider.omfgslider('update', { range: 'toggle' });
   };
 
   private handleVerticalButtonChange = () => {
-    this.inputs.slider.omfgslider('update', { isVertical: 'toggle' });
+    this.inputs.slider.omfgslider('update', { vertical: 'toggle' });
   };
 
   private handleLabelButtonChange = () => {
