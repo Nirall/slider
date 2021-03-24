@@ -3,16 +3,6 @@ import View from '../View/View';
 import Model from '../Model/Model';
 import MakeObservableObject from '../makeObservableObject/MakeObservableObject';
 
-const defaultParameters = {
-  minValue: 0,
-  maxValue: 1000,
-  step: 1,
-  isRange: false,
-  isVertical: false,
-  showLabel: true,
-  isFloat: false
-};
-
 class Controller {
   private view: View;
 
@@ -20,7 +10,7 @@ class Controller {
 
   observers: MakeObservableObject;
 
-  constructor(parameters = defaultParameters, entry: JQuery<Methods>) {
+  constructor(parameters: types.Parameters, entry: JQuery<Methods>) {
     this.view = new View(parameters, this.handleViewChangingValue);
     this.model = new Model({
       currentMinValue: parameters.minValue,
