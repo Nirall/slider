@@ -48,6 +48,8 @@ export type Parameters = {
   isFloat: boolean
 }
 
+export type keyOfParameters = keyof Parameters;
+
 export type RawParameters = {
   minValue?: number,
   maxValue?: number,
