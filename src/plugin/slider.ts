@@ -71,7 +71,11 @@ const normalizeInitParameters = (parameters: unknown | types.Parameters) => {
   const methods: Methods = {
     init: function init(opt: types.Parameters) {
       if (!$(this).data('slider')) {
+<<<<<<< HEAD
         const newConfig = { ...defaultParameters };
+=======
+        const newConfig = {...defaultParameters};
+>>>>>>> 883bcebdce72bb25e1aca3756765d98761054e75
         const slider = new Controller($.extend(newConfig, normalizeInitParameters(opt)), $(this));
         $(this).data('slider', slider);
       }
