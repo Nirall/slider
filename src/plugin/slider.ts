@@ -12,12 +12,67 @@ const defaultParameters = {
   isFloat: false
 };
 
+const isParametersCorrect = (parameters: types.Parameters | unknown)
+  : parameters is types.Parameters => {
+  let isCorrect = false;
+  if (parameters && typeof parameters === 'object') {
+    Object.keys(defaultParameters).forEach(key => {
+      if (key in parameters) isCorrect = true;
+    });
+  }
+
+  return isCorrect;
+};
+
+const normalizeInitParameters = (parameters: unknown | types.Parameters) => {
+  const normalizedParamters = defaultParameters;
+  if (isParametersCorrect(parameters)) {
+    Object.keys(defaultParameters).forEach(key => {
+      switch (key) {
+        case 'minValue':
+          normalizedParamters.minValue = Number.isFinite(parseFloat(String(parameters.minValue)))
+            ? parseFloat(String(parameters.minValue))
+            : defaultParameters.minValue;
+          break;
+        case 'maxValue':
+          normalizedParamters.maxValue = Number.isFinite(parseFloat(String(parameters.maxValue)))
+            ? parseFloat(String(parameters.maxValue))
+            : defaultParameters.maxValue;
+          break;
+        case 'step':
+          normalizedParamters.step = Number.isFinite(parseFloat(String(parameters.step)))
+            ? parseFloat(String(parameters.step))
+            : defaultParameters.step;
+          break;
+        case 'isRange':
+          normalizedParamters.isRange = typeof parameters.isRange === 'boolean'
+            ? parameters.isRange
+            : defaultParameters.isRange;
+          break;
+        case 'isVertical':
+          normalizedParamters.isVertical = typeof parameters.isVertical === 'boolean'
+            ? parameters.isVertical
+            : defaultParameters.isVertical;
+          break;
+        case 'showLabel':
+          normalizedParamters.showLabel = typeof parameters.showLabel === 'boolean'
+            ? parameters.showLabel
+            : defaultParameters.showLabel;
+          break;
+        default: break;
+      }
+    });
+  }
+
+  return normalizedParamters;
+};
+
 (function pluginWrapper($) {
   const methods: Methods = {
     init: function init(opt: types.Parameters) {
       if (!$(this).data('slider')) {
         const newConfig = { ...defaultParameters };
-        const slider = new Controller($.extend(newConfig, opt), $(this));
+        const slider = new Controller($.extend(newConfig, normalizeInitParameters(opt)), $(this));
         $(this).data('slider', slider);
       }
     },
