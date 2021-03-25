@@ -12,57 +12,61 @@ const defaultParameters = {
   isFloat: false
 };
 
-const isParametersCorrect = (parameters: types.Parameters | unknown)
-  : parameters is types.Parameters => {
-  let isCorrect = false;
-  if (parameters && typeof parameters === 'object') {
-    Object.keys(defaultParameters).forEach(key => {
-      if (key in parameters) isCorrect = true;
-    });
-  }
-
-  return isCorrect;
+const hasOwnProperty = <T, K extends PropertyKey>(obj: T, key: K)
+  : obj is T & Record<K, unknown> => {
+  return Object.prototype.hasOwnProperty.call(obj, key);
 };
 
 const normalizeInitParameters = (parameters: unknown | types.Parameters) => {
   const normalizedParamters = defaultParameters;
-  if (isParametersCorrect(parameters)) {
-    Object.keys(defaultParameters).forEach(key => {
-      switch (key) {
-        case 'minValue':
-          normalizedParamters.minValue = Number.isFinite(parseFloat(String(parameters.minValue)))
-            ? parseFloat(String(parameters.minValue))
-            : defaultParameters.minValue;
-          break;
-        case 'maxValue':
-          normalizedParamters.maxValue = Number.isFinite(parseFloat(String(parameters.maxValue)))
-            ? parseFloat(String(parameters.maxValue))
-            : defaultParameters.maxValue;
-          break;
-        case 'step':
-          normalizedParamters.step = Number.isFinite(parseFloat(String(parameters.step)))
-            ? parseFloat(String(parameters.step))
-            : defaultParameters.step;
-          break;
-        case 'isRange':
+
+  Object.keys(defaultParameters).forEach(key => {
+    switch (key) {
+      case 'minValue':
+        if (hasOwnProperty(parameters, key)) {
+          normalizedParamters[key] = Number.isFinite(parseFloat(String(parameters[key])))
+            ? parseFloat(String(parameters[key]))
+            : defaultParameters[key];
+        }
+        break;
+      case 'maxValue':
+        if (hasOwnProperty(parameters, key)) {
+          normalizedParamters[key] = Number.isFinite(parseFloat(String(parameters[key])))
+            ? parseFloat(String(parameters[key]))
+            : defaultParameters[key];
+        }
+        break;
+      case 'step':
+        if (hasOwnProperty(parameters, key)) {
+          normalizedParamters[key] = Number.isFinite(parseFloat(String(parameters[key])))
+            ? parseFloat(String(parameters[key]))
+            : defaultParameters[key];
+        }
+        break;
+      case 'isRange':
+        if (hasOwnProperty(parameters, key)) {
           normalizedParamters.isRange = typeof parameters.isRange === 'boolean'
             ? parameters.isRange
             : defaultParameters.isRange;
-          break;
-        case 'isVertical':
+        }
+        break;
+      case 'isVertical':
+        if (hasOwnProperty(parameters, key)) {
           normalizedParamters.isVertical = typeof parameters.isVertical === 'boolean'
             ? parameters.isVertical
             : defaultParameters.isVertical;
-          break;
-        case 'showLabel':
+        }
+        break;
+      case 'showLabel':
+        if (hasOwnProperty(parameters, key)) {
           normalizedParamters.showLabel = typeof parameters.showLabel === 'boolean'
             ? parameters.showLabel
             : defaultParameters.showLabel;
-          break;
-        default: break;
-      }
-    });
-  }
+        }
+        break;
+      default: break;
+    }
+  });
 
   return normalizedParamters;
 };
