@@ -34,7 +34,7 @@ class Controller {
   }
 
   private normalizeUpdateConfig = (parameters: types.updateData)
-    : types.RawParameters | undefined => {
+    : types.RawParameters => {
     const key = Object.keys(parameters)[0];
     switch (key) {
       case 'minValue':
