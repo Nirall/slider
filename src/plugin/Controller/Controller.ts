@@ -17,7 +17,7 @@ class Controller {
       currentMaxValue: parameters.maxValue
     }, this.handleModelSendingValues);
     this.observers = new MakeObservableObject();
-    this.init(entry);
+    this.init(parameters, entry);
   }
 
   update = (parameters: types.updateData): void => {
@@ -54,22 +54,25 @@ class Controller {
     }
   }
 
-  private normalizeSetValues = (parameters: types.updateData): types.updateCurrentValues | null => {
-    const key = Object.keys(parameters)[0];
-    switch (key) {
-      case 'currentMinValue':
-        return { currentMinValue: parseFloat(parameters.currentMinValue + '') };
-      case 'currentMaxValue':
-        return { currentMaxValue: parseFloat(parameters.currentMaxValue + '') };
-      default:
-        return null;
-    }
+  private normalizeSetValues = (values: types.updateData): types.updateCurrentValues => {
+    const snapValues = { ...values };
+    Object.keys(values).forEach((key) => {
+      snapValues[key] = parseFloat(values[key] + '');
+    });
+
+    return snapValues;
   }
 
-  private init = (entry: JQuery<Methods>):void => {
+  private init = (parameters: types.Parameters, entry: JQuery<Methods>):void => {
     this.observers.addObserver(this.view.observeControllerFromView);
     this.observers.addObserver(this.model.observeControllerFromModel);
     this.observers.notifyObservers('AppendingToNode', entry.get(0));
+    if (parameters.initMaxValue || parameters.initMinValue) {
+      this.setValues({
+        currentMinValue: parameters.initMinValue ? parameters.initMinValue : parameters.minValue,
+        currentMaxValue: parameters.initMaxValue ? parameters.initMaxValue : parameters.maxValue
+      });
+    }
   }
 
   private handleViewChangingValue = (eventName: string, data: any): void => {

@@ -18,7 +18,7 @@ const hasOwnProperty = <T, K extends PropertyKey>(obj: T, key: K)
 };
 
 const normalizeInitParameters = (parameters: unknown | types.Parameters) => {
-  const normalizedParamters = defaultParameters;
+  let normalizedParamters = defaultParameters;
 
   Object.keys(defaultParameters).forEach(key => {
     switch (key) {
@@ -65,6 +65,17 @@ const normalizeInitParameters = (parameters: unknown | types.Parameters) => {
         }
         break;
       default: break;
+    }
+  });
+
+  ['initMinValue', 'initMaxValue'].forEach(key => {
+    if (hasOwnProperty(parameters, key)) {
+      if (Number.isFinite(parseFloat(String(parameters[key])))) {
+        normalizedParamters = {
+          ...normalizedParamters,
+          [key]: parseFloat(String(parameters[key]))
+        };
+      }
     }
   });
 

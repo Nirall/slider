@@ -45,7 +45,9 @@ export type Parameters = {
   isRange: boolean,
   isVertical: boolean,
   showLabel: boolean,
-  isFloat: boolean
+  isFloat: boolean,
+  initMinValue?: number,
+  initMaxValue?: number,
 }
 
 export type keyOfParameters = keyof Parameters;
