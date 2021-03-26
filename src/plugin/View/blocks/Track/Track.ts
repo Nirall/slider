@@ -64,17 +64,27 @@ class Track {
     );
   }
 
-  observeViewFromTrack = (eventName: string, data?: any): void => {
+  observeViewFromTrack = <T>(
+    eventName: string,
+    data?: T | types.CurrentValues | types.Parameters | types.AppendingObserverData
+    ): void => {
     if (eventName === 'SendingCurrentValues') {
-      this.renewRunners(data);
+      if (types.isCurrentValues(data)) {
+        this.renewRunners(data);
+      }
     } if (eventName === 'UpdatingConfig') {
-      this.update(data);
+      if (types.isParametersData(data)) {
+        this.update(data);
+      }
     } if (eventName === 'AppendingToNode') {
-      this.appendToNode(data);
+      if (types.isAppendingObserverData(data)) {
+        this.appendToNode(data);
+      }
     }
   }
 
-  appendToNode = (entry: HTMLElement): void => {
+  appendToNode = (data: types.AppendingObserverData): void => {
+    const { entry } = data;
     entry.appendChild(this.bar.elem).appendChild(this.progressBar.elem);
     this.runnerMain.appendToNode(entry);
     this.runnerAdditional.appendToNode(entry);
@@ -119,10 +129,13 @@ class Track {
     return 0;
   }
 
-  private handleRunnerMove = (eventName: string,
-    { event, runner }: types.RunnerObserverData): void => {
+  private handleRunnerMove = <T>(eventName: string,
+    data: T | types.RunnerObserverData): void => {
     if (eventName === 'MovingRunner') {
-      this.moveRunner(this.processRunnerMouseEvent(event, runner));
+      if (types.isRunnerObserverData(data)) {
+        const { event, runner } = data;
+        this.moveRunner(this.processRunnerMouseEvent(event, runner));
+      }
     }
   }
 
@@ -223,18 +236,21 @@ class Track {
     return reminder < step / 2 ? whole * step : (whole + 1) * step;
   }
 
-  private handleScaleClick = (eventName: string, value: number) => {
+  private handleScaleClick = <T>(eventName: string, data: T | types.ScaleObserverData) => {
     if (eventName === 'ClickOnScale') {
-      const offset = this.convertOffsetToValue(value);
-      let runner;
+      if (types.isScaleObserverData(data)) {
+        const { value } = data;
+        const offset = this.convertOffsetToValue(value);
+        let runner;
 
-      if (this.parameters.isRange) {
-        runner = this.checkRunnerCloser(offset);
-      } else {
-        runner = this.runnerMain;
+        if (this.parameters.isRange) {
+          runner = this.checkRunnerCloser(offset);
+        } else {
+          runner = this.runnerMain;
+        }
+
+        this.moveRunner(this.processRunnerOffset(offset, runner));
       }
-
-      this.moveRunner(this.processRunnerOffset(offset, runner));
     }
   }
 
@@ -247,15 +263,18 @@ class Track {
     return this.runnerAdditional;
   }
 
-  private handleBarClick = (eventName: string, event: MouseEvent): void => {
+  private handleBarClick = <T>(eventName: string, data: T | types.BarObserverData): void => {
     if (eventName === 'ClickOnBar') {
-      const coordinate = this.parameters.isVertical ? event.clientY : event.clientX;
-      const offset = coordinate - this.bar.getPosition() - this.runnerMain.getWidth() / 2;
+      if (types.isBarObserverData(data)) {
+        const { event } = data;
+        const coordinate = this.parameters.isVertical ? event.clientY : event.clientX;
+        const offset = coordinate - this.bar.getPosition() - this.runnerMain.getWidth() / 2;
 
-      if (this.parameters.isRange) {
-        this.moveRunner(this.processRunnerOffset(offset, this.checkRunnerCloser(offset)));
-      } else {
-        this.moveRunner(this.processRunnerOffset(offset, this.runnerMain));
+        if (this.parameters.isRange) {
+          this.moveRunner(this.processRunnerOffset(offset, this.checkRunnerCloser(offset)));
+        } else {
+          this.moveRunner(this.processRunnerOffset(offset, this.runnerMain));
+        }
       }
     }
   }

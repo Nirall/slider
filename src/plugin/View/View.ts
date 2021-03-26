@@ -36,13 +36,15 @@ class View {
     this.observers.notifyObservers('SendingConfig', this.parameters);
   }
 
-  handleTrackValueChanging = (eventName: string, data: types.CurrentValues): void => {
+  handleTrackValueChanging = <T>(eventName: string, data: T | types.CurrentValues): void => {
     if (eventName === 'ChangingCurrentValueFromTrack') {
-      this.observers.notifyObservers('ChangingCurrentValueFromView', data);
+      if (types.isCurrentValues(data)) {
+        this.observers.notifyObservers('ChangingCurrentValueFromView', data);
+      }
     }
   }
 
-  observeControllerFromView = (eventName: string, data: any): void => {
+  observeControllerFromView = <T>(eventName: string, data: T): void => {
     if (eventName === 'SendingCurrentValues') {
       this.observers.notifyObservers('SendingCurrentValues', data);
     } if (eventName === 'UpdatingConfigAfterModelChecking') {

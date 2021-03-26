@@ -42,13 +42,13 @@ class Bar {
     }
   }
 
-  private init = (observer: types.FunctionCallbackData): void => {
+  private init = (observer: types.ObserverFunction): void => {
     this.elem.addEventListener('click', this.handleBarClick);
     this.observers.addObserver(observer);
   }
 
   private handleBarClick = (event: MouseEvent): void => {
-    this.observers.notifyObservers('ClickOnBar', event);
+    this.observers.notifyObservers('ClickOnBar', { event });
   }
 }
 

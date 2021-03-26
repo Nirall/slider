@@ -3,5 +3,5 @@ interface JQuery {
 }
 
 interface Methods {
-  [index: string]: (arg: any) => void;
+  [index: string]: <T>(arg: T) => void;
 }

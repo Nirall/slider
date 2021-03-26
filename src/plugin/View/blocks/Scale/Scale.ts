@@ -81,9 +81,9 @@ class Scale {
     this.observers.addObserver(observer);
   }
 
-  private handleScaleClick = (eventName: string, value: number): void => {
+  private handleScaleClick = <T>(eventName: string, data: T | types.ScaleObserverData): void => {
     if (eventName === 'ClickOnMark') {
-      this.observers.notifyObservers('ClickOnScale', value);
+      this.observers.notifyObservers('ClickOnScale', data);
     }
   }
 

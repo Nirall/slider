@@ -60,7 +60,7 @@ const normalizeInitParameters = (parameters: unknown | types.Parameters) => {
 
 (function pluginWrapper($) {
   const methods: Methods = {
-    init: function init(opt: types.Parameters) {
+    init: function init<T>(opt: T | types.Parameters) {
       if (!$(this).data('slider')) {
         const newConfig = { ...defaultParameters };
         const slider = new Controller($.extend(newConfig, normalizeInitParameters(opt)), $(this));
@@ -68,7 +68,7 @@ const normalizeInitParameters = (parameters: unknown | types.Parameters) => {
       }
     },
 
-    update: function update(opt: types.Parameters) {
+    update: function update<T>(opt: T | types.Parameters) {
       const slider = $(this).data('slider');
       slider.update(opt);
     },
@@ -78,23 +78,31 @@ const normalizeInitParameters = (parameters: unknown | types.Parameters) => {
       return slider.renew();
     },
 
-    setValues: function setValues(opt: types.CurrentValues) {
+    setValues: function setValues<T>(opt: T | types.CurrentValues) {
       const slider = $(this).data('slider');
       slider.setValues(opt);
     },
 
-    inputsAttach: function inputsAttach(opt: types.InputsObject) {
-      const slider = $(this).data('slider');
-      slider.observers.addObserver((eventName?: string, data?: any) => {
-        if (eventName === 'SendingCurrentValuesForTracking') {
-          opt.minValueInput.val(data.currentMinValue);
-          opt.maxValueInput.val(data.currentMaxValue);
-        } if (eventName === 'SendingConfig') {
-          opt.maxValue.val(data.maxValue);
-          opt.minValue.val(data.minValue);
-          opt.step.val(data.step);
-        }
-      });
+    inputsAttach: function inputsAttach<T>(opt: T | types.InputsObject) {
+      if (types.isInputsData(opt)) {
+        const slider = $(this).data('slider');
+        slider.observers.addObserver(
+          (eventName: string, data: types.Parameters | types.CurrentValues) => {
+            if (eventName === 'SendingCurrentValuesForTracking') {
+              if (types.isCurrentValues(data)) {
+                opt.minValueInput.val(data.currentMinValue);
+                opt.maxValueInput.val(data.currentMaxValue);
+              }
+            } if (eventName === 'SendingConfig') {
+              if (types.isParametersData(data)) {
+                opt.maxValue.val(data.maxValue);
+                opt.minValue.val(data.minValue);
+                opt.step.val(data.step);
+              }
+            }
+          }
+        );
+      }
     }
   };
 

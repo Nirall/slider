@@ -55,13 +55,13 @@ class Mark {
     this.isVertical = isVertical;
   }
 
-  private init = (observer: types.FunctionCallbackData): void => {
+  private init = (observer: types.ObserverFunction): void => {
     this.elem.addEventListener('click', this.handleMarkClick);
     this.observers.addObserver(observer);
   }
 
   private handleMarkClick = (): void => {
-    this.observers.notifyObservers('ClickOnMark', this.value);
+    this.observers.notifyObservers('ClickOnMark', { value: this.value });
   }
 }
 

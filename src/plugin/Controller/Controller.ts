@@ -66,7 +66,7 @@ class Controller {
   private init = (parameters: types.Parameters, entry: JQuery<Methods>):void => {
     this.observers.addObserver(this.view.observeControllerFromView);
     this.observers.addObserver(this.model.observeControllerFromModel);
-    this.observers.notifyObservers('AppendingToNode', entry.get(0));
+    this.observers.notifyObservers('AppendingToNode', { entry: entry.get(0) });
     if (parameters.initMaxValue || parameters.initMinValue) {
       this.setValues({
         currentMinValue: parameters.initMinValue ? parameters.initMinValue : parameters.minValue,
@@ -75,7 +75,7 @@ class Controller {
     }
   }
 
-  private handleViewChangingValue = (eventName: string, data: any): void => {
+  private handleViewChangingValue = <T>(eventName: string, data: T): void => {
     if (eventName === 'ChangingCurrentValueFromView') {
       this.observers.notifyObservers('ChangingCurrentValueFromView', data);
     } if (eventName === 'SendingConfig') {
@@ -83,7 +83,8 @@ class Controller {
     }
   }
 
-  private handleModelSendingValues = (eventName: string, data: types.CurrentValues): void => {
+  private handleModelSendingValues = <T>(eventName: string, data: T | types.CurrentValues)
+  : void => {
     if (eventName === 'SendingCurrentValues') {
       this.observers.notifyObservers('SendingCurrentValues', data);
     } if (eventName === 'SendingCurrentValuesForTracking') {
