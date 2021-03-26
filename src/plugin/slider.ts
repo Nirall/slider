@@ -18,50 +18,26 @@ const hasOwnProperty = <T, K extends PropertyKey>(obj: T, key: K)
 };
 
 const normalizeInitParameters = (parameters: unknown | types.Parameters) => {
-  let normalizedParamters = defaultParameters;
+  let normalizedParameters = defaultParameters;
 
   Object.keys(defaultParameters).forEach(key => {
     switch (key) {
       case 'minValue':
-        if (hasOwnProperty(parameters, key)) {
-          normalizedParamters[key] = Number.isFinite(parseFloat(String(parameters[key])))
-            ? parseFloat(String(parameters[key]))
-            : defaultParameters[key];
-        }
-        break;
       case 'maxValue':
-        if (hasOwnProperty(parameters, key)) {
-          normalizedParamters[key] = Number.isFinite(parseFloat(String(parameters[key])))
-            ? parseFloat(String(parameters[key]))
-            : defaultParameters[key];
-        }
-        break;
       case 'step':
         if (hasOwnProperty(parameters, key)) {
-          normalizedParamters[key] = Number.isFinite(parseFloat(String(parameters[key])))
+          normalizedParameters[key] = Number.isFinite(parseFloat(String(parameters[key])))
             ? parseFloat(String(parameters[key]))
             : defaultParameters[key];
         }
         break;
       case 'isRange':
-        if (hasOwnProperty(parameters, key)) {
-          normalizedParamters.isRange = typeof parameters.isRange === 'boolean'
-            ? parameters.isRange
-            : defaultParameters.isRange;
-        }
-        break;
       case 'isVertical':
-        if (hasOwnProperty(parameters, key)) {
-          normalizedParamters.isVertical = typeof parameters.isVertical === 'boolean'
-            ? parameters.isVertical
-            : defaultParameters.isVertical;
-        }
-        break;
       case 'showLabel':
         if (hasOwnProperty(parameters, key)) {
-          normalizedParamters.showLabel = typeof parameters.showLabel === 'boolean'
-            ? parameters.showLabel
-            : defaultParameters.showLabel;
+          normalizedParameters[key] = typeof parameters[key] === 'boolean'
+            ? Boolean(parameters[key])
+            : defaultParameters[key];
         }
         break;
       default: break;
@@ -71,15 +47,15 @@ const normalizeInitParameters = (parameters: unknown | types.Parameters) => {
   ['initMinValue', 'initMaxValue'].forEach(key => {
     if (hasOwnProperty(parameters, key)) {
       if (Number.isFinite(parseFloat(String(parameters[key])))) {
-        normalizedParamters = {
-          ...normalizedParamters,
+        normalizedParameters = {
+          ...normalizedParameters,
           [key]: parseFloat(String(parameters[key]))
         };
       }
     }
   });
 
-  return normalizedParamters;
+  return normalizedParameters;
 };
 
 (function pluginWrapper($) {

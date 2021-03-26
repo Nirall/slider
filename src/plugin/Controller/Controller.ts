@@ -38,11 +38,11 @@ class Controller {
     const key = Object.keys(parameters)[0];
     switch (key) {
       case 'minValue':
-        return { minValue: parseFloat(parameters.minValue + '') };
+        return { minValue: parseFloat(String(parameters.minValue)) };
       case 'maxValue':
-        return { maxValue: parseFloat(parameters.maxValue + '') };
+        return { maxValue: parseFloat(String(parameters.maxValue)) };
       case 'step':
-        return { step: parseFloat(parameters.step + '') };
+        return { step: parseFloat(String(parameters.step)) };
       case 'range':
         return { range: parameters.range ? 'toggle' : '' };
       case 'vertical':
@@ -57,7 +57,7 @@ class Controller {
   private normalizeSetValues = (values: types.updateData): types.updateCurrentValues => {
     const snapValues = { ...values };
     Object.keys(values).forEach((key) => {
-      snapValues[key] = parseFloat(values[key] + '');
+      snapValues[key] = parseFloat(String(values[key]));
     });
 
     return snapValues;
