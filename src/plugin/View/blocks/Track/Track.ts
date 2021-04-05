@@ -221,7 +221,7 @@ class Track {
 
   private round = (value: number, step: number): number => {
     const whole = Math.trunc(value / step);
-    const reminder = +(value - whole * step).toFixed(2);
+    const reminder = Number((value - whole * step).toFixed(2));
 
     if (value < 0) {
       return Math.abs(reminder) < step / 2 ? whole * step : (whole - 1) * step;
