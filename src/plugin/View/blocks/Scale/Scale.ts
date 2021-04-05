@@ -97,7 +97,7 @@ class Scale {
   private round = (value: number): number => {
     const whole = Math.trunc(value / this.parameters.step);
 
-    const reminder = +(value - whole * this.parameters.step).toFixed(2);
+    const reminder = Number((value - whole * this.parameters.step).toFixed(2));
     if (value < 0) {
       return Math.abs(reminder) < this.parameters.step / 2
         ? whole * this.parameters.step

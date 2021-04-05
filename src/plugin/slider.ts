@@ -34,6 +34,7 @@ const normalizeInitParameters = (parameters: unknown | types.Parameters) => {
       case 'isRange':
       case 'isVertical':
       case 'showLabel':
+      case 'isFloat':
         if (hasOwnProperty(parameters, key)) {
           normalizedParameters[key] = typeof parameters[key] === 'boolean'
             ? Boolean(parameters[key])
