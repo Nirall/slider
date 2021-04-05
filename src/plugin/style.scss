@@ -21,6 +21,10 @@ $red: #990033;
     cursor: pointer;
     z-index: 3;
 
+    &_hidden {
+      display: none;
+    }
+
     &_position_vertical {
       transform: translateX(-50%);
     }
@@ -41,6 +45,10 @@ $red: #990033;
     text-align: center;
     cursor: pointer;
     z-index: 3;
+
+    &_visible {
+      display: block;
+    }
 
     &_position_vertical {
       transform: none;

@@ -40,20 +40,20 @@ class Runner {
   }
 
   hideRunner = (): void => {
-    this.knob.elem.style.display = 'none';
-    this.tooltip.elem.style.display = 'none';
+    this.knob.elem.classList.add('slider__knob_hidden');
+    this.tooltip.elem.classList.remove('slider__tooltip_visible');
   }
 
   hideLabel = (): void => {
-    this.tooltip.elem.style.display = 'none';
+    this.tooltip.elem.classList.remove('slider__tooltip_visible');
   }
 
   showLabel = (): void => {
-    this.tooltip.elem.style.display = 'block';
+    this.tooltip.elem.classList.add('slider__tooltip_visible');
   }
 
   showRunner = (): void => {
-    this.knob.elem.style.display = 'block';
+    this.knob.elem.classList.remove('slider__knob_hidden');
   }
 
   appendToNode = (entry: HTMLElement): void => {
