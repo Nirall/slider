@@ -1,4 +1,4 @@
-import createElem from '../createElem/createElem';
+import createElem from '../createElem';
 
 class ProgressBar {
   elem: HTMLElement;

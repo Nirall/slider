@@ -1,5 +1,5 @@
 import Mark from './Mark/Mark';
-import createElem from '../createElem/createElem';
+import createElem from '../createElem';
 import * as types from '../../../types';
 import MakeObservableObject from '../../../makeObservableObject/MakeObservableObject';
 

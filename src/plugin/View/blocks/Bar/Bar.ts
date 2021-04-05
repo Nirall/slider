@@ -1,5 +1,5 @@
 import * as types from '../../../types';
-import createElem from '../createElem/createElem';
+import createElem from '../createElem';
 import MakeObservableObject from '../../../makeObservableObject/MakeObservableObject';
 
 class Bar {
