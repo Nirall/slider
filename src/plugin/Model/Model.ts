@@ -1,5 +1,5 @@
 import * as types from '../types';
-import MakeObservableObject from '../makeObservableObject/MakeObservableObject';
+import ObservableObject from '../observableObject/ObservableObject';
 
 const isCurrentValues = (data: types.CurrentValues | types.RawParameters)
   : data is types.CurrentValues => {
@@ -13,13 +13,13 @@ class Model {
 
   minValue: number;
 
-  observers: MakeObservableObject;
+  observers: ObservableObject;
 
   constructor(currentValues: types.CurrentValues, observer: types.ObserverFunction) {
     this.currentValues = currentValues;
     this.maxValue = currentValues.currentMaxValue;
     this.minValue = currentValues.currentMinValue;
-    this.observers = new MakeObservableObject();
+    this.observers = new ObservableObject();
     this.observers.addObserver(observer);
   }
 

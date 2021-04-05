@@ -1,6 +1,6 @@
 import * as types from '../../../../types';
 import createElem from '../../createElem';
-import MakeObservableObject from '../../../../makeObservableObject/MakeObservableObject';
+import ObservableObject from '../../../../observableObject/ObservableObject';
 
 class Mark {
   elem: HTMLElement;
@@ -9,12 +9,12 @@ class Mark {
 
   value: number | undefined;
 
-  observers: MakeObservableObject;
+  observers: ObservableObject;
 
   constructor(isVertical: boolean, observer: types.ObserverFunction) {
     this.elem = createElem('slider__mark');
     this.isVertical = isVertical;
-    this.observers = new MakeObservableObject();
+    this.observers = new ObservableObject();
     this.init(observer);
   }
 

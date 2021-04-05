@@ -1,5 +1,5 @@
 import * as types from '../types';
-import MakeObservableObject from '../makeObservableObject/MakeObservableObject';
+import ObservableObject from '../observableObject/ObservableObject';
 import Track from './blocks/Track/Track';
 
 const isOthersValuesFloat = (item: View, parameter: string): boolean => {
@@ -18,12 +18,12 @@ const isOthersValuesFloat = (item: View, parameter: string): boolean => {
 class View {
   parameters: types.Parameters;
 
-  observers: MakeObservableObject;
+  observers: ObservableObject;
 
   private track: Track;
 
   constructor(parameters: types.Parameters, observer: types.ObserverFunction) {
-    this.observers = new MakeObservableObject();
+    this.observers = new ObservableObject();
     this.track = new Track(parameters, this.handleTrackValueChanging);
     this.parameters = parameters;
     this.init(observer);

@@ -1,7 +1,7 @@
 import Mark from './Mark/Mark';
 import createElem from '../createElem';
 import * as types from '../../../types';
-import MakeObservableObject from '../../../makeObservableObject/MakeObservableObject';
+import ObservableObject from '../../../observableObject/ObservableObject';
 
 class Scale {
   parameters: types.Parameters;
@@ -10,13 +10,13 @@ class Scale {
 
   elem: HTMLElement;
 
-  observers: MakeObservableObject;
+  observers: ObservableObject;
 
   constructor(parameters: types.Parameters, observer: types.ObserverFunction) {
     this.parameters = parameters;
     this.marks = [];
     this.elem = createElem('slider__scale');
-    this.observers = new MakeObservableObject();
+    this.observers = new ObservableObject();
     this.init(observer);
   }
 

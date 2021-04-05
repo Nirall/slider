@@ -1,14 +1,14 @@
 import * as types from '../types';
 import View from '../View/View';
 import Model from '../Model/Model';
-import MakeObservableObject from '../makeObservableObject/MakeObservableObject';
+import ObservableObject from '../observableObject/ObservableObject';
 
 class Controller {
   private view: View;
 
   private model: Model;
 
-  observers: MakeObservableObject;
+  observers: ObservableObject;
 
   constructor(parameters: types.Parameters, entry: JQuery<Methods>) {
     this.view = new View(parameters, this.handleViewChangingValue);
@@ -16,7 +16,7 @@ class Controller {
       currentMinValue: parameters.minValue,
       currentMaxValue: parameters.maxValue
     }, this.handleModelSendingValues);
-    this.observers = new MakeObservableObject();
+    this.observers = new ObservableObject();
     this.init(parameters, entry);
   }
 

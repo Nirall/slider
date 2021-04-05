@@ -1,7 +1,7 @@
 import * as types from '../../../types';
 import Knob from '../Knob/Knob';
 import Tooltip from '../Tooltip/Tooltip';
-import MakeObservableObject from '../../../makeObservableObject/MakeObservableObject';
+import ObservableObject from '../../../observableObject/ObservableObject';
 
 class Runner {
   knob: Knob;
@@ -10,13 +10,13 @@ class Runner {
 
   isVertical: boolean;
 
-  observers: MakeObservableObject;
+  observers: ObservableObject;
 
   constructor(isVertical: boolean, moveObserver: types.ObserverFunction) {
     this.isVertical = isVertical;
     this.knob = new Knob(isVertical);
     this.tooltip = new Tooltip(isVertical);
-    this.observers = new MakeObservableObject();
+    this.observers = new ObservableObject();
     this.observers.addObserver(moveObserver);
   }
 

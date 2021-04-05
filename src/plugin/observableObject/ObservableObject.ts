@@ -1,6 +1,6 @@
 import * as types from '../types';
 
-class MakeObservableObject {
+class ObservableObject {
   observers: Array<types.ObserverFunction>;
 
   constructor() {
@@ -37,4 +37,4 @@ class MakeObservableObject {
   }
 }
 
-export default MakeObservableObject;
+export default ObservableObject;

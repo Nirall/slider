@@ -3,7 +3,7 @@ import Bar from '../Bar/Bar';
 import Runner from '../Runner/Runner';
 import Scale from '../Scale/Scale';
 import ProgressBar from '../ProgressBar/ProgressBar';
-import MakeObservableObject from '../../../makeObservableObject/MakeObservableObject';
+import ObservableObject from '../../../observableObject/ObservableObject';
 
 class Track {
   parameters: types.Parameters;
@@ -18,7 +18,7 @@ class Track {
 
   scale: Scale;
 
-  observers: MakeObservableObject;
+  observers: ObservableObject;
 
   constructor(parameters: types.Parameters, observer: types.ObserverFunction) {
     this.parameters = parameters;
@@ -27,7 +27,7 @@ class Track {
     this.progressBar = new ProgressBar(this.parameters.isVertical);
     this.bar = new Bar(this.parameters.isVertical, this.handleBarClick);
     this.scale = new Scale(this.parameters, this.handleScaleClick);
-    this.observers = new MakeObservableObject();
+    this.observers = new ObservableObject();
     this.observers.addObserver(observer);
   }
 
