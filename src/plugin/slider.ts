@@ -84,7 +84,7 @@ const normalizeInitParameters = (parameters: unknown | types.Parameters) => {
       slider.setValues(opt);
     },
 
-    inputsAttach: function inputsAttach<T>(opt: T | types.InputsObject) {
+    inputsAttach: function inputsAttach<T>(opt: T | InputsObject) {
       if (types.isInputsData(opt)) {
         const slider = $(this).data('slider');
         slider.observers.addObserver(
@@ -108,7 +108,8 @@ const normalizeInitParameters = (parameters: unknown | types.Parameters) => {
   };
 
   // eslint-disable-next-line no-param-reassign
-  $.fn.omfgslider = function processMethod(method: MethodsName, ...args: Array<types.updateData>) {
+  $.fn.omfgslider = function processMethod(method: MethodsName,
+    ...args: Array<updateData | InputsObject>) {
     if (methods[method]) {
       return methods[method].apply(this, [args[0]]);
     }
