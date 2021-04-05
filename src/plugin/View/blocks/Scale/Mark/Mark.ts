@@ -34,11 +34,11 @@ class Mark {
       this.elem.style.left = '50%';
       this.elem.style.top = offset + '%';
       this.elem.style.marginTop = '0';
-      this.elem.style.transform = `translate(-45px, ${-this.getDimension() / 2 + 'px'})`;
+      this.elem.style.transform = `translate(-45px, ${-this.getDimension() / 2}px)`;
     } else {
       this.elem.style.top = '50%';
       this.elem.style.left = offset + '%';
-      this.elem.style.transform = `translateX(${-this.getDimension() / 2 + 'px'})`;
+      this.elem.style.transform = `translateX(${-this.getDimension() / 2}px})`;
       this.elem.style.marginTop = '15px';
     }
   }

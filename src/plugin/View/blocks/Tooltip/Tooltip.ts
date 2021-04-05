@@ -20,13 +20,14 @@ class Tooltip {
 
   setPosition = (offset: number, value: number): void => {
     this.elem.innerHTML = value + '';
+    const edgeOffset = offset - this.getDimension() / 2;
 
     if (this.isVertical) {
       this.elem.style.left = '50%';
-      this.elem.style.top = offset - this.getDimension() / 2 + 'px';
+      this.elem.style.top = `${edgeOffset}px`;
     } else {
       this.elem.style.top = '50%';
-      this.elem.style.left = offset - this.getDimension() / 2 + 'px';
+      this.elem.style.left = `${edgeOffset}px`;
     }
   }
 

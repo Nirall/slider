@@ -25,10 +25,10 @@ class Knob {
   setPosition = (offset: number): void => {
     if (this.isVertical) {
       this.elem.style.left = '50%';
-      this.elem.style.top = offset + 'px';
+      this.elem.style.top = `${offset}px`;
     } else {
       this.elem.style.top = '50%';
-      this.elem.style.left = offset + 'px';
+      this.elem.style.left = `${offset}px`;
     }
   }
 
