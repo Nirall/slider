@@ -38,7 +38,7 @@ class Mark {
     } else {
       this.elem.style.top = '50%';
       this.elem.style.left = offset + '%';
-      this.elem.style.transform = `translateX(${-this.getDimension() / 2}px})`;
+      this.elem.style.transform = `translateX(${-this.getDimension() / 2}px)`;
       this.elem.style.marginTop = '15px';
     }
   }

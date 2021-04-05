@@ -111,7 +111,6 @@ class View {
   private checkStep = (step: number | undefined): number => {
     if (step) {
       if (step > 0 && step < (this.parameters.maxValue - this.parameters.minValue) / 2) {
-        console.log(step, this.parameters.isFloat, step % 1 !== 0);
         if (step % 1 !== 0) {
           this.parameters.isFloat = true;
         } else if (!isOthersValuesFloat(this, 'step')) {

@@ -108,10 +108,12 @@ const normalizeInitParameters = (parameters: unknown | types.Parameters) => {
   };
 
   // eslint-disable-next-line no-param-reassign
-  $.fn.omfgslider = function processMethod(method: string, ...args: Array<types.updateData>) {
+  $.fn.omfgslider = function processMethod(method: MethodsName, ...args: Array<types.updateData>) {
     if (methods[method]) {
       return methods[method].apply(this, [args[0]]);
-    } if (typeof method === 'object' || !method) {
+    }
+
+    if (typeof method === 'object' || !method) {
       return methods.init.apply(this, [method]);
     }
     $.error(`Метод ${method} не найден в плагине jQuery.omfgslider`);
