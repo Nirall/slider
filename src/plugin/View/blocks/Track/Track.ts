@@ -101,7 +101,7 @@ class Track {
   }
 
   private renewRunners({ currentMinValue, currentMaxValue }: types.CurrentValues): void {
-    if (currentMinValue || currentMinValue !== 0) {
+    if (currentMinValue || currentMinValue === 0) {
       this.moveRunner(
         this.processRunnerOffset(
           this.convertValueToOffset(currentMinValue),
@@ -110,7 +110,7 @@ class Track {
       );
     }
 
-    if (currentMaxValue || currentMaxValue !== 0) {
+    if (currentMaxValue || currentMaxValue === 0) {
       this.moveRunner(
         this.processRunnerOffset(
           this.convertValueToOffset(currentMaxValue),
@@ -172,15 +172,21 @@ class Track {
     return this.processRunnerOffset(offset, runner);
   }
 
-  private processRunnerOffset = (offset: number, runner: Runner): types.RunnerMoveData => {
-    let currentValue = this.parameters.minValue
+  private processRunnerOffset = (
+    offset: number,
+    runner: Runner,
+    value?: number
+  ): types.RunnerMoveData => {
+    let currentValue;
+    if (!value || value !== 0) {
+      currentValue = this.parameters.minValue
       + ((offset + this.runnerMain.getWidth() / 2)
       * (this.parameters.maxValue - this.parameters.minValue))
       / this.bar.getDimension();
-
-    currentValue = this.parameters.isFloat
-      ? parseFloat(currentValue.toFixed(2))
-      : parseInt(String(currentValue), 10);
+      currentValue = parseFloat(currentValue.toFixed(2));
+    } else {
+      currentValue = value;
+    }
 
     let roundOffset = offset;
 

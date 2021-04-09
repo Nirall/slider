@@ -6,7 +6,9 @@ const roundValue = (value: number, step: number): number => {
     return Math.abs(reminder) < step / 2 ? whole * step : (whole - 1) * step;
   }
 
-  return reminder < step / 2 ? whole * step : (whole + 1) * step;
+  const result = reminder < step / 2 ? whole * step : (whole + 1) * step;
+
+  return Number((result).toFixed(2));
 };
 
 export default roundValue;

@@ -51,7 +51,6 @@ export type Parameters = {
   isRange: boolean,
   isVertical: boolean,
   showLabel: boolean,
-  isFloat: boolean,
   initMinValue?: number,
   initMaxValue?: number,
 }
@@ -65,7 +64,6 @@ export type RawParameters = {
   range?: string,
   vertical?: string,
   showLabel?: string,
-  isFloat?: string
 }
 
 export type ModelCreateParameters = {
@@ -120,8 +118,7 @@ export const isParametersData = <T>(data: T | Parameters)
     'step',
     'isRange',
     'isVertical',
-    'showLabel',
-    'isFloat'
+    'showLabel'
   ];
 
   return (keys.every(key => Object.hasOwnProperty.call(data, key)));

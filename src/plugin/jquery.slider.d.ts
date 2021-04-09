@@ -9,7 +9,6 @@ type ConfigParameters = {
   isRange: boolean,
   isVertical: boolean,
   showLabel: boolean,
-  isFloat: boolean,
   initMinValue?: number,
   initMaxValue?: number,
 }

@@ -50,10 +50,7 @@ class Scale {
           + ((this.parameters.maxValue - this.parameters.minValue) * index)
           / (this.marks.length - 1));
 
-        if (this.parameters.isFloat) {
-          roundValue = parseFloat(roundValue.toFixed(2));
-        }
-
+        roundValue = parseFloat(roundValue.toFixed(2));
         if (roundValue === this.marks[index - 1].value) {
           this.removeMark(mark.elem);
         } else {

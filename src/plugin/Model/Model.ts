@@ -31,8 +31,16 @@ class Model {
     const isCurrentMaxValueReal = currentMaxValue || currentMaxValue === 0;
     const isCurrentMinValueReal = currentMinValue || currentMinValue === 0;
     if (isCurrentMinValueReal) {
-      const valueRounded = reductValue(currentMinValue, this.step);
-      if (valueRounded !== this.currentMinValue) {
+      let valueRounded;
+      if (currentMaxValue === this.minValue) {
+        valueRounded = this.minValue;
+      } else {
+        valueRounded = currentMinValue > this.minValue
+          ? reductValue(currentMinValue, this.step)
+          : this.minValue;
+      }
+
+      if (currentMinValue !== this.currentMinValue) {
         if (valueRounded < this.currentMaxValue && valueRounded >= this.minValue) {
           this.currentMinValue = valueRounded;
         }
@@ -45,9 +53,17 @@ class Model {
     }
 
     if (isCurrentMaxValueReal) {
-      const valueRounded = reductValue(currentMaxValue, this.step);
-      if (valueRounded !== this.currentMaxValue) {
-        if (valueRounded > this.currentMinValue && valueRounded <= this.maxValue) {
+      let valueRounded;
+      if (currentMaxValue === this.maxValue) {
+        valueRounded = this.maxValue;
+      } else {
+        valueRounded = currentMaxValue < this.maxValue
+          ? reductValue(currentMaxValue, this.step)
+          : this.maxValue;
+      }
+
+      if (currentMaxValue !== this.currentMaxValue) {
+        if (valueRounded > this.currentMinValue && valueRounded) {
           this.currentMaxValue = valueRounded;
         }
 
@@ -59,7 +75,7 @@ class Model {
     }
   }
 
-  observeSourceFromModel = (eventName: string, data?: types.CurrentValues | types.RawParameters)
+  observeSourceFromModel = <T>(eventName: string, data?: types.CurrentValues | types.Parameters | T)
   : void => {
     switch (eventName) {
       case 'ChangingCurrentValue':
@@ -67,11 +83,18 @@ class Model {
           this.setCurrentValues(data);
         }
         break;
-      case 'GettingValues':
       case 'UpdatingConfig':
+      case 'GettingValues':
+        this.observers.notifyObservers(
+          'SendingCurrentValues',
+          { currentMinValue: this.currentMinValue, currentMaxValue: this.currentMaxValue }
+        );
+        break;
+      case 'SendingConfig':
         if (data && types.isParametersData(data)) {
           this.minValue = data.minValue;
           this.maxValue = data.maxValue;
+          this.step = data.step;
         }
         this.observers.notifyObservers(
           'SendingCurrentValues',

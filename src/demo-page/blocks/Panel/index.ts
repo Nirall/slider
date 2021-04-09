@@ -9,7 +9,6 @@ const parameters = [
     isVertical: false,
     isRange: false,
     showLabel: true,
-    isFloat: false,
     initMaxValue: 777
   },
   {
@@ -18,8 +17,7 @@ const parameters = [
     step: 100,
     isVertical: false,
     isRange: true,
-    showLabel: true,
-    isFloat: false
+    showLabel: true
   },
   {
     minValue: 0,
@@ -27,8 +25,7 @@ const parameters = [
     step: 0.05,
     isVertical: true,
     isRange: false,
-    showLabel: true,
-    isFloat: true
+    showLabel: true
   },
   {
     minValue: -3,
@@ -36,8 +33,7 @@ const parameters = [
     step: 0.1,
     isRange: true,
     isVertical: true,
-    showLabel: true,
-    isFloat: true
+    showLabel: true
   }
 ];
 

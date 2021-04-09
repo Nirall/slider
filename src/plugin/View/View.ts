@@ -2,19 +2,6 @@ import * as types from '../types';
 import ObservableObject from '../observableObject/ObservableObject';
 import Track from './blocks/Track/Track';
 
-const isOthersValuesFloat = (item: View, parameter: string): boolean => {
-  switch (parameter) {
-    case 'step':
-      return (item.parameters.maxValue % 1 !== 0 || item.parameters.minValue % 1 !== 0);
-    case 'maxValue':
-      return (item.parameters.step % 1 !== 0 || item.parameters.minValue % 1 !== 0);
-    case 'minValue':
-      return (item.parameters.step % 1 !== 0 || item.parameters.maxValue % 1 !== 0);
-    default:
-      return false;
-  }
-};
-
 class View {
   parameters: types.Parameters;
 
@@ -118,12 +105,6 @@ class View {
   private checkStep = (step: number | undefined): number => {
     if (step) {
       if (step > 0 && step < (this.parameters.maxValue - this.parameters.minValue) / 2) {
-        if (step % 1 !== 0) {
-          this.parameters.isFloat = true;
-        } else if (!isOthersValuesFloat(this, 'step')) {
-          this.parameters.isFloat = false;
-        }
-
         return step;
       }
     }
@@ -134,12 +115,6 @@ class View {
   private checkMaxValue = (maxValue: number | undefined): number => {
     if (maxValue || maxValue === 0) {
       if (maxValue > this.parameters.minValue) {
-        if (maxValue % 1 !== 0) {
-          this.parameters.isFloat = true;
-        } else if (!isOthersValuesFloat(this, 'maxValue')) {
-          this.parameters.isFloat = false;
-        }
-
         return maxValue;
       }
     }
@@ -150,12 +125,6 @@ class View {
   private checkMinValue = (minValue: number | undefined): number => {
     if (minValue || minValue === 0) {
       if (minValue < this.parameters.maxValue) {
-        if (minValue && minValue % 1 !== 0) {
-          this.parameters.isFloat = true;
-        } else if (!isOthersValuesFloat(this, 'minValue')) {
-          this.parameters.isFloat = false;
-        }
-
         return minValue;
       }
     }
