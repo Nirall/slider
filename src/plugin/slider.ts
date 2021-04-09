@@ -89,7 +89,7 @@ const normalizeInitParameters = (parameters: unknown | types.Parameters) => {
         const slider = $(this).data('slider');
         slider.observers.addObserver(
           (eventName: string, data: types.Parameters | types.CurrentValues) => {
-            if (eventName === 'SendingCurrentValuesForTracking') {
+            if (eventName === 'SendingCurrentValues') {
               if (types.isCurrentValues(data)) {
                 opt.minValueInput.val(data.currentMinValue);
                 opt.maxValueInput.val(data.currentMaxValue);
@@ -108,10 +108,14 @@ const normalizeInitParameters = (parameters: unknown | types.Parameters) => {
   };
 
   // eslint-disable-next-line no-param-reassign
-  $.fn.omfgslider = function processMethod(method: MethodsName,
-    ...args: Array<updateData | InputsObject>) {
-    if (methods[method]) {
-      return methods[method].apply(this, [args[0]]);
+  $.fn.omfgslider = function processMethod(
+    method: MethodsName | ConfigParameters,
+    args?: updateData | InputsObject
+  ) {
+    if (types.isMethodName(method)) {
+      if (methods[method]) {
+        return methods[method].apply(this, [args]);
+      }
     }
 
     if (typeof method === 'object' || !method) {

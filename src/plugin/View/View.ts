@@ -44,17 +44,22 @@ class View {
     }
   }
 
-  observeControllerFromView = <T>(eventName: string, data: T): void => {
-    if (eventName === 'SendingCurrentValues') {
-      this.observers.notifyObservers('SendingCurrentValues', data);
-    } if (eventName === 'SendingCurrentValuesForTracking') {
-      this.observers.notifyObservers('SendingCurrentValuesForTracking', data);
-    } if (eventName === 'UpdatingConfig') {
-      this.update(data);
-    } if (eventName === 'GettingConfig') {
-      this.observers.notifyObservers('SendingConfig', this.parameters);
-    } if (eventName === 'AppendingToNode') {
-      this.observers.notifyObservers('AppendingToNode', data);
+  observeSourceFromView = <T>(eventName: string, data: T): void => {
+    switch (eventName) {
+      case 'SendingCurrentValues':
+        this.observers.notifyObservers('SendingCurrentValuesFromView', data);
+        break;
+      case 'UpdatingConfig':
+        this.update(data);
+        break;
+      case 'GettingConfig':
+        this.observers.notifyObservers('SendingConfig', this.parameters);
+        break;
+      case 'AppendingToNode':
+        this.observers.notifyObservers('AppendingToNode', data);
+        break;
+      default:
+        break;
     }
   }
 

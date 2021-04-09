@@ -71,6 +71,8 @@ export type RawParameters = {
 export type ModelCreateParameters = {
   currentMinValue: number;
   currentMaxValue: number;
+  maxValue: number;
+  minValue: number;
   step: number;
   observer: ObserverFunction;
 }
@@ -139,4 +141,15 @@ export const isInputsData = <T>(data: T | InputsObject): data is InputsObject =>
 
 export const isUpdateData = <T>(data: T | updateData): data is updateData => {
   return (typeof Object.keys(data)[0] === 'string');
+};
+
+type MethodsName = 'init' | 'update' | 'renew' | 'setValues' | 'inputsAttach';
+
+export const isMethodName = <T>(data: T | MethodsName): data is MethodsName => {
+  let isName = false;
+  if (typeof data === 'string') {
+    isName = ['init', 'update', 'renew', 'setValues', 'inputsAttach'].includes(data);
+  }
+
+  return isName;
 };

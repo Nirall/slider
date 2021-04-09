@@ -11,12 +11,14 @@ class Controller {
   observers: ObservableObject;
 
   constructor(parameters: types.Parameters, entry: JQuery<Methods>) {
-    this.view = new View(parameters, this.handleViewChangingValue);
+    this.view = new View(parameters, this.observeSourceFromController);
     this.model = new Model({
       currentMinValue: parameters.minValue,
       currentMaxValue: parameters.maxValue,
+      minValue: parameters.minValue,
+      maxValue: parameters.maxValue,
       step: parameters.step,
-      observer: this.handleModelSendingValues
+      observer: this.observeSourceFromController
     });
     this.observers = new ObservableObject();
     this.init(parameters, entry);
@@ -66,7 +68,7 @@ class Controller {
   }
 
   private init = (parameters: types.Parameters, entry: JQuery<Methods>):void => {
-    this.observers.addObserver(this.view.observeControllerFromView);
+    this.observers.addObserver(this.view.observeSourceFromView);
     this.observers.addObserver(this.model.observeSourceFromModel);
     this.observers.notifyObservers('AppendingToNode', { entry: entry.get(0) });
     if (parameters.initMaxValue || parameters.initMinValue) {
@@ -77,22 +79,17 @@ class Controller {
     }
   }
 
-  private handleViewChangingValue = <T>(eventName: string, data: T): void => {
+  private observeSourceFromController = <T>(eventName: string, data: T): void => {
     if (eventName === 'ChangingCurrentValue') {
       this.observers.notifyObservers('ChangingCurrentValue', data);
-    } if (eventName === 'SendingConfig') {
+    }
+
+    if (eventName === 'SendingConfig') {
       this.observers.notifyObservers('SendingConfig', data);
     }
-  }
 
-  private handleModelSendingValues = <T>(eventName: string, data: T | types.CurrentValues)
-  : void => {
     if (eventName === 'SendingCurrentValues') {
       this.observers.notifyObservers('SendingCurrentValues', data);
-    } if (eventName === 'SendingCurrentValuesForTracking') {
-      this.observers.notifyObservers('SendingCurrentValuesForTracking', data);
-    } if (eventName === 'UpdatingConfigAfterModelChecking') {
-      this.observers.notifyObservers('UpdatingConfigAfterModelChecking', data);
     }
   }
 }

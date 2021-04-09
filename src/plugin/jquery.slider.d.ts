@@ -1,5 +1,17 @@
 type updateData = {
-  [index: string]: number|string|boolean;
+  [index: string]: number|string|boolean|undefined|string[]
+}
+
+type ConfigParameters = {
+  minValue: number,
+  maxValue: number,
+  step: number,
+  isRange: boolean,
+  isVertical: boolean,
+  showLabel: boolean,
+  isFloat: boolean,
+  initMinValue?: number,
+  initMaxValue?: number,
 }
 
 type InputsObject = {
@@ -8,10 +20,12 @@ type InputsObject = {
 
 type MethodsName = 'init' | 'update' | 'renew' | 'setValues' | 'inputsAttach';
 
-type sliderObject = (method: MethodsName, ...args: Array<updateData | InputsObject>) => void;
+type sliderObject = (
+  arg0: MethodsName | ConfigParameters,
+  args?: updateData | InputsObject) => void;
 
 interface JQuery {
-  omfgslider: (...args: any) => void;
+  omfgslider: sliderObject;
 }
 
 interface Methods {

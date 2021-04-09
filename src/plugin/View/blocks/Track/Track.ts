@@ -58,6 +58,7 @@ class Track {
       -this.runnerAdditional.getWidth() / 2,
       this.parameters.minValue
     );
+
     this.runnerMain.setPosition(
       this.bar.getDimension() - this.runnerMain.getWidth() / 2,
       this.parameters.maxValue
@@ -68,18 +69,24 @@ class Track {
     eventName: string,
     data?: T | types.CurrentValues | types.Parameters | types.AppendingObserverData
     ): void => {
-    if (eventName === 'SendingCurrentValues') {
-      if (types.isCurrentValues(data)) {
-        this.renewRunners(data);
-      }
-    } if (eventName === 'UpdatingConfig') {
-      if (types.isParametersData(data)) {
-        this.update(data);
-      }
-    } if (eventName === 'AppendingToNode') {
-      if (types.isAppendingObserverData(data)) {
-        this.appendToNode(data);
-      }
+    switch (eventName) {
+      case 'SendingCurrentValuesFromView':
+        if (types.isCurrentValues(data)) {
+          this.renewRunners(data);
+        }
+        break;
+      case 'UpdatingConfig':
+        if (types.isParametersData(data)) {
+          this.update(data);
+        }
+        break;
+      case 'AppendingToNode':
+        if (types.isAppendingObserverData(data)) {
+          this.appendToNode(data);
+        }
+        break;
+      default:
+        break;
     }
   }
 
@@ -93,22 +100,27 @@ class Track {
     this.updateProgressBar();
   }
 
-  private renewRunners(currentValues: types.CurrentValues): void {
-    this.moveRunner(
-      this.processRunnerOffset(
-        this.convertOffsetToValue(currentValues.currentMaxValue),
-        this.runnerMain
-      )
-    );
-    this.moveRunner(
-      this.processRunnerOffset(
-        this.convertOffsetToValue(currentValues.currentMinValue),
-        this.runnerAdditional
-      )
-    );
+  private renewRunners({ currentMinValue, currentMaxValue }: types.CurrentValues): void {
+    if (currentMinValue || currentMinValue !== 0) {
+      this.moveRunner(
+        this.processRunnerOffset(
+          this.convertValueToOffset(currentMinValue),
+          this.runnerAdditional
+        )
+      );
+    }
+
+    if (currentMaxValue || currentMaxValue !== 0) {
+      this.moveRunner(
+        this.processRunnerOffset(
+          this.convertValueToOffset(currentMaxValue),
+          this.runnerMain
+        )
+      );
+    }
   }
 
-  private convertOffsetToValue = (value: number): number => {
+  private convertValueToOffset = (value: number): number => {
     return (((value - this.parameters.minValue) * this.bar.getDimension())
       / (this.parameters.maxValue - this.parameters.minValue)
       - this.runnerMain.getWidth() / 2);
@@ -139,15 +151,15 @@ class Track {
     }
   }
 
-  private moveRunner = (obj: types.RunnerMoveData): void => {
-    obj.runner.setPosition(obj.offset, obj.value);
+  private moveRunner = ({ offset, value, runner }: types.RunnerMoveData): void => {
+    runner.setPosition(offset, value);
 
-    if (obj.runner === this.runnerAdditional) {
-      this.observers.notifyObservers('ChangingCurrentValueFromTrack', { currentMinValue: obj.value });
+    if (runner === this.runnerAdditional) {
+      this.observers.notifyObservers('ChangingCurrentValueFromTrack', { currentMinValue: value });
     }
 
-    if (obj.runner === this.runnerMain) {
-      this.observers.notifyObservers('ChangingCurrentValueFromTrack', { currentMaxValue: obj.value });
+    if (runner === this.runnerMain) {
+      this.observers.notifyObservers('ChangingCurrentValueFromTrack', { currentMaxValue: value });
     }
 
     this.updateProgressBar();
@@ -161,86 +173,39 @@ class Track {
   }
 
   private processRunnerOffset = (offset: number, runner: Runner): types.RunnerMoveData => {
-    let roundValue = 0;
-    let roundOffset;
-    roundOffset = this.checkRunnerOffset(offset, runner);
-    [roundOffset, roundValue] = this.roundOffsetRunner(roundOffset);
-    return {
-      runner: runner,
-      offset: roundOffset,
-      value: roundValue
-    };
-  }
-
-  private checkRunnerOffset = (offset: number, runner: Runner): number => {
-    const stepWidth = (this.parameters.step * this.bar.getDimension())
-      / (this.parameters.maxValue - this.parameters.minValue);
-    const minOffset = stepWidth / 1.5 > this.runnerMain.getWidth()
-      ? stepWidth / 1.5
-      : this.runnerMain.getWidth();
-    let newOffset = offset;
-
-    if (runner === this.runnerAdditional) {
-      if (offset > this.runnerMain.getPosition() - this.bar.getPosition() - minOffset) {
-        newOffset = this.runnerMain.getPosition() - this.bar.getPosition() - minOffset;
-      }
-    } else if (runner === this.runnerMain) {
-      if (offset < this.runnerAdditional.getPosition() - this.bar.getPosition() + minOffset) {
-        newOffset = this.runnerAdditional.getPosition() - this.bar.getPosition() + minOffset;
-      }
-    }
-
-    return newOffset;
-  }
-
-  private roundOffsetRunner = (currentOffset: number): [number, number] => {
-    const currentValue = this.parameters.minValue
-      + ((currentOffset + this.runnerMain.getWidth() / 2)
+    let currentValue = this.parameters.minValue
+      + ((offset + this.runnerMain.getWidth() / 2)
       * (this.parameters.maxValue - this.parameters.minValue))
       / this.bar.getDimension();
-    let roundValue = this.round(currentValue, this.parameters.step);
 
-    if (this.parameters.isFloat) {
-      roundValue = parseFloat(roundValue.toFixed(2));
-    }
+    currentValue = this.parameters.isFloat
+      ? parseFloat(currentValue.toFixed(2))
+      : parseInt(String(currentValue), 10);
 
-    let roundOffset = this.convertOffsetToValue(roundValue);
+    let roundOffset = offset;
 
     if (roundOffset < -this.runnerMain.getWidth() / 2) {
       roundOffset = -this.runnerMain.getWidth() / 2;
-      roundValue = this.parameters.minValue;
+      currentValue = this.parameters.minValue;
     }
 
     if (roundOffset > this.bar.getDimension() - this.runnerMain.getWidth() / 2) {
       roundOffset = this.bar.getDimension() - this.runnerMain.getWidth() / 2;
-      roundValue = this.parameters.maxValue;
+      currentValue = this.parameters.maxValue;
     }
 
-    return [roundOffset, roundValue];
-  }
-
-  private round = (value: number, step: number): number => {
-    const whole = Math.trunc(value / step);
-    const reminder = Number((value - whole * step).toFixed(2));
-
-    if (value < 0) {
-      return Math.abs(reminder) < step / 2 ? whole * step : (whole - 1) * step;
-    }
-
-    if (value <= this.parameters.minValue) {
-      return this.parameters.minValue;
-    } if (value >= this.parameters.maxValue) {
-      return this.parameters.maxValue;
-    }
-
-    return reminder < step / 2 ? whole * step : (whole + 1) * step;
+    return {
+      runner: runner,
+      offset: roundOffset,
+      value: currentValue
+    };
   }
 
   private handleScaleClick = <T>(eventName: string, data: T | types.ScaleObserverData) => {
     if (eventName === 'ClickOnScale') {
       if (types.isScaleObserverData(data)) {
         const { value } = data;
-        const offset = this.convertOffsetToValue(value);
+        const offset = this.convertValueToOffset(value);
         let runner;
 
         if (this.parameters.isRange) {

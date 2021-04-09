@@ -1,11 +1,6 @@
 import * as types from '../types';
-import roundValue from '../helpers/roundValue';
+import reductValue from '../helpers/reductValue';
 import ObservableObject from '../observableObject/ObservableObject';
-
-const isCurrentValues = (data: types.CurrentValues | types.RawParameters)
-  : data is types.CurrentValues => {
-  return ('currentMinValue' in data || 'currentMaxValue' in data);
-};
 
 class Model {
   currentMinValue: number;
@@ -14,14 +9,20 @@ class Model {
 
   step: number;
 
+  minValue: number;
+
+  maxValue: number;
+
   observers: ObservableObject;
 
   constructor({
-    currentMinValue, currentMaxValue, step, observer
+    currentMinValue, currentMaxValue, step, minValue, maxValue, observer
   }: types.ModelCreateParameters) {
     this.currentMinValue = currentMinValue;
     this.currentMaxValue = currentMaxValue;
     this.step = step;
+    this.minValue = minValue;
+    this.maxValue = maxValue;
     this.observers = new ObservableObject();
     this.observers.addObserver(observer);
   }
@@ -30,28 +31,28 @@ class Model {
     const isCurrentMaxValueReal = currentMaxValue || currentMaxValue === 0;
     const isCurrentMinValueReal = currentMinValue || currentMinValue === 0;
     if (isCurrentMinValueReal) {
-      const valueRounded = roundValue(currentMinValue, this.step);
+      const valueRounded = reductValue(currentMinValue, this.step);
       if (valueRounded !== this.currentMinValue) {
-        if (valueRounded < this.currentMaxValue) {
+        if (valueRounded < this.currentMaxValue && valueRounded >= this.minValue) {
           this.currentMinValue = valueRounded;
         }
 
         this.observers.notifyObservers(
-          'SendingCurrentValuesForTracking',
+          'SendingCurrentValues',
           { currentMinValue: this.currentMinValue, currentMaxValue: this.currentMaxValue }
         );
       }
     }
 
     if (isCurrentMaxValueReal) {
-      const valueRounded = roundValue(currentMaxValue, this.step);
+      const valueRounded = reductValue(currentMaxValue, this.step);
       if (valueRounded !== this.currentMaxValue) {
-        if (valueRounded > this.currentMinValue) {
+        if (valueRounded > this.currentMinValue && valueRounded <= this.maxValue) {
           this.currentMaxValue = valueRounded;
         }
 
         this.observers.notifyObservers(
-          'SendingCurrentValuesForTracking',
+          'SendingCurrentValues',
           { currentMinValue: this.currentMinValue, currentMaxValue: this.currentMaxValue }
         );
       }
@@ -62,19 +63,16 @@ class Model {
   : void => {
     switch (eventName) {
       case 'ChangingCurrentValue':
-        if (data && isCurrentValues(data)) {
+        if (data && types.isCurrentValues(data)) {
           this.setCurrentValues(data);
         }
-
         break;
       case 'GettingValues':
-        this.observers.notifyObservers(
-          'SendingCurrentValuesForTracking',
-          { currentMinValue: this.currentMinValue, currentMaxValue: this.currentMaxValue }
-        );
-
-        break;
       case 'UpdatingConfig':
+        if (data && types.isParametersData(data)) {
+          this.minValue = data.minValue;
+          this.maxValue = data.maxValue;
+        }
         this.observers.notifyObservers(
           'SendingCurrentValues',
           { currentMinValue: this.currentMinValue, currentMaxValue: this.currentMaxValue }

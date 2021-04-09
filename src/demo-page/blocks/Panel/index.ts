@@ -10,7 +10,6 @@ const parameters = [
     isRange: false,
     showLabel: true,
     isFloat: false,
-    initMinValue: 200,
     initMaxValue: 777
   },
   {
