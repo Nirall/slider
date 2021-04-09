@@ -31,17 +31,20 @@ class Model {
     const isCurrentMaxValueReal = currentMaxValue || currentMaxValue === 0;
     const isCurrentMinValueReal = currentMinValue || currentMinValue === 0;
     if (isCurrentMinValueReal) {
-      let valueRounded;
-      if (currentMaxValue === this.minValue) {
-        valueRounded = this.minValue;
-      } else {
-        valueRounded = currentMinValue > this.minValue
-          ? reductValue(currentMinValue, this.step)
-          : this.minValue;
+      let valueRounded = reductValue(currentMinValue - this.minValue, this.step) + this.minValue;
+
+      if (valueRounded > this.maxValue - this.step / 2) {
+        valueRounded = reductValue(this.maxValue - this.step, this.step);
       }
 
-      if (currentMinValue !== this.currentMinValue) {
-        if (valueRounded < this.currentMaxValue && valueRounded >= this.minValue) {
+      if (currentMinValue === this.minValue || valueRounded < this.minValue) {
+        valueRounded = this.minValue;
+      }
+
+      valueRounded = Number(valueRounded.toFixed(2));
+
+      if (currentMinValue !== this.currentMinValue || valueRounded !== this.currentMinValue) {
+        if (valueRounded < this.currentMaxValue) {
           this.currentMinValue = valueRounded;
         }
 
@@ -53,17 +56,19 @@ class Model {
     }
 
     if (isCurrentMaxValueReal) {
-      let valueRounded;
-      if (currentMaxValue === this.maxValue) {
+      let valueRounded = reductValue(currentMaxValue - this.minValue, this.step) + this.minValue;
+      if (currentMaxValue === this.maxValue || valueRounded > this.maxValue) {
         valueRounded = this.maxValue;
-      } else {
-        valueRounded = currentMaxValue < this.maxValue
-          ? reductValue(currentMaxValue, this.step)
-          : this.maxValue;
       }
 
-      if (currentMaxValue !== this.currentMaxValue) {
-        if (valueRounded > this.currentMinValue && valueRounded) {
+      if (valueRounded < this.minValue + this.step) {
+        valueRounded = this.minValue + this.step;
+      }
+
+      valueRounded = Number(valueRounded.toFixed(2));
+
+      if (currentMaxValue !== this.currentMaxValue || valueRounded !== this.currentMaxValue) {
+        if (valueRounded > this.currentMinValue) {
           this.currentMaxValue = valueRounded;
         }
 
@@ -96,6 +101,7 @@ class Model {
           this.maxValue = data.maxValue;
           this.step = data.step;
         }
+
         this.observers.notifyObservers(
           'SendingCurrentValues',
           { currentMinValue: this.currentMinValue, currentMaxValue: this.currentMaxValue }

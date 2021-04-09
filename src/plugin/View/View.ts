@@ -114,7 +114,7 @@ class View {
 
   private checkMaxValue = (maxValue: number | undefined): number => {
     if (maxValue || maxValue === 0) {
-      if (maxValue > this.parameters.minValue) {
+      if (maxValue >= this.parameters.minValue + this.parameters.step) {
         return maxValue;
       }
     }

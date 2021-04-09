@@ -2,6 +2,7 @@ import Mark from './Mark/Mark';
 import createElem from '../createElem';
 import * as types from '../../../types';
 import ObservableObject from '../../../observableObject/ObservableObject';
+import reductValue from '../../../helpers/reductValue';
 
 class Scale {
   parameters: types.Parameters;
@@ -46,11 +47,11 @@ class Scale {
       } else if (index === this.marks.length - 1) {
         mark.setPosition(100, this.parameters.maxValue);
       } else {
-        let roundValue = this.round(this.parameters.minValue
-          + ((this.parameters.maxValue - this.parameters.minValue) * index)
-          / (this.marks.length - 1));
+        let roundValue = reductValue(((this.parameters.maxValue - this.parameters.minValue) * index)
+          / (this.marks.length - 1), this.parameters.step)
+          + this.parameters.minValue;
 
-        roundValue = parseFloat(roundValue.toFixed(2));
+        roundValue = Number(roundValue.toFixed(2));
         if (roundValue === this.marks[index - 1].value) {
           this.removeMark(mark.elem);
         } else {
@@ -90,7 +91,7 @@ class Scale {
       this.marks.push(mark);
     }
   }
-
+  /*
   private round = (value: number): number => {
     const whole = Math.trunc(value / this.parameters.step);
 
@@ -105,6 +106,7 @@ class Scale {
       ? whole * this.parameters.step
       : (whole + 1) * this.parameters.step;
   }
+  */
 }
 
 export default Scale;
