@@ -14,8 +14,10 @@ class Controller {
     this.view = new View(parameters, this.handleViewChangingValue);
     this.model = new Model({
       currentMinValue: parameters.minValue,
-      currentMaxValue: parameters.maxValue
-    }, this.handleModelSendingValues);
+      currentMaxValue: parameters.maxValue,
+      step: parameters.step,
+      observer: this.handleModelSendingValues
+    });
     this.observers = new ObservableObject();
     this.init(parameters, entry);
   }
@@ -25,7 +27,7 @@ class Controller {
   }
 
   setValues = (currentValues: types.CurrentValues): void => {
-    this.observers.notifyObservers('ChangingCurrentValueFromPanel', this.normalizeSetValues(currentValues));
+    this.observers.notifyObservers('ChangingCurrentValue', this.normalizeSetValues(currentValues));
   }
 
   renew = (): void => {
@@ -65,7 +67,7 @@ class Controller {
 
   private init = (parameters: types.Parameters, entry: JQuery<Methods>):void => {
     this.observers.addObserver(this.view.observeControllerFromView);
-    this.observers.addObserver(this.model.observeControllerFromModel);
+    this.observers.addObserver(this.model.observeSourceFromModel);
     this.observers.notifyObservers('AppendingToNode', { entry: entry.get(0) });
     if (parameters.initMaxValue || parameters.initMinValue) {
       this.setValues({
@@ -76,8 +78,8 @@ class Controller {
   }
 
   private handleViewChangingValue = <T>(eventName: string, data: T): void => {
-    if (eventName === 'ChangingCurrentValueFromView') {
-      this.observers.notifyObservers('ChangingCurrentValueFromView', data);
+    if (eventName === 'ChangingCurrentValue') {
+      this.observers.notifyObservers('ChangingCurrentValue', data);
     } if (eventName === 'SendingConfig') {
       this.observers.notifyObservers('SendingConfig', data);
     }

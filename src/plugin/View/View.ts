@@ -39,7 +39,7 @@ class View {
   handleTrackValueChanging = <T>(eventName: string, data: T | types.CurrentValues): void => {
     if (eventName === 'ChangingCurrentValueFromTrack') {
       if (types.isCurrentValues(data)) {
-        this.observers.notifyObservers('ChangingCurrentValueFromView', data);
+        this.observers.notifyObservers('ChangingCurrentValue', data);
       }
     }
   }
@@ -47,7 +47,9 @@ class View {
   observeControllerFromView = <T>(eventName: string, data: T): void => {
     if (eventName === 'SendingCurrentValues') {
       this.observers.notifyObservers('SendingCurrentValues', data);
-    } if (eventName === 'UpdatingConfigAfterModelChecking') {
+    } if (eventName === 'SendingCurrentValuesForTracking') {
+      this.observers.notifyObservers('SendingCurrentValuesForTracking', data);
+    } if (eventName === 'UpdatingConfig') {
       this.update(data);
     } if (eventName === 'GettingConfig') {
       this.observers.notifyObservers('SendingConfig', this.parameters);
@@ -126,13 +128,15 @@ class View {
 
   private checkMaxValue = (maxValue: number | undefined): number => {
     if (maxValue || maxValue === 0) {
-      if (maxValue % 1 !== 0) {
-        this.parameters.isFloat = true;
-      } else if (!isOthersValuesFloat(this, 'maxValue')) {
-        this.parameters.isFloat = false;
-      }
+      if (maxValue > this.parameters.minValue) {
+        if (maxValue % 1 !== 0) {
+          this.parameters.isFloat = true;
+        } else if (!isOthersValuesFloat(this, 'maxValue')) {
+          this.parameters.isFloat = false;
+        }
 
-      return maxValue;
+        return maxValue;
+      }
     }
 
     return this.parameters.maxValue;
@@ -140,13 +144,15 @@ class View {
 
   private checkMinValue = (minValue: number | undefined): number => {
     if (minValue || minValue === 0) {
-      if (minValue && minValue % 1 !== 0) {
-        this.parameters.isFloat = true;
-      } else if (!isOthersValuesFloat(this, 'minValue')) {
-        this.parameters.isFloat = false;
-      }
+      if (minValue < this.parameters.maxValue) {
+        if (minValue && minValue % 1 !== 0) {
+          this.parameters.isFloat = true;
+        } else if (!isOthersValuesFloat(this, 'minValue')) {
+          this.parameters.isFloat = false;
+        }
 
-      return minValue;
+        return minValue;
+      }
     }
 
     return this.parameters.minValue;

@@ -68,6 +68,21 @@ export type RawParameters = {
   isFloat?: string
 }
 
+export type ModelCreateParameters = {
+  currentMinValue: number;
+  currentMaxValue: number;
+  step: number;
+  observer: ObserverFunction;
+}
+
+export type updateData = {
+  [index: string]: number|string|boolean;
+}
+
+export type InputsObject = {
+  [index: string]: JQuery;
+}
+
 // TypeGuards
 
 export const isRunnerObserverData = <T>(data: T | RunnerObserverData)

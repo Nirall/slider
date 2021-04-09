@@ -1,4 +1,5 @@
 import * as types from '../types';
+import roundValue from '../helpers/roundValue';
 import ObservableObject from '../observableObject/ObservableObject';
 
 const isCurrentValues = (data: types.CurrentValues | types.RawParameters)
@@ -7,82 +8,80 @@ const isCurrentValues = (data: types.CurrentValues | types.RawParameters)
 };
 
 class Model {
-  currentValues: types.CurrentValues;
+  currentMinValue: number;
 
-  maxValue: number;
+  currentMaxValue: number;
 
-  minValue: number;
+  step: number;
 
   observers: ObservableObject;
 
-  constructor(currentValues: types.CurrentValues, observer: types.ObserverFunction) {
-    this.currentValues = currentValues;
-    this.maxValue = currentValues.currentMaxValue;
-    this.minValue = currentValues.currentMinValue;
+  constructor({
+    currentMinValue, currentMaxValue, step, observer
+  }: types.ModelCreateParameters) {
+    this.currentMinValue = currentMinValue;
+    this.currentMaxValue = currentMaxValue;
+    this.step = step;
     this.observers = new ObservableObject();
     this.observers.addObserver(observer);
   }
 
-  setCurrentValues = (data: types.CurrentValues, sourceOfChanging?: string): void => {
-    const isCurrentMaxValueReal = data.currentMaxValue || data.currentMaxValue === 0;
-    const isCurrentMinValueReal = data.currentMinValue || data.currentMinValue === 0;
-    if (isCurrentMaxValueReal && data.currentMaxValue !== this.currentValues.currentMaxValue) {
-      this.currentValues.currentMaxValue = data.currentMaxValue;
-    } if (isCurrentMinValueReal && data.currentMinValue !== this.currentValues.currentMinValue) {
-      this.currentValues.currentMinValue = data.currentMinValue;
+  setCurrentValues = ({ currentMinValue, currentMaxValue }: types.CurrentValues): void => {
+    const isCurrentMaxValueReal = currentMaxValue || currentMaxValue === 0;
+    const isCurrentMinValueReal = currentMinValue || currentMinValue === 0;
+    if (isCurrentMinValueReal) {
+      const valueRounded = roundValue(currentMinValue, this.step);
+      if (valueRounded !== this.currentMinValue) {
+        if (valueRounded < this.currentMaxValue) {
+          this.currentMinValue = valueRounded;
+        }
+
+        this.observers.notifyObservers(
+          'SendingCurrentValuesForTracking',
+          { currentMinValue: this.currentMinValue, currentMaxValue: this.currentMaxValue }
+        );
+      }
     }
 
-    if (sourceOfChanging === 'fromPanel') {
-      this.observers.notifyObservers('SendingCurrentValues', this.currentValues);
+    if (isCurrentMaxValueReal) {
+      const valueRounded = roundValue(currentMaxValue, this.step);
+      if (valueRounded !== this.currentMaxValue) {
+        if (valueRounded > this.currentMinValue) {
+          this.currentMaxValue = valueRounded;
+        }
+
+        this.observers.notifyObservers(
+          'SendingCurrentValuesForTracking',
+          { currentMinValue: this.currentMinValue, currentMaxValue: this.currentMaxValue }
+        );
+      }
     }
   }
 
-  private processConfigChanging = (parameters: types.RawParameters): void => {
-    const key = Object.keys(parameters)[0];
-    switch (key) {
-      case 'maxValue':
-        if (parameters.maxValue || parameters.maxValue === 0) {
-          if (parameters.maxValue > this.minValue) {
-            this.maxValue = parameters.maxValue;
-          }
+  observeSourceFromModel = (eventName: string, data?: types.CurrentValues | types.RawParameters)
+  : void => {
+    switch (eventName) {
+      case 'ChangingCurrentValue':
+        if (data && isCurrentValues(data)) {
+          this.setCurrentValues(data);
         }
-        this.observers.notifyObservers('UpdatingConfigAfterModelChecking', { maxValue: this.maxValue });
+
         break;
-      case 'minValue':
-        if (parameters.minValue || parameters.minValue === 0) {
-          if (parameters.minValue < this.maxValue) {
-            this.minValue = parameters.minValue;
-          }
-        }
-        this.observers.notifyObservers('UpdatingConfigAfterModelChecking', { minValue: this.minValue });
+      case 'GettingValues':
+        this.observers.notifyObservers(
+          'SendingCurrentValuesForTracking',
+          { currentMinValue: this.currentMinValue, currentMaxValue: this.currentMaxValue }
+        );
+
+        break;
+      case 'UpdatingConfig':
+        this.observers.notifyObservers(
+          'SendingCurrentValues',
+          { currentMinValue: this.currentMinValue, currentMaxValue: this.currentMaxValue }
+        );
         break;
       default:
-        this.observers.notifyObservers('UpdatingConfigAfterModelChecking', parameters);
-    }
-
-    this.observers.notifyObservers('SendingCurrentValues', this.currentValues);
-  }
-
-  observeControllerFromModel = (eventName: string, data?: types.CurrentValues | types.RawParameters)
-  : void => {
-    if (data && isCurrentValues(data)) {
-      switch (eventName) {
-        case 'ChangingCurrentValueFromView':
-          this.setCurrentValues(data, 'fromView');
-          this.observers.notifyObservers('SendingCurrentValuesForTracking', this.currentValues);
-          break;
-        case 'ChangingCurrentValueFromPanel':
-          this.setCurrentValues(data, 'fromPanel');
-          break;
-        default:
-          break;
-      }
-    } else {
-      if (eventName === 'GettingValues') {
-        this.observers.notifyObservers('SendingCurrentValuesForTracking', this.currentValues);
-      }
-
-      if (eventName === 'UpdatingConfig' && data) this.processConfigChanging(data);
+        break;
     }
   }
 }

@@ -11,7 +11,7 @@ type MethodsName = 'init' | 'update' | 'renew' | 'setValues' | 'inputsAttach';
 type sliderObject = (method: MethodsName, ...args: Array<updateData | InputsObject>) => void;
 
 interface JQuery {
-  omfgslider: sliderObject;
+  omfgslider: (...args: any) => void;
 }
 
 interface Methods {
