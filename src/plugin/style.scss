@@ -28,6 +28,10 @@ $red: #990033;
     &_position_vertical {
       transform: translateX(-50%);
     }
+
+    &_raised {
+      z-index: 10;
+    }
   }
 
   &__tooltip {
@@ -48,6 +52,10 @@ $red: #990033;
 
     &_visible {
       display: block;
+    }
+
+    &_raised {
+      z-index: 10;
     }
 
     &_position_vertical {

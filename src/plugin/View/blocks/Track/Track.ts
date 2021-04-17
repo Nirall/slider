@@ -156,10 +156,18 @@ class Track {
 
     if (runner === this.runnerAdditional) {
       this.observers.notifyObservers('ChangingCurrentValueFromTrack', { currentMinValue: value });
+      this.runnerAdditional.raise();
+      this.runnerMain.putDown();
     }
 
     if (runner === this.runnerMain) {
       this.observers.notifyObservers('ChangingCurrentValueFromTrack', { currentMaxValue: value });
+      this.runnerMain.raise();
+      this.runnerAdditional.putDown();
+      if (offset >= this.bar.getDimension() - this.runnerMain.getWidth() / 2) {
+        this.runnerAdditional.raise();
+        this.runnerMain.putDown();
+      }
     }
 
     this.updateProgressBar();

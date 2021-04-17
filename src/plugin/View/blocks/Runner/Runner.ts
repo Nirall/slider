@@ -29,6 +29,16 @@ class Runner {
     this.knob.setPosition(offset);
   }
 
+  raise = (): void => {
+    this.knob.elem.classList.add('slider__knob_raised');
+    this.tooltip.elem.classList.add('slider__tooltip_raised');
+  }
+
+  putDown = (): void => {
+    this.knob.elem.classList.remove('slider__knob_raised');
+    this.tooltip.elem.classList.remove('slider__tooltip_raised');
+  }
+
   update = (isVertical: boolean): void => {
     this.isVertical = isVertical;
     this.knob.update(this.isVertical);

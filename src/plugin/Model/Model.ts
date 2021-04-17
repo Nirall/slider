@@ -28,55 +28,44 @@ class Model {
   }
 
   setCurrentValues = ({ currentMinValue, currentMaxValue }: types.CurrentValues): void => {
-    const isCurrentMaxValueReal = currentMaxValue || currentMaxValue === 0;
-    const isCurrentMinValueReal = currentMinValue || currentMinValue === 0;
-    if (isCurrentMinValueReal) {
-      let valueRounded = reductValue(currentMinValue - this.minValue, this.step) + this.minValue;
+    const checkedCurrentMinValue = Number.isFinite(currentMinValue)
+      ? currentMinValue
+      : this.currentMinValue;
 
-      if (valueRounded > this.maxValue - this.step / 2) {
-        valueRounded = reductValue(this.maxValue - this.step, this.step);
-      }
+    const checkedCurrentMaxValue = Number.isFinite(currentMaxValue)
+      ? currentMaxValue
+      : this.currentMaxValue;
 
-      if (currentMinValue === this.minValue || valueRounded < this.minValue) {
-        valueRounded = this.minValue;
-      }
+    let [roundedCurrentMinValue, roundedCurrentMaxValue] = [
+      checkedCurrentMinValue,
+      checkedCurrentMaxValue
+    ].map((item) => {
+      if (item <= this.minValue) return this.minValue;
+      if (item >= this.maxValue) return this.maxValue;
+      return Number((reductValue(item - this.minValue, this.step) + this.minValue).toFixed(2));
+    });
 
-      valueRounded = Number(valueRounded.toFixed(2));
-
-      if (currentMinValue !== this.currentMinValue || valueRounded !== this.currentMinValue) {
-        if (valueRounded < this.currentMaxValue) {
-          this.currentMinValue = valueRounded;
-        }
-
-        this.observers.notifyObservers(
-          'SendingCurrentValues',
-          { currentMinValue: this.currentMinValue, currentMaxValue: this.currentMaxValue }
-        );
+    if (roundedCurrentMinValue > roundedCurrentMaxValue) {
+      if (checkedCurrentMinValue !== this.currentMinValue) {
+        roundedCurrentMinValue = roundedCurrentMaxValue;
+      } else {
+        roundedCurrentMaxValue = roundedCurrentMinValue;
       }
     }
 
-    if (isCurrentMaxValueReal) {
-      let valueRounded = reductValue(currentMaxValue - this.minValue, this.step) + this.minValue;
-      if (currentMaxValue === this.maxValue || valueRounded > this.maxValue) {
-        valueRounded = this.maxValue;
-      }
+    const isMinValueChanged = checkedCurrentMinValue !== this.currentMinValue
+      || roundedCurrentMinValue !== this.currentMinValue;
 
-      if (valueRounded < this.minValue + this.step) {
-        valueRounded = this.minValue + this.step;
-      }
+    const isMaxValueChanged = checkedCurrentMaxValue !== this.currentMaxValue
+      || roundedCurrentMaxValue !== this.currentMaxValue;
 
-      valueRounded = Number(valueRounded.toFixed(2));
-
-      if (currentMaxValue !== this.currentMaxValue || valueRounded !== this.currentMaxValue) {
-        if (valueRounded > this.currentMinValue) {
-          this.currentMaxValue = valueRounded;
-        }
-
-        this.observers.notifyObservers(
-          'SendingCurrentValues',
-          { currentMinValue: this.currentMinValue, currentMaxValue: this.currentMaxValue }
-        );
-      }
+    if (isMinValueChanged || isMaxValueChanged) {
+      this.currentMinValue = roundedCurrentMinValue;
+      this.currentMaxValue = roundedCurrentMaxValue;
+      this.observers.notifyObservers(
+        'SendingCurrentValues',
+        { currentMinValue: this.currentMinValue, currentMaxValue: this.currentMaxValue }
+      );
     }
   }
 
@@ -100,6 +89,7 @@ class Model {
           this.minValue = data.minValue;
           this.maxValue = data.maxValue;
           this.step = data.step;
+          if (data.isRange === false) this.currentMinValue = this.minValue;
         }
 
         this.observers.notifyObservers(
