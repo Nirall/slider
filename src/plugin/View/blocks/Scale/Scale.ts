@@ -41,22 +41,23 @@ class Scale {
 
   moveMarks = (): void => {
     this.marks.forEach((mark, index) => {
-      mark.update(this.parameters.isVertical);
+      const {
+        isVertical, minValue, maxValue, step
+      } = this.parameters;
+      mark.update(isVertical);
       if (index === 0) {
-        mark.setPosition(0, this.parameters.minValue);
+        mark.setPosition(0, minValue);
       } else if (index === this.marks.length - 1) {
-        mark.setPosition(100, this.parameters.maxValue);
+        mark.setPosition(100, maxValue);
       } else {
-        let roundValue = reductValue(((this.parameters.maxValue - this.parameters.minValue) * index)
-          / (this.marks.length - 1), this.parameters.step)
-          + this.parameters.minValue;
+        let roundValue = reductValue(((maxValue - minValue) * index)
+          / (this.marks.length - 1), step) + minValue;
 
         roundValue = Number(roundValue.toFixed(2));
         if (roundValue === this.marks[index - 1].value) {
           this.removeMark(mark.elem);
         } else {
-          const offset = (roundValue - this.parameters.minValue)
-          / (this.parameters.maxValue - this.parameters.minValue);
+          const offset = (roundValue - minValue) / (maxValue - minValue);
 
           mark.setPosition(offset * 100, roundValue);
         }
@@ -91,22 +92,6 @@ class Scale {
       this.marks.push(mark);
     }
   }
-  /*
-  private round = (value: number): number => {
-    const whole = Math.trunc(value / this.parameters.step);
-
-    const reminder = Number((value - whole * this.parameters.step).toFixed(2));
-    if (value < 0) {
-      return Math.abs(reminder) < this.parameters.step / 2
-        ? whole * this.parameters.step
-        : (whole - 1) * this.parameters.step;
-    }
-
-    return reminder < this.parameters.step / 2
-      ? whole * this.parameters.step
-      : (whole + 1) * this.parameters.step;
-  }
-  */
 }
 
 export default Scale;

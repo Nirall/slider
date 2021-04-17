@@ -24,15 +24,15 @@ class Panel {
     const showingLabelsInput = this.node.find('.js-panel__showing-labels');
 
     this.inputs = {
-      slider: slider,
-      currentMinValueInput: currentMinValueInput,
-      currentMaxValueInput: currentMaxValueInput,
-      minValueInput: minValueInput,
-      maxValueInput: maxValueInput,
-      stepInput: stepInput,
-      rangeInput: rangeInput,
-      orientationInput: orientationInput,
-      showingLabelsInput: showingLabelsInput
+      slider,
+      currentMinValueInput,
+      currentMaxValueInput,
+      minValueInput,
+      maxValueInput,
+      stepInput,
+      rangeInput,
+      orientationInput,
+      showingLabelsInput
     };
 
     slider.omfgslider(parameters);

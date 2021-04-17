@@ -23,20 +23,20 @@ mixin panel(index, parameters)
         .panel__row
           h3.panel__title Диапазон
           if isRange
-            +radio-button({ class: "panel__range js-panel__range", name: "range", value: "single", text: "Одиночный" })
-            +radio-button({ class: "panel__range js-panel__range", name: "range", value: "range", text: "Диапазон", checked: true })
+            +radio-button({ classProp: "panel__range js-panel__range", nameProp: "range", valueProp: "single", textProp: "Одиночный" })
+            +radio-button({ classProp: "panel__range js-panel__range", nameProp: "range", valueProp: "range", textProp: "Диапазон", checkedProp: true })
           else
-            +radio-button({ class: "panel__range js-panel__range", name: "range", value: "single", text: "Одиночный", checked: true })
-            +radio-button({ class: "panel__range js-panel__range", name: "range", value: "range", text: "Диапазон" })
+            +radio-button({ classProp: "panel__range js-panel__range", nameProp: "range", valueProp: "single", textProp: "Одиночный", checkedProp: true })
+            +radio-button({ classProp: "panel__range js-panel__range", nameProp: "range", valueProp: "range", textProp: "Диапазон" })
         .panel__row
           h3.panel__title Ориентация
           if isVertical
-            +radio-button({ class: "panel__orientation js-panel__orientation", name: "vertical", value: "horizontal", text: "Горизонтальный" })
-            +radio-button({ class: "panel__orientation js-panel__orientation", name: "vertical", value: "vertical", text: "Вертикальный", checked: true })
+            +radio-button({ classProp: "panel__orientation js-panel__orientation", nameProp: "vertical", valueProp: "horizontal", textProp: "Горизонтальный" })
+            +radio-button({ classProp: "panel__orientation js-panel__orientation", nameProp: "vertical", valueProp: "vertical", textProp: "Вертикальный", checkedProp: true })
           else
-            +radio-button({ class: "panel__orientation js-panel__orientation", name: "vertical", value: "horizontal", text: "Горизонтальный", checked: true })
-            +radio-button({ class: "panel__orientation js-panel__orientation", name: "vertical", value: "vertical", text: "Вертикальный" })
+            +radio-button({ classProp: "panel__orientation js-panel__orientation", nameProp: "vertical", valueProp: "horizontal", textProp: "Горизонтальный", checkedProp: true })
+            +radio-button({ classProp: "panel__orientation js-panel__orientation", nameProp: "vertical", valueProp: "vertical", textProp: "Вертикальный" })
         .panel__row
           h3= "Отображение значений"
-          +radio-button({ class: "js-panel__showing-labels panel__showing-labels", name: "showLabel", value: "noLabel", text: "Без значений" })
-          +radio-button({ class: "js-panel__showing-labels panel__showing-labels", name: "showLabel", value: "showLabel", text: "Со значениями", checked: true })
+          +radio-button({ classProp: "js-panel__showing-labels panel__showing-labels", nameProp: "showLabel", valueProp: "noLabel", textProp: "Без значений" })
+          +radio-button({ classProp: "js-panel__showing-labels panel__showing-labels", nameProp: "showLabel", valueProp: "showLabel", textProp: "Со значениями", checkedProp: true })

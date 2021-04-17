@@ -90,8 +90,7 @@ class Track {
     }
   }
 
-  appendToNode = (data: types.AppendingObserverData): void => {
-    const { entry } = data;
+  appendToNode = ({ entry }: types.AppendingObserverData): void => {
     entry.appendChild(this.bar.elem).appendChild(this.progressBar.elem);
     this.runnerMain.appendToNode(entry);
     this.runnerAdditional.appendToNode(entry);
