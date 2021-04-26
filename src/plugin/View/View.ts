@@ -23,7 +23,7 @@ class View {
     this.observers.notifyObservers('SendingConfig', this.parameters);
   }
 
-  handleTrackValueChanging = <T>(eventName: string, data: T | types.CurrentValues): void => {
+  handleTrackValueChanging = (eventName: string, data: unknown): void => {
     if (eventName === 'ChangingCurrentValueFromTrack') {
       if (types.isCurrentValues(data)) {
         this.observers.notifyObservers('ChangingCurrentValue', data);
@@ -31,13 +31,13 @@ class View {
     }
   }
 
-  observeSourceFromView = <T>(eventName: string, data: T): void => {
+  observeSourceFromView = (eventName: string, data: unknown): void => {
     switch (eventName) {
       case 'SendingCurrentValues':
         this.observers.notifyObservers('SendingCurrentValuesFromView', data);
         break;
       case 'UpdatingConfig':
-        this.update(data);
+        if (types.isRawParametersData(data)) this.update(data);
         break;
       case 'GettingConfig':
         this.observers.notifyObservers('SendingConfig', this.parameters);

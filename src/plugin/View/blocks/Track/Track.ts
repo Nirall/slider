@@ -65,10 +65,7 @@ class Track {
     );
   }
 
-  observeViewFromTrack = <T>(
-    eventName: string,
-    data?: T | types.CurrentValues | types.Parameters | types.AppendingObserverData
-    ): void => {
+  observeViewFromTrack = (eventName: string, data?: unknown): void => {
     switch (eventName) {
       case 'SendingCurrentValuesFromView':
         if (types.isCurrentValues(data)) {
@@ -140,8 +137,7 @@ class Track {
     return 0;
   }
 
-  private handleRunnerMove = <T>(eventName: string,
-    data: T | types.RunnerObserverData): void => {
+  private handleRunnerMove = (eventName: string, data: unknown): void => {
     if (eventName === 'MovingRunner') {
       if (types.isRunnerObserverData(data)) {
         const { event, runner } = data;
@@ -212,7 +208,7 @@ class Track {
     };
   }
 
-  private handleScaleClick = <T>(eventName: string, data: T | types.ScaleObserverData) => {
+  private handleScaleClick = (eventName: string, data: unknown) => {
     if (eventName === 'ClickOnScale') {
       if (types.isScaleObserverData(data)) {
         const { value } = data;
@@ -239,7 +235,7 @@ class Track {
     return this.runnerAdditional;
   }
 
-  private handleBarClick = <T>(eventName: string, data: T | types.BarObserverData): void => {
+  private handleBarClick = (eventName: string, data: unknown): void => {
     if (eventName === 'ClickOnBar') {
       if (types.isBarObserverData(data)) {
         const { event } = data;

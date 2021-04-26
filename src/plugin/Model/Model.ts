@@ -69,7 +69,7 @@ class Model {
     }
   }
 
-  observeSourceFromModel = <T>(eventName: string, data?: types.CurrentValues | types.Parameters | T)
+  observeSourceFromModel = (eventName: string, data?: unknown)
   : void => {
     switch (eventName) {
       case 'ChangingCurrentValue':

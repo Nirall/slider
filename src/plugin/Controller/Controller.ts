@@ -79,7 +79,7 @@ class Controller {
     }
   }
 
-  private observeSourceFromController = <T>(eventName: string, data: T): void => {
+  private observeSourceFromController = (eventName: string, data: unknown): void => {
     if (eventName === 'ChangingCurrentValue') {
       this.observers.notifyObservers('ChangingCurrentValue', data);
     }

@@ -1,14 +1,12 @@
 import Runner from './View/blocks/Runner/Runner';
 
-export type FunctionCallbackData = <T>(data: T, eventName?: string) => void;
-
-export type ObserverFunction = <T>(eventName: string, data?: T) => void;
+export type ObserverFunction = (eventName: string, data?: unknown) => void;
 
 export type RunnerObserver = (eventName: string, data: RunnerObserverData) => void;
 
-export type ObserverTestResult<T> = {
+export type ObserverTestResult = {
   eventName: string,
-  data?: T,
+  data?: unknown,
 }
 
 export type RunnerMoveData = {
@@ -55,8 +53,6 @@ export type Parameters = {
   initMaxValue?: number,
 }
 
-export type keyOfParameters = keyof Parameters;
-
 export type RawParameters = {
   minValue?: number,
   maxValue?: number,
@@ -85,33 +81,27 @@ export type InputsObject = {
 
 // TypeGuards
 
-export const isRunnerObserverData = <T>(data: T | RunnerObserverData)
-  : data is RunnerObserverData => {
+export const isRunnerObserverData = (data: unknown): data is RunnerObserverData => {
   return (Object.hasOwnProperty.call(data, 'event') && Object.hasOwnProperty.call(data, 'runner'));
 };
 
-export const isBarObserverData = <T>(data: T | BarObserverData)
-  : data is BarObserverData => {
+export const isBarObserverData = (data: unknown): data is BarObserverData => {
   return (Object.hasOwnProperty.call(data, 'event'));
 };
 
-export const isScaleObserverData = <T>(data: T | ScaleObserverData)
-  : data is ScaleObserverData => {
+export const isScaleObserverData = (data: unknown): data is ScaleObserverData => {
   return (Object.hasOwnProperty.call(data, 'value'));
 };
 
-export const isCurrentValues = <T>(data: T | CurrentValues)
-  : data is CurrentValues => {
+export const isCurrentValues = (data: unknown): data is CurrentValues => {
   return (Object.hasOwnProperty.call(data, 'currentMinValue') || Object.hasOwnProperty.call(data, 'currentMaxValue'));
 };
 
-export const isAppendingObserverData = <T>(data: T | AppendingObserverData)
-  : data is AppendingObserverData => {
+export const isAppendingObserverData = (data: unknown): data is AppendingObserverData => {
   return (Object.hasOwnProperty.call(data, 'entry'));
 };
 
-export const isParametersData = <T>(data: T | Parameters)
-  : data is Parameters => {
+export const isParametersData = (data: unknown): data is Parameters => {
   const keys = [
     'minValue',
     'maxValue',
@@ -124,7 +114,20 @@ export const isParametersData = <T>(data: T | Parameters)
   return (keys.every(key => Object.hasOwnProperty.call(data, key)));
 };
 
-export const isInputsData = <T>(data: T | InputsObject): data is InputsObject => {
+export const isRawParametersData = (data: unknown): data is RawParameters => {
+  const keys = [
+    'minValue',
+    'maxValue',
+    'step',
+    'range',
+    'vertical',
+    'showLabel'
+  ];
+
+  return (keys.some(key => Object.hasOwnProperty.call(data, key)));
+};
+
+export const isInputsData = (data: unknown): data is InputsObject => {
   const keys = [
     'minValueInput',
     'maxValueInput',
@@ -136,13 +139,17 @@ export const isInputsData = <T>(data: T | InputsObject): data is InputsObject =>
   return (keys.every(key => Object.hasOwnProperty.call(data, key)));
 };
 
-export const isUpdateData = <T>(data: T | updateData): data is updateData => {
-  return (typeof Object.keys(data)[0] === 'string');
+export const isUpdateData = (data: unknown): data is updateData => {
+  if (data !== null && data === 'object') {
+    return (typeof Object.keys(data)[0] === 'string');
+  }
+
+  return false;
 };
 
 type MethodsName = 'init' | 'update' | 'renew' | 'setValues' | 'inputsAttach';
 
-export const isMethodName = <T>(data: T | MethodsName): data is MethodsName => {
+export const isMethodName = (data: unknown): data is MethodsName => {
   let isName = false;
   if (typeof data === 'string') {
     isName = ['init', 'update', 'renew', 'setValues', 'inputsAttach'].includes(data);

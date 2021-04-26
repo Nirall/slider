@@ -17,33 +17,30 @@ const hasOwnProperty = <T, K extends PropertyKey>(obj: T, key: K)
   return Object.prototype.hasOwnProperty.call(obj, key);
 };
 
-const normalizeInitParameters = (parameters: unknown | types.Parameters) => {
+const normalizeInitParameters = (parameters: unknown) => {
   let normalizedParameters = defaultParameters;
 
-  Object.keys(defaultParameters).forEach(key => {
-    switch (key) {
-      case 'minValue':
-      case 'maxValue':
-      case 'step':
-        if (hasOwnProperty(parameters, key)) {
+  if (types.isParametersData(parameters)) {
+    Object.keys(defaultParameters).forEach(key => {
+      switch (key) {
+        case 'minValue':
+        case 'maxValue':
+        case 'step':
           normalizedParameters[key] = Number.isFinite(parseFloat(String(parameters[key])))
             ? parseFloat(String(parameters[key]))
             : defaultParameters[key];
-        }
-        break;
-      case 'isRange':
-      case 'isVertical':
-      case 'showLabel':
-      case 'isFloat':
-        if (hasOwnProperty(parameters, key)) {
+          break;
+        case 'isRange':
+        case 'isVertical':
+        case 'showLabel':
           normalizedParameters[key] = typeof parameters[key] === 'boolean'
             ? Boolean(parameters[key])
             : defaultParameters[key];
-        }
-        break;
-      default: break;
-    }
-  });
+          break;
+        default: break;
+      }
+    });
+  }
 
   ['initMinValue', 'initMaxValue'].forEach(key => {
     if (hasOwnProperty(parameters, key)) {
@@ -61,7 +58,7 @@ const normalizeInitParameters = (parameters: unknown | types.Parameters) => {
 
 (function pluginWrapper($) {
   const methods: Methods = {
-    init: function init<T>(opt: T | types.Parameters) {
+    init: function init(opt: unknown) {
       if (!$(this).data('slider')) {
         const newConfig = { ...defaultParameters };
         const slider = new Controller($.extend(newConfig, normalizeInitParameters(opt)), $(this));
@@ -69,7 +66,7 @@ const normalizeInitParameters = (parameters: unknown | types.Parameters) => {
       }
     },
 
-    update: function update<T>(opt: T | types.Parameters) {
+    update: function update(opt: unknown) {
       const slider = $(this).data('slider');
       slider.update(opt);
     },
@@ -79,16 +76,16 @@ const normalizeInitParameters = (parameters: unknown | types.Parameters) => {
       return slider.renew();
     },
 
-    setValues: function setValues<T>(opt: T | types.CurrentValues) {
+    setValues: function setValues(opt: unknown) {
       const slider = $(this).data('slider');
       slider.setValues(opt);
     },
 
-    inputsAttach: function inputsAttach<T>(opt: T | InputsObject) {
+    inputsAttach: function inputsAttach(opt: unknown) {
       if (types.isInputsData(opt)) {
         const slider = $(this).data('slider');
         slider.observers.addObserver(
-          (eventName: string, data: types.Parameters | types.CurrentValues) => {
+          (eventName: string, data: unknown) => {
             if (eventName === 'SendingCurrentValues') {
               if (types.isCurrentValues(data)) {
                 const { currentMinValue, currentMaxValue } = data;
@@ -111,8 +108,8 @@ const normalizeInitParameters = (parameters: unknown | types.Parameters) => {
 
   // eslint-disable-next-line no-param-reassign
   $.fn.omfgslider = function processMethod(
-    method: MethodsName | ConfigParameters,
-    args?: updateData | InputsObject
+    method: unknown,
+    args?: unknown
   ) {
     if (types.isMethodName(method)) {
       if (methods[method]) {
