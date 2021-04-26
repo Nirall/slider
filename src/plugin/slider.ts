@@ -9,16 +9,13 @@ const defaultParameters = {
   isRange: false,
   isVertical: false,
   showLabel: true,
-  isFloat: false
-};
-
-const hasOwnProperty = <T, K extends PropertyKey>(obj: T, key: K)
-  : obj is T & Record<K, unknown> => {
-  return Object.prototype.hasOwnProperty.call(obj, key);
+  isFloat: false,
+  initMinValue: 0,
+  initMaxValue: 0
 };
 
 const normalizeInitParameters = (parameters: unknown) => {
-  let normalizedParameters = defaultParameters;
+  const normalizedParameters = defaultParameters;
 
   if (types.isParametersData(parameters)) {
     Object.keys(defaultParameters).forEach(key => {
@@ -26,32 +23,21 @@ const normalizeInitParameters = (parameters: unknown) => {
         case 'minValue':
         case 'maxValue':
         case 'step':
-          normalizedParameters[key] = Number.isFinite(parseFloat(String(parameters[key])))
-            ? parseFloat(String(parameters[key]))
-            : defaultParameters[key];
+        case 'initMinValue':
+        case 'initMaxValue':
+          if (typeof parameters[key] === 'number') {
+            normalizedParameters[key] = Number(parameters[key]);
+          }
           break;
         case 'isRange':
         case 'isVertical':
         case 'showLabel':
-          normalizedParameters[key] = typeof parameters[key] === 'boolean'
-            ? Boolean(parameters[key])
-            : defaultParameters[key];
+          if (typeof parameters[key] === 'boolean') normalizedParameters[key] = Boolean(parameters[key]);
           break;
         default: break;
       }
     });
   }
-
-  ['initMinValue', 'initMaxValue'].forEach(key => {
-    if (hasOwnProperty(parameters, key)) {
-      if (Number.isFinite(parseFloat(String(parameters[key])))) {
-        normalizedParameters = {
-          ...normalizedParameters,
-          [key]: parseFloat(String(parameters[key]))
-        };
-      }
-    }
-  });
 
   return normalizedParameters;
 };
