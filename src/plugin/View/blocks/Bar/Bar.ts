@@ -17,28 +17,30 @@ class Bar {
   }
 
   getPosition = (): number => {
-    if (this.isVertical) {
-      return this.elem.getBoundingClientRect().top;
+    const { elem, isVertical } = this;
+    if (isVertical) {
+      return elem.getBoundingClientRect().top;
     }
 
-    return this.elem.getBoundingClientRect().left;
+    return elem.getBoundingClientRect().left;
   }
 
   getDimension = (): number => {
-    if (this.isVertical) {
-      return this.elem.getBoundingClientRect().height;
+    const { elem, isVertical } = this;
+    if (isVertical) {
+      return elem.getBoundingClientRect().height;
     }
 
-    return this.elem.getBoundingClientRect().width;
+    return elem.getBoundingClientRect().width;
   }
 
   update = (isVertical: boolean): void => {
     this.isVertical = isVertical;
-
-    if (this.isVertical) {
-      this.elem.classList.add('slider__bar_position_vertical');
+    const { elem } = this;
+    if (isVertical) {
+      elem.classList.add('slider__bar_position_vertical');
     } else {
-      this.elem.classList.remove('slider__bar_position_vertical');
+      elem.classList.remove('slider__bar_position_vertical');
     }
   }
 

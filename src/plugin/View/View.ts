@@ -69,31 +69,13 @@ class View {
         checkedParameters.minValue = this.checkMinValue(parameters.minValue);
         break;
       case 'range':
-        if (parameters.range === 'toggle') {
-          if (this.parameters.isRange === true) {
-            checkedParameters.isRange = false;
-          } else {
-            checkedParameters.isRange = true;
-          }
-        }
+        if (parameters.range === 'toggle') checkedParameters.isRange = !this.parameters.isRange;
         break;
       case 'vertical':
-        if (parameters.vertical === 'toggle') {
-          if (this.parameters.isVertical === true) {
-            checkedParameters.isVertical = false;
-          } else {
-            checkedParameters.isVertical = true;
-          }
-        }
+        if (parameters.vertical === 'toggle') checkedParameters.isVertical = !this.parameters.isVertical;
         break;
       case 'showLabel':
-        if (parameters.showLabel === 'toggle') {
-          if (this.parameters.showLabel === true) {
-            checkedParameters.showLabel = false;
-          } else {
-            checkedParameters.showLabel = true;
-          }
-        }
+        if (parameters.showLabel === 'toggle') checkedParameters.showLabel = !this.parameters.showLabel;
         break;
       default:
         break;
@@ -113,7 +95,7 @@ class View {
   }
 
   private checkMaxValue = (maxValue: number | undefined): number => {
-    if (maxValue || maxValue === 0) {
+    if (typeof maxValue === 'number') {
       if (maxValue >= this.parameters.minValue + this.parameters.step) {
         return maxValue;
       }
@@ -123,7 +105,7 @@ class View {
   }
 
   private checkMinValue = (minValue: number | undefined): number => {
-    if (minValue || minValue === 0) {
+    if (typeof minValue === 'number') {
       if (minValue < this.parameters.maxValue) {
         return minValue;
       }

@@ -100,7 +100,7 @@ class Track {
   }
 
   private renewRunners({ currentMinValue, currentMaxValue }: types.CurrentValues): void {
-    if (currentMinValue || currentMinValue === 0) {
+    if (typeof currentMinValue === 'number') {
       this.moveRunner(
         this.processRunnerOffset(
           this.convertValueToOffset(currentMinValue),
@@ -109,7 +109,7 @@ class Track {
       );
     }
 
-    if (currentMaxValue || currentMaxValue === 0) {
+    if (typeof currentMaxValue === 'number') {
       this.moveRunner(
         this.processRunnerOffset(
           this.convertValueToOffset(currentMaxValue),
@@ -120,9 +120,9 @@ class Track {
   }
 
   private convertValueToOffset = (value: number): number => {
-    return (((value - this.parameters.minValue) * this.bar.getDimension())
-      / (this.parameters.maxValue - this.parameters.minValue)
-      - this.runnerMain.getWidth() / 2);
+    const { minValue, maxValue } = this.parameters;
+    return (((value - minValue) * this.bar.getDimension())
+      / (maxValue - minValue) - this.runnerMain.getWidth() / 2);
   }
 
   private getMainRunnerOffset = (): number => {
@@ -186,10 +186,8 @@ class Track {
   ): types.RunnerMoveData => {
     let currentValue;
     if (!value || value !== 0) {
-      currentValue = this.parameters.minValue
-      + ((offset + this.runnerMain.getWidth() / 2)
-      * (this.parameters.maxValue - this.parameters.minValue))
-      / this.bar.getDimension();
+      currentValue = this.parameters.minValue + ((offset + this.runnerMain.getWidth() / 2)
+      * (this.parameters.maxValue - this.parameters.minValue)) / this.bar.getDimension();
       currentValue = parseFloat(currentValue.toFixed(2));
     } else {
       currentValue = value;
@@ -258,9 +256,10 @@ class Track {
   }
 
   private updateProgressBar = (): void => {
-    this.progressBar.update(this.parameters.isVertical);
-    this.progressBar.setPosition(this.getAdditionalRunnerOffset());
-    this.progressBar.setDimension(this.getMainRunnerOffset() - this.getAdditionalRunnerOffset());
+    const { progressBar } = this;
+    progressBar.update(this.parameters.isVertical);
+    progressBar.setPosition(this.getAdditionalRunnerOffset());
+    progressBar.setDimension(this.getMainRunnerOffset() - this.getAdditionalRunnerOffset());
   }
 }
 

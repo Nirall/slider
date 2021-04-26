@@ -91,14 +91,16 @@ const normalizeInitParameters = (parameters: unknown | types.Parameters) => {
           (eventName: string, data: types.Parameters | types.CurrentValues) => {
             if (eventName === 'SendingCurrentValues') {
               if (types.isCurrentValues(data)) {
-                opt.minValueInput.val(data.currentMinValue);
-                opt.maxValueInput.val(data.currentMaxValue);
+                const { currentMinValue, currentMaxValue } = data;
+                opt.minValueInput.val(currentMinValue);
+                opt.maxValueInput.val(currentMaxValue);
               }
             } if (eventName === 'SendingConfig') {
               if (types.isParametersData(data)) {
-                opt.maxValue.val(data.maxValue);
-                opt.minValue.val(data.minValue);
-                opt.step.val(data.step);
+                const { minValue, maxValue, step } = data;
+                opt.maxValue.val(maxValue);
+                opt.minValue.val(minValue);
+                opt.step.val(step);
               }
             }
           }

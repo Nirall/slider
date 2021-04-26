@@ -66,8 +66,9 @@ class Scale {
   }
 
   private removeMarks = () : void => {
-    this.elem.querySelectorAll('.slider__mark').forEach((child) => {
-      this.elem.removeChild(child);
+    const { elem } = this;
+    elem.querySelectorAll('.slider__mark').forEach((child) => {
+      elem.removeChild(child);
     });
   }
 

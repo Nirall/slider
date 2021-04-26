@@ -11,41 +11,44 @@ class Tooltip {
   }
 
   getPosition = (): number => {
-    if (this.isVertical) {
-      return this.elem.getBoundingClientRect().top;
+    const { elem, isVertical } = this;
+    if (isVertical) {
+      return elem.getBoundingClientRect().top;
     }
 
-    return this.elem.getBoundingClientRect().left;
+    return elem.getBoundingClientRect().left;
   }
 
   setPosition = (offset: number, value: number): void => {
-    this.elem.innerHTML = value + '';
+    this.elem.innerHTML = String(value);
     const edgeOffset = offset - this.getDimension() / 2;
+    const { style } = this.elem;
 
     if (this.isVertical) {
-      this.elem.style.left = '50%';
-      this.elem.style.top = `${edgeOffset}px`;
+      style.left = '50%';
+      style.top = `${edgeOffset}px`;
     } else {
-      this.elem.style.top = '50%';
-      this.elem.style.left = `${edgeOffset}px`;
+      style.top = '50%';
+      style.left = `${edgeOffset}px`;
     }
   }
 
   getDimension = (): number => {
-    if (this.isVertical) {
-      return this.elem.getBoundingClientRect().height;
+    const { elem, isVertical } = this;
+    if (isVertical) {
+      return elem.getBoundingClientRect().height;
     }
 
-    return this.elem.getBoundingClientRect().width;
+    return elem.getBoundingClientRect().width;
   }
 
   update = (isVertical: boolean): void => {
     this.isVertical = isVertical;
-
+    const { elem } = this;
     if (this.isVertical) {
-      this.elem.classList.add('slider__tooltip_position_vertical');
+      elem.classList.add('slider__tooltip_position_vertical');
     } else {
-      this.elem.classList.remove('slider__tooltip_position_vertical');
+      elem.classList.remove('slider__tooltip_position_vertical');
     }
   }
 }
