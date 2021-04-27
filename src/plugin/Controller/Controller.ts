@@ -24,47 +24,17 @@ class Controller {
     this.init(parameters, entry);
   }
 
-  update = (parameters: types.updateData): void => {
-    this.observers.notifyObservers('UpdatingConfig', this.normalizeUpdateConfig(parameters));
+  update = (parameters: types.RawParameters): void => {
+    this.observers.notifyObservers('UpdatingConfig', parameters);
   }
 
   setValues = (currentValues: types.CurrentValues): void => {
-    this.observers.notifyObservers('ChangingCurrentValue', this.normalizeSetValues(currentValues));
+    this.observers.notifyObservers('ChangingCurrentValue', currentValues);
   }
 
   renew = (): void => {
     this.observers.notifyObservers('GettingConfig');
     this.observers.notifyObservers('GettingValues');
-  }
-
-  private normalizeUpdateConfig = (parameters: types.updateData)
-    : types.RawParameters => {
-    const key = Object.keys(parameters)[0];
-    switch (key) {
-      case 'minValue':
-        return { minValue: parseFloat(String(parameters.minValue)) };
-      case 'maxValue':
-        return { maxValue: parseFloat(String(parameters.maxValue)) };
-      case 'step':
-        return { step: parseFloat(String(parameters.step)) };
-      case 'range':
-        return { range: parameters.range ? 'toggle' : '' };
-      case 'vertical':
-        return { vertical: parameters.vertical ? 'toggle' : '' };
-      case 'showLabel':
-        return { showLabel: parameters.showLabel ? 'toggle' : '' };
-      default:
-        return {};
-    }
-  }
-
-  private normalizeSetValues = (values: types.updateData): types.updateCurrentValues => {
-    const snapValues = { ...values };
-    Object.keys(values).forEach((key) => {
-      snapValues[key] = parseFloat(String(values[key]));
-    });
-
-    return snapValues;
   }
 
   private init = (parameters: types.Parameters, entry: JQuery<Methods>):void => {

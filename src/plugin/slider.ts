@@ -1,6 +1,7 @@
-import * as types from './types';
-import Controller from './Controller/Controller';
 import * as jQuery from 'jquery';
+import * as types from './types';
+import { normalizeInitParameters, normalizeUpdateConfig, normalizeSetValues } from './helpers';
+import Controller from './Controller/Controller';
 
 const defaultParameters = {
   minValue: 0,
@@ -10,51 +11,23 @@ const defaultParameters = {
   isVertical: false,
   showLabel: true,
   isFloat: false,
-  initMinValue: 0,
-  initMaxValue: 0
-};
-
-const normalizeInitParameters = (parameters: unknown) => {
-  const normalizedParameters = defaultParameters;
-
-  if (types.isParametersData(parameters)) {
-    Object.keys(defaultParameters).forEach(key => {
-      switch (key) {
-        case 'minValue':
-        case 'maxValue':
-        case 'step':
-        case 'initMinValue':
-        case 'initMaxValue':
-          if (typeof parameters[key] === 'number') {
-            normalizedParameters[key] = Number(parameters[key]);
-          }
-          break;
-        case 'isRange':
-        case 'isVertical':
-        case 'showLabel':
-          if (typeof parameters[key] === 'boolean') normalizedParameters[key] = Boolean(parameters[key]);
-          break;
-        default: break;
-      }
-    });
-  }
-
-  return normalizedParameters;
+  initMinValue: NaN,
+  initMaxValue: NaN
 };
 
 (function pluginWrapper($) {
   const methods: Methods = {
     init: function init(opt: unknown) {
       if (!$(this).data('slider')) {
-        const newConfig = { ...defaultParameters };
-        const slider = new Controller($.extend(newConfig, normalizeInitParameters(opt)), $(this));
+        const newConfig = normalizeInitParameters(opt, defaultParameters);
+        const slider = new Controller(newConfig, $(this));
         $(this).data('slider', slider);
       }
     },
 
     update: function update(opt: unknown) {
       const slider = $(this).data('slider');
-      slider.update(opt);
+      slider.update(normalizeUpdateConfig(opt));
     },
 
     renew: function renew() {
@@ -64,7 +37,7 @@ const normalizeInitParameters = (parameters: unknown) => {
 
     setValues: function setValues(opt: unknown) {
       const slider = $(this).data('slider');
-      slider.setValues(opt);
+      slider.setValues(normalizeSetValues(opt));
     },
 
     inputsAttach: function inputsAttach(opt: unknown) {

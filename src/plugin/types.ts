@@ -20,11 +20,6 @@ export type CurrentValues = {
   currentMaxValue: number,
 }
 
-export type updateCurrentValues = {
-  currentMinValue?: number,
-  currentMaxValue?: number,
-}
-
 export type RunnerObserverData = {
   event: MouseEvent,
   runner: Runner,
@@ -140,11 +135,16 @@ export const isInputsData = (data: unknown): data is InputsObject => {
 };
 
 export const isUpdateData = (data: unknown): data is updateData => {
-  if (data !== null && data === 'object') {
-    return (typeof Object.keys(data)[0] === 'string');
-  }
+  const keys = [
+    'minValue',
+    'maxValue',
+    'step',
+    'range',
+    'vertical',
+    'showLabel'
+  ];
 
-  return false;
+  return (keys.some(key => Object.hasOwnProperty.call(data, key)));
 };
 
 type MethodsName = 'init' | 'update' | 'renew' | 'setValues' | 'inputsAttach';
